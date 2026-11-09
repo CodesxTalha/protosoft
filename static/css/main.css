@@ -191,7 +191,9 @@ a { color: inherit; }
 .services .column,
 .process .column,
 .work .column,
-.pricing .column { max-width: var(--services-width); }
+.pricing .column,
+.testimonials .column,
+.faq .column { max-width: var(--services-width); }
 
 /* Cards: flat rounded tiles in the same light fill as the buttons */
 .cards {

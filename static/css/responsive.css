@@ -1,6 +1,7 @@
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .faq__icon, .faq.is-ready .faq__a, .faq.is-ready .faq__a > div,
   .btn__icon, .btn__icon svg, .seg label span,  .svc, .svc__name, .switch__track, .switch__track::after,
   .step__card, .step__node, .step__no, .step__title, .step__desc,
   .rdot, .rdot circle, .rdot text { transition: none; }
@@ -57,4 +58,17 @@
   .svc__name { white-space: nowrap; font-size: 14px; }
   .svc:has(input:focus-visible) { outline-offset: -2px; }   /* an outside ring would be clipped by the row */
   .builder__card { min-height: 0; padding: 24px; }
+}
+
+@media (max-width: 800px) {
+  .faq__layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .faq__aside { position: static; }
+  .faq__text, .faq__aside .btn { display: none; }   /* phones keep only the heading; the text and button are desktop-only */
+  .quotes { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .faq__list { padding: 2px 20px; }
+  .faq__q { padding: 18px 0; font-size: 16px; }
+  .faq__a p { padding-right: 0; }
 }

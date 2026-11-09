@@ -14,7 +14,9 @@
   <link rel="stylesheet" href="static/css/main.css">
   <link rel="stylesheet" href="static/css/process.css">
   <link rel="stylesheet" href="static/css/work.css">
+  <link rel="stylesheet" href="static/css/testimonials.css">
   <link rel="stylesheet" href="static/css/pricing.css">
+  <link rel="stylesheet" href="static/css/faq.css">
   <link rel="stylesheet" href="static/css/rail.css">
   <link rel="stylesheet" href="static/css/responsive.css">
 </head>
@@ -23,6 +25,9 @@
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <symbol id="plus" viewBox="0 0 24 24">
       <path d="M12 2.5v19M2.5 12h19" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+    </symbol>
+    <symbol id="plus-thin" viewBox="0 0 24 24">
+      <path d="M12 3v18M3 12h18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
     </symbol>
   </svg>
 
@@ -230,6 +235,37 @@
     </div>
   </section>
 
+  <!-- Testimonials: HIDDEN for now and filled with placeholder text.
+       To show it: replace the placeholders with real quotes, delete the `hidden` attribute and add data-rail-label="Clients". -->
+  <section class="testimonials" id="testimonials" aria-labelledby="testimonials-title" hidden>
+    <div class="column">
+      <h2 class="testimonials__title" id="testimonials-title"><span class="muted">What clients</span> say.</h2>
+      <ul class="quotes">
+          <li>
+            <figure class="quote">
+              <svg class="quote__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/></svg>
+              <blockquote class="quote__text"><p>Placeholder quote. Replace this with a real client testimonial about working with Protosoft: what they needed, how the project went and what changed for their business.</p></blockquote>
+              <figcaption class="quote__by"><span class="quote__avatar" aria-hidden="true"></span><span><span class="quote__name">Client name</span><span class="quote__role">Role, Company</span></span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="quote">
+              <svg class="quote__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/></svg>
+              <blockquote class="quote__text"><p>Placeholder quote. Keep it short and specific, two or three sentences about the result or the experience works best.</p></blockquote>
+              <figcaption class="quote__by"><span class="quote__avatar" aria-hidden="true"></span><span><span class="quote__name">Client name</span><span class="quote__role">Role, Company</span></span></figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="quote">
+              <svg class="quote__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/></svg>
+              <blockquote class="quote__text"><p>Placeholder quote. Add the client's name, role and company underneath, with their permission.</p></blockquote>
+              <figcaption class="quote__by"><span class="quote__avatar" aria-hidden="true"></span><span><span class="quote__name">Client name</span><span class="quote__role">Role, Company</span></span></figcaption>
+            </figure>
+          </li>
+      </ul>
+    </div>
+  </section>
+
   <!-- Pricing: pick a service, set its options, see the price (static/js/pricing.js).
        PKR for visitors in Pakistan, USD for everyone else, decided by the visitor's IP country (no switch).
        Prices live in PLANS at the top of pricing.js. -->
@@ -313,6 +349,45 @@
     </div>
   </section>
 
+  <!-- FAQ: an accordion (static/js/faq.js). Without JavaScript every answer stays open. -->
+  <section class="faq" id="faq" aria-labelledby="faq-title" data-rail-label="FAQ">
+    <div class="column">
+      <div class="faq__layout">
+        <div class="faq__aside">
+          <h2 class="faq__title" id="faq-title"><span class="muted">Common</span> questions.</h2>
+          <p class="faq__text">Can&rsquo;t find your answer? Book a call and we&rsquo;ll go through it with you.</p>
+          <a class="btn btn--dark btn--lg" href="#contact">Book a call</a>
+        </div>
+        <ul class="faq__list">
+          <li class="faq__item">
+            <h3 class="faq__h"><button class="faq__q" type="button" id="faq-q1" aria-expanded="false" aria-controls="faq-a1"><span>What&rsquo;s the difference between a static and a dynamic website?</span><svg class="faq__icon" aria-hidden="true"><use href="#plus-thin"></use></svg></button></h3>
+            <div class="faq__a" id="faq-a1" role="region" aria-labelledby="faq-q1"><div><p>A static website has fixed content: simple, fast and quick to launch. A dynamic website has content you can manage and update yourself, so it suits businesses that change things often, like products or posts.</p></div></div>
+          </li>
+          <li class="faq__item">
+            <h3 class="faq__h"><button class="faq__q" type="button" id="faq-q2" aria-expanded="false" aria-controls="faq-a2"><span>What does the Launch Package include?</span><svg class="faq__icon" aria-hidden="true"><use href="#plus-thin"></use></svg></button></h3>
+            <div class="faq__a" id="faq-a2" role="region" aria-labelledby="faq-q2"><div><p>A complete brand identity with your logo, and a dynamic website designed and built to match, by one team on one timeline. You also get the editable source files for everything.</p></div></div>
+          </li>
+          <li class="faq__item">
+            <h3 class="faq__h"><button class="faq__q" type="button" id="faq-q3" aria-expanded="false" aria-controls="faq-a3"><span>Do I get the files and the code?</span><svg class="faq__icon" aria-hidden="true"><use href="#plus-thin"></use></svg></button></h3>
+            <div class="faq__a" id="faq-a3" role="region" aria-labelledby="faq-q3"><div><p>Yes. You receive the editable design files and the full source code of your website.</p></div></div>
+          </li>
+          <li class="faq__item">
+            <h3 class="faq__h"><button class="faq__q" type="button" id="faq-q4" aria-expanded="false" aria-controls="faq-a4"><span>Can I start with design and add development later?</span><svg class="faq__icon" aria-hidden="true"><use href="#plus-thin"></use></svg></button></h3>
+            <div class="faq__a" id="faq-a4" role="region" aria-labelledby="faq-q4"><div><p>Yes. Web design is available on its own, and development can be added to the same project when you are ready.</p></div></div>
+          </li>
+          <li class="faq__item">
+            <h3 class="faq__h"><button class="faq__q" type="button" id="faq-q5" aria-expanded="false" aria-controls="faq-a5"><span>How long does a project take?</span><svg class="faq__icon" aria-hidden="true"><use href="#plus-thin"></use></svg></button></h3>
+            <div class="faq__a" id="faq-a5" role="region" aria-labelledby="faq-q5"><div><p>It depends on the scope. We agree a timeline with you on the first call, before any work starts.</p></div></div>
+          </li>
+          <li class="faq__item">
+            <h3 class="faq__h"><button class="faq__q" type="button" id="faq-q6" aria-expanded="false" aria-controls="faq-a6"><span>How do we get started?</span><svg class="faq__icon" aria-hidden="true"><use href="#plus-thin"></use></svg></button></h3>
+            <div class="faq__a" id="faq-a6" role="region" aria-labelledby="faq-q6"><div><p>Book a call. We talk through your business and goals, then agree on the scope, timeline and budget. After that we move through planning, design, development and launch.</p></div></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   <!-- Scroll rail (desktop). Sections are any element with data-rail-label. -->
   <div class="rail" aria-hidden="true">
     <div class="rail__track"><div class="rail__thumb"></div></div>
@@ -325,6 +400,7 @@
   <script src="static/js/illustrations.js" defer></script>
   <script src="static/js/process.js" defer></script>
   <script src="static/js/pricing.js" defer></script>
+  <script src="static/js/faq.js" defer></script>
   <script src="static/js/scroll-rail.js" defer></script>
 </body>
 </html>
