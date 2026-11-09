@@ -1,6 +1,7 @@
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .btn__icon, .btn__icon svg,
   .step__card, .step__node, .step__no, .step__title, .step__desc,
   .rdot, .rdot circle, .rdot text { transition: none; }
 }
@@ -19,4 +20,10 @@
 @media (max-width: 800px) {
   .process__body { grid-template-columns: minmax(0, 1fr); }
   .process__ring { display: none; }
+}
+
+@media (max-width: 800px) {
+  .project { grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 12px; }
+  .project__media { min-height: 0; aspect-ratio: 1 / 1; }
+  .project__body { padding: 8px 12px 14px; }
 }

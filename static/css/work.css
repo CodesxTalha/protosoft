@@ -1,0 +1,96 @@
+/* ---------- Work: project cards ---------- */
+.work {
+  display: flex;
+  justify-content: center;
+  padding: 0 clamp(20px, 4vw, 48px) 128px;
+}
+
+.project {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: 40px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+/* Image on the left; it stretches to the height of the text */
+.project__media {
+  display: grid;
+  min-height: 320px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #e7e7e5;
+}
+.project__media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* Text on the right */
+.project__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+  padding: 16px 16px 16px 0;
+}
+
+.project__eyebrow { display: block; margin-bottom: 14px; font-size: 13px; color: var(--ink-muted); }
+
+.project__name {
+  margin: 0 0 14px;
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.project__desc { margin: 0; max-width: 46ch; font-size: 15px; line-height: 1.5; color: var(--ink-muted); }
+
+/* What we delivered */
+.deliver { margin: 0; padding: 0; list-style: none; counter-reset: item; }
+.deliver li {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  column-gap: 8px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+.deliver li:first-child { padding-top: 0; border-top: 0; }
+.deliver li:last-child { padding-bottom: 0; }
+.deliver__no { padding-top: 2px; font-size: 13px; color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+.deliver__title { margin: 0 0 4px; font-size: 16px; font-weight: 500; letter-spacing: -0.015em; }
+.deliver__desc { margin: 0; font-size: 14px; line-height: 1.45; color: var(--ink-muted); }
+
+/* Case-study button: the dark button with the arrow in its own small chip */
+.project__cta { display: flex; }
+
+.btn--cta {
+  min-height: 40px;
+  min-width: 0;
+  padding: 0 6px 0 18px;
+  gap: 16px;
+  font-size: 14px;
+}
+
+.btn__icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(250, 250, 250, .12);
+  transition: background-color .18s ease;
+}
+
+.btn__icon svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: #fafafa;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform .2s ease;
+}
+
+.btn--cta:hover .btn__icon { background: rgba(250, 250, 250, .22); }
+.btn--cta:hover .btn__icon svg { transform: translateX(2px); }

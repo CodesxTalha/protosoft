@@ -8,6 +8,8 @@
 
   --font-sans: "Inter Tight", system-ui, -apple-system, sans-serif;
 
+  --line: rgba(20, 20, 20, .1);
+
   --radius: 8px;
   --content-width: 700px;
   --services-width: 960px;
@@ -158,7 +160,8 @@ a { color: inherit; }
   padding: 112px clamp(20px, 4vw, 48px) 128px;
 }
 
-.services__title {
+.services__title,
+.work__title {
   margin: 0;
   font-weight: 500;
   font-size: clamp(22px, 2.6vw, 30px);
@@ -168,7 +171,8 @@ a { color: inherit; }
 
 /* Services use a wider column than the hero (no effect below ~960px) */
 .services .column,
-.process .column { max-width: var(--services-width); }
+.process .column,
+.work .column { max-width: var(--services-width); }
 
 /* Cards: flat rounded tiles in the same light fill as the buttons */
 .cards {
