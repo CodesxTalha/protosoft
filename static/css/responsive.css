@@ -1,7 +1,7 @@
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .btn__icon, .btn__icon svg, .seg button, .seg label span,  .svc, .svc__name, .switch__track, .switch__track::after,
+  .btn__icon, .btn__icon svg, .seg label span,  .svc, .svc__name, .switch__track, .switch__track::after,
   .step__card, .step__node, .step__no, .step__title, .step__desc,
   .rdot, .rdot circle, .rdot text { transition: none; }
 }

@@ -231,15 +231,12 @@
   </section>
 
   <!-- Pricing: pick a service, set its options, see the price (static/js/pricing.js).
-       PKR in Pakistan, USD elsewhere, with a manual switch. Prices live in PLANS at the top of pricing.js. -->
-  <section class="pricing" id="pricing" aria-labelledby="pricing-title" data-rail-label="Pricing">
+       PKR for visitors in Pakistan, USD for everyone else, decided by the visitor's IP country (no switch).
+       Prices live in PLANS at the top of pricing.js. -->
+  <section class="pricing" id="pricing" aria-labelledby="pricing-title" data-rail-label="Pricing" data-pending>
     <div class="column">
       <div class="pricing__head">
         <h2 class="pricing__title" id="pricing-title"><span class="muted">Simple</span> pricing.</h2>
-        <div class="seg currency" role="group" aria-label="Currency">
-          <button type="button" data-cur="PKR" aria-pressed="true">PKR</button>
-          <button type="button" data-cur="USD" aria-pressed="false">USD</button>
-        </div>
       </div>
 
       <div class="builder">

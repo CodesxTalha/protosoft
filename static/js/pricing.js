@@ -1,7 +1,9 @@
 /* ---------- Pricing: pick a service, set its options, see the price ----------
    Edit prices in PLANS below: price is [PKR, USD]. A plan without a price shows its `custom` text.
-   Currency: PKR in Pakistan, USD elsewhere. A static site has no server to look up a location, so this
-   reads the browser's timezone and language; the PKR/USD switch covers VPNs and Pakistanis abroad. */
+   Currency follows the visitor's IP country on every page load: only a confirmed Pakistani IP sees PKR,
+   everyone else sees USD, and there is no switch. A static site has no server, so the country comes from
+   a free public lookup (Cloudflare's trace, then country.is, then ipwho.is). Nothing is saved between loads,
+   and the browser's timezone is deliberately ignored: a VPN changes the IP but not the timezone. */
 (function () {
   var sec = document.querySelector('.pricing');
   if (!sec) return;
@@ -53,7 +55,7 @@
     }
   };
 
-  var KEY = 'protosoft-currency', nf = new Intl.NumberFormat('en-US');
+  var nf = new Intl.NumberFormat('en-US');
   var $ = function (s) { return sec.querySelector(s); }, $$ = function (s) { return [].slice.call(sec.querySelectorAll(s)); };
   var card = $('.builder__card'), nameEl = $('.plan__name'), blurbEl = $('.plan__blurb'), eyebrow = $('.plan__eyebrow');
   var amountEl = $('.plan__amount'), noteEl = $('.plan__note'), listEl = $('.plan__list');
@@ -83,11 +85,22 @@
   var state = { service: 'package', type: 'static', dev: false, cur: 'PKR' };
   var shown = null, raf = 0;                                 // number currently shown in the big price
 
-  function fromPakistan() {
-    try { if (Intl.DateTimeFormat().resolvedOptions().timeZone === 'Asia/Karachi') return true; } catch (e) {}
-    return (navigator.languages || [navigator.language || '']).some(function (l) { return /-PK$/i.test(l); });
+  // Country lookup: try each source with a short timeout, first answer wins
+  var SOURCES = [
+    { url: 'https://www.cloudflare.com/cdn-cgi/trace', parse: function (t) { return (t.match(/^loc=([A-Z]{2})/m) || [])[1]; } },
+    { url: 'https://api.country.is', parse: function (t) { return JSON.parse(t).country; } },
+    { url: 'https://ipwho.is/?fields=country_code', parse: function (t) { return JSON.parse(t).country_code; } }
+  ];
+  function fetchText(url) {
+    var ctl = window.AbortController ? new AbortController() : null, timer = setTimeout(function () { if (ctl) ctl.abort(); }, 1000);
+    return fetch(url, { cache: 'no-store', signal: ctl ? ctl.signal : undefined })
+      .then(function (r) { if (!r.ok) throw new Error('bad status'); return r.text(); })
+      .then(function (t) { clearTimeout(timer); return t; }, function (e) { clearTimeout(timer); throw e; });
   }
-  function saved() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+  function lookup(i) {
+    if (i >= SOURCES.length) return Promise.resolve(null);
+    return fetchText(SOURCES[i].url).then(SOURCES[i].parse).then(function (c) { return /^[A-Z]{2}$/.test(c || '') ? c : lookup(i + 1); }, function () { return lookup(i + 1); });
+  }
 
   function money(pair, cur) { return cur === 'USD' ? '$' + nf.format(pair[1]) : 'PKR ' + nf.format(pair[0]); }
   function idx() { return state.cur === 'USD' ? 1 : 0; }
@@ -130,7 +143,6 @@
       var p = PLANS[h.dataset.hint], base = p.price ? p.price({ type: 'static', dev: false }) : null;
       h.textContent = base ? (h.dataset.hint === 'website' || h.dataset.hint === 'design' ? 'from ' : '') + money(base, state.cur) : p.custom;
     });
-    $$('.currency button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.cur === state.cur ? 'true' : 'false'); });
   }
 
   // events
@@ -157,17 +169,18 @@
   });
   $$('input[name="wtype"]').forEach(function (r) { r.addEventListener('change', function () { state.type = r.value; render(); }); });
   $('input[name="dev"]').addEventListener('change', function (e) { state.dev = e.target.checked; render(); });
-  $$('.currency button').forEach(function (b) {
-    b.addEventListener('click', function () {
-      state.cur = b.dataset.cur; shown = null; render();
-      try { localStorage.setItem(KEY, state.cur); } catch (e) {}
-    });
-  });
-
   // start from whatever the form currently shows (browsers restore form choices on reload)
   state.service = ($('input[name="service"]:checked') || {}).value || 'package';
   state.type = ($('input[name="wtype"]:checked') || {}).value || 'static';
   state.dev = $('input[name="dev"]').checked;
-  state.cur = saved() === 'PKR' || saved() === 'USD' ? saved() : (fromPakistan() ? 'PKR' : 'USD');
-  render();
+  state.cur = 'USD';
+  render();                                                  // build the card now; the prices stay hidden (data-pending)
+  lookup(0).then(function (country) {
+    // only a confirmed Pakistani IP gets PKR; an unknown country counts as "not Pakistan"
+    state.cur = country === 'PK' ? 'PKR' : 'USD';
+    shown = null;
+    render();
+    sec.dataset.country = country || 'unknown';              // visible in DevTools: handy for checking a VPN
+    sec.removeAttribute('data-pending');
+  });
 })();

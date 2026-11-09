@@ -6,7 +6,6 @@
   padding: 0 var(--gutter) 128px;
 }
 
-.pricing__head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 
 .pricing__title {
   margin: 0;
@@ -16,9 +15,9 @@
   letter-spacing: -0.035em;
 }
 
-/* Segmented control (currency, website type) */
+/* Segmented control (website type) */
 .seg { display: inline-flex; gap: 3px; padding: 3px; border-radius: 10px; background: #e7e7e5; }   /* gap = padding */
-.seg button, .seg label span {
+.seg label span {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -37,14 +36,19 @@
 }
 .seg label { display: block; }
 .seg input { position: absolute; opacity: 0; pointer-events: none; }
-.seg button[aria-pressed="true"], .seg input:checked + span { background: #fff; color: var(--ink); }
-.seg button:focus-visible, .seg input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 1px; }
+.seg input:checked + span { background: #fff; color: var(--ink); }
+.seg input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 1px; }
 
 .seg--dark { background: rgba(250, 250, 250, .1); }
 .seg--dark label span { color: #bdbdbb; }
 .seg--dark input:checked + span { background: #fafafa; color: var(--ink); }
 .seg--dark input:focus-visible + span { outline-color: #fafafa; }
 
+
+/* Prices stay hidden until we know the visitor's country, so nobody sees the wrong currency flash by */
+.pricing[data-pending] .plan__amount,
+.pricing[data-pending] .svc__hint,
+.pricing[data-pending] .opt__delta { visibility: hidden; }
 
 /* Layout */
 .builder { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); gap: 16px; align-items: stretch; }   /* the card is exactly as tall as the service list */
