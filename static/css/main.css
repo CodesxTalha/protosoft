@@ -146,6 +146,11 @@ a { color: inherit; }
 .btn--dark { background: var(--btn-dark); color: #fafafa; }
 .btn--dark:hover { background: #000; }
 
+/* Desktop: the hero buttons are the same size as the case-study button (40px tall, 10px radius) */
+@media (min-width: 801px) {
+  .hero__actions .btn { min-height: 40px; border-radius: 10px; }
+}
+
 /* ---------- Hero grid (canvas, drawn by static/js/hero-grid.js) ---------- */
 .hero__grid {
   display: block;

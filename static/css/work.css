@@ -60,13 +60,17 @@
 .deliver__title { margin: 0 0 4px; font-size: 16px; font-weight: 500; letter-spacing: -0.015em; }
 .deliver__desc { margin: 0; font-size: 14px; line-height: 1.45; color: var(--ink-muted); }
 
-/* Case-study button: the dark button with the arrow in its own small chip */
+/* Case-study button: the dark button with the arrow in its own small chip.
+   Corners are concentric: chip radius = button radius - the gap around the chip (10px - 5px = 5px). */
 .project__cta { display: flex; }
 
 .btn--cta {
+  --r: 10px;
+  --gap: 5px;
+  border-radius: var(--r);
   min-height: 40px;
   min-width: 0;
-  padding: 0 6px 0 18px;
+  padding: 0 var(--gap) 0 18px;
   gap: 16px;
   font-size: 14px;
 }
@@ -74,9 +78,9 @@
 .btn__icon {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  border-radius: calc(var(--r) - var(--gap));
   background: rgba(250, 250, 250, .12);
   transition: background-color .18s ease;
 }
