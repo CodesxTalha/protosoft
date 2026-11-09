@@ -13,6 +13,7 @@
 
   --radius: 8px;
   --content-width: 700px;
+  --services-width: 960px;
 
   /* Hero plus grid animation (script sets --speed) */
   --speed: 1;
@@ -52,6 +53,12 @@ a { color: inherit; }
   padding: 24px clamp(20px, 4vw, 48px) 0;
 }
 
+/* Desktop/tablet: the hero fills the screen, so services starts on its own below the fold */
+@media (min-width: 561px) {
+  .page { min-height: 100vh; min-height: 100svh; padding-bottom: 48px; }
+  .page .hero { padding: 0; }
+}
+
 /* ---------- Nav ---------- */
 .nav {
   display: flex;
@@ -88,9 +95,9 @@ a { color: inherit; }
 .hero__title {
   margin: 0;
   font-weight: 500;
-  font-size: clamp(26px, 2.6vw, 32px);
-  line-height: 1.1;
-  letter-spacing: -0.035em;
+  font-size: clamp(26px, 3.2vw, 38px);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
 }
 
 .muted { color: var(--ink-muted); }
@@ -201,10 +208,13 @@ a { color: inherit; }
 .services__title {
   margin: 0;
   font-weight: 500;
-  font-size: clamp(22px, 2.2vw, 26px);
+  font-size: clamp(22px, 2.6vw, 30px);
   line-height: 1.1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
 }
+
+/* Services use a wider column than the hero (no effect below ~960px) */
+.services .column { max-width: var(--services-width); }
 
 /* Cards: flat rounded tiles in the same light fill as the buttons */
 .cards {
