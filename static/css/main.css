@@ -21,6 +21,14 @@
 html, body { margin: 0; }
 html { scroll-behavior: smooth; }
 
+/* No grey/blue flash when something is tapped on a phone; keyboard focus rings are unaffected */
+* { -webkit-tap-highlight-color: transparent; }
+a, button, label, summary { touch-action: manipulation; }
+
+/* Selected text uses the theme's ink instead of the browser's blue (inverted on the dark cards and buttons) */
+::selection { background: var(--ink); color: #fafafa; }
+.builder__card ::selection, .cta__card ::selection, .btn--dark ::selection, .btn--dark::selection { background: #fafafa; color: var(--ink); }
+
 body {
   background: var(--bg);
   color: var(--ink);
