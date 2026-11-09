@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 160" width="280" height="160" role="img" aria-label="marketing">
+<style><![CDATA[
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap');
+svg { font-family: "Inter Tight", system-ui, -apple-system, sans-serif; }
+.ln { fill: none; stroke-width: 1; }
+.ink { stroke: #141414; }
+.soft { stroke: #e0e0de; }
+.mid { stroke: #b4b4b2; }
+.w { fill: #fff; }
+.bg { fill: #fafafa; }
+.f1 { fill: #1f1f1f; }
+.f2 { fill: #ececea; }
+.f3 { fill: #d6d6d4; }
+.lbl { font-size: 6.2px; font-weight: 500; letter-spacing: .09em; text-transform: uppercase; fill: #8a8a88; }
+.t5 { font-size: 5px; font-weight: 500; fill: #141414; }
+.t6 { font-size: 6px; font-weight: 600; fill: #141414; }
+.mu { fill: #8a8a88; font-weight: 400; }
+.inv { fill: #fafafa; }
+symbol.ic * { fill: none; stroke: currentColor; stroke-width: var(--sw, 2); stroke-linecap: round; stroke-linejoin: round; }
+symbol.ic .solid { fill: currentColor; }
+
+
+.s-progress { transform-box: fill-box; transform-origin: left center; transform: scaleX(.62); animation: s-progress 6s linear infinite; }
+.s-heart    { transform-box: fill-box; transform-origin: center; animation: s-heart 6s ease infinite; }
+.s-chip     { animation: s-chip 6s cubic-bezier(.3, 0, .2, 1) infinite; }
+.s-chip-2   { animation-name: s-chip-2; }
+.s-chip-3   { animation-name: s-chip-3; }
+.s-slot     { transform-box: fill-box; transform-origin: center; animation: s-slot 6s ease infinite; }
+.s-slotn    { animation: s-slotn 6s ease infinite; }
+.s-likes    { font-variant-numeric: tabular-nums; }
+@keyframes s-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes s-heart {
+  0%, 12%   { transform: scale(0); }
+  17%       { transform: scale(1.25); }
+  21%, 88%  { transform: scale(1); }
+  94%, 100% { transform: scale(0); }
+}
+@keyframes s-chip {
+  0%, 29%   { opacity: 0; transform: translateX(-6px); }
+  35%, 88%  { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+@keyframes s-chip-2 {
+  0%, 39%   { opacity: 0; transform: translateX(-6px); }
+  45%, 88%  { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+@keyframes s-chip-3 {
+  0%, 49%   { opacity: 0; transform: translateX(-6px); }
+  55%, 88%  { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+@keyframes s-slot {
+  0%, 60%   { fill: #e4e4e2; transform: scale(1); }
+  64%       { fill: #1f1f1f; transform: scale(1.2); }
+  68%, 88%  { fill: #1f1f1f; transform: scale(1); }
+  94%, 100% { fill: #e4e4e2; transform: scale(1); }
+}
+@keyframes s-slotn {
+  0%, 60%   { fill: #141414; }
+  64%, 88%  { fill: #fafafa; }
+  94%, 100% { fill: #141414; }
+}
+
+]]></style>
+<defs>
+  <symbol id="i-heart" class="ic" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-heart-solid" class="ic" viewBox="0 0 24 24"><path class="solid" d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-comment" class="ic" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+  <symbol id="i-send" class="ic" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="i-bookmark" class="ic" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></symbol>
+  <symbol id="i-check" class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-up" class="ic" viewBox="0 0 24 24"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></symbol>
+  <symbol id="plus" viewBox="0 0 24 24"><path d="M12 2.5v19M2.5 12h19" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></symbol>
+</defs>
+<rect width="280" height="160" class="bg"/>
+
+<!-- Calendar -->
+<text x="10.5" y="45" font-size="6.6" font-weight="600" letter-spacing="-.1" fill="#141414">November</text>
+<text x="15.6" y="58" text-anchor="middle" font-size="4.3" font-weight="500" fill="#a0a09e">S</text><text x="25.8" y="58" text-anchor="middle" font-size="4.3" font-weight="500" fill="#a0a09e">M</text><text x="36.0" y="58" text-anchor="middle" font-size="4.3" font-weight="500" fill="#a0a09e">T</text><text x="46.2" y="58" text-anchor="middle" font-size="4.3" font-weight="500" fill="#a0a09e">W</text><text x="56.4" y="58" text-anchor="middle" font-size="4.3" font-weight="500" fill="#a0a09e">T</text><text x="66.6" y="58" text-anchor="middle" font-size="4.3" font-weight="500" fill="#a0a09e">F</text><text x="76.8" y="58" text-anchor="middle" font-size="4.3" font-weight="500" fill="#a0a09e">S</text><text x="15.6" y="71.1" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">1</text><text x="25.8" y="71.1" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">2</text><circle class="f1" cx="36.0" cy="69.5" r="4.4"/><text x="36.0" y="71.1" text-anchor="middle" font-size="4.5" font-weight="500" fill="#fafafa">3</text><text x="46.2" y="71.1" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">4</text><circle class="f1" cx="56.4" cy="69.5" r="4.4"/><text x="56.4" y="71.1" text-anchor="middle" font-size="4.5" font-weight="500" fill="#fafafa">5</text><text x="66.6" y="71.1" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">6</text><text x="76.8" y="71.1" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">7</text><text x="15.6" y="81.5" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">8</text><circle class="ln ink" cx="25.8" cy="79.9" r="4.3"/><text x="25.8" y="81.5" text-anchor="middle" font-size="4.5" font-weight="500" fill="#141414">9</text><circle class="f1" cx="36.0" cy="79.9" r="4.4"/><text x="36.0" y="81.5" text-anchor="middle" font-size="4.5" font-weight="500" fill="#fafafa">10</text><text x="46.2" y="81.5" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">11</text><circle class="f1" cx="56.4" cy="79.9" r="4.4"/><text x="56.4" y="81.5" text-anchor="middle" font-size="4.5" font-weight="500" fill="#fafafa">12</text><text x="66.6" y="81.5" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">13</text><text x="76.8" y="81.5" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">14</text><text x="15.6" y="91.9" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">15</text><text x="25.8" y="91.9" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">16</text><circle class="f1" cx="36.0" cy="90.3" r="4.4"/><text x="36.0" y="91.9" text-anchor="middle" font-size="4.5" font-weight="500" fill="#fafafa">17</text><text x="46.2" y="91.9" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">18</text><circle class="f1" cx="56.4" cy="90.3" r="4.4"/><text x="56.4" y="91.9" text-anchor="middle" font-size="4.5" font-weight="500" fill="#fafafa">19</text><text x="66.6" y="91.9" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">20</text><text x="76.8" y="91.9" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">21</text><text x="15.6" y="102.3" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">22</text><text x="25.8" y="102.3" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">23</text><circle class="s-slot" cx="36.0" cy="100.7" r="4.4" fill="#e4e4e2"/><text class="s-slotn" x="36.0" y="102.3" text-anchor="middle" font-size="4.5" font-weight="500">24</text><text x="46.2" y="102.3" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">25</text><text x="56.4" y="102.3" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">26</text><text x="66.6" y="102.3" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">27</text><text x="76.8" y="102.3" text-anchor="middle" font-size="4.5" font-weight="500" fill="#8a8a88">28</text>
+<text class="lbl" x="10.5" y="124">Calendar</text>
+
+<!-- Post -->
+<defs><clipPath id="m-media"><rect x="96" y="36" width="88" height="62" rx="4"/></clipPath></defs>
+<rect class="ln ink w" x="88.5" y="12.5" width="103" height="135" rx="10"/>
+<circle class="f1" cx="102" cy="25" r="6"/>
+<use href="#plus" x="99" y="22" width="6" height="6" color="#fafafa"/>
+<text class="t6" x="111.5" y="24" style="font-size:5.6px">protosoft</text>
+<text class="t5 mu" x="111.5" y="30.4" style="font-size:4.4px">Islamabad, Pakistan</text>
+<g fill="#8a8a88"><circle cx="173" cy="25.5" r="1"/><circle cx="177" cy="25.5" r="1"/><circle cx="181" cy="25.5" r="1"/></g>
+
+<g clip-path="url(#m-media)">
+  <rect x="96" y="36" width="88" height="62" fill="#1f1f1f"/>
+  <path d="M103.0 42.5v4M101.0 44.5h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M117.5 42.5v4M115.5 44.5h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M132.0 42.5v4M130.0 44.5h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M146.5 42.5v4M144.5 44.5h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M161.0 42.5v4M159.0 44.5h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M175.5 42.5v4M173.5 44.5h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M103.0 50.7v4M101.0 52.7h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M117.5 50.7v4M115.5 52.7h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M132.0 50.7v4M130.0 52.7h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M146.5 50.7v4M144.5 52.7h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M161.0 50.7v4M159.0 52.7h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M175.5 50.7v4M173.5 52.7h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M103.0 58.9v4M101.0 60.9h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M117.5 58.9v4M115.5 60.9h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M132.0 58.9v4M130.0 60.9h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M146.5 58.9v4M144.5 60.9h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M161.0 58.9v4M159.0 60.9h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/><path d="M175.5 58.9v4M173.5 60.9h4" stroke="#3d3d3d" stroke-width="1.1" stroke-linecap="round" fill="none"/>
+  <text x="102" y="77" font-size="12.5" font-weight="600" letter-spacing="-.5" class="inv">We’re live.</text>
+  <text x="102" y="85.6" font-size="5.2" font-weight="400" fill="#b4b4b2">Meet the new Protosoft.</text>
+  <rect x="102" y="91.5" width="76" height="1.6" rx=".8" fill="#4a4a4a"/>
+  <rect class="s-progress" x="102" y="91.5" width="76" height="1.6" rx=".8" fill="#fafafa"/>
+</g>
+
+<use href="#i-heart" x="96" y="103" width="12" height="12" color="#141414"/>
+<g class="s-heart"><use href="#i-heart-solid" x="96" y="103" width="12" height="12" color="#141414"/></g>
+<use href="#i-comment" x="112" y="103" width="12" height="12" color="#141414"/>
+<use href="#i-send" x="128" y="103" width="12" height="12" color="#141414"/>
+<use href="#i-bookmark" x="171.5" y="103" width="12" height="12" color="#141414"/>
+
+<text class="s-likes" x="96" y="127" font-size="6.2" font-weight="600" fill="#141414">1,284 likes</text>
+<text x="96" y="138" font-size="5.2" fill="#141414"><tspan font-weight="600">protosoft</tspan> <tspan fill="#5c5c5a">New site is live.</tspan></text>
+
+<g class="s-chip s-chip-1">
+  <rect class="ln soft w" x="204.5" y="30.5" width="65" height="20" rx="10"/>
+  <use href="#i-heart-solid" x="210" y="35.5" width="10" height="10" color="#141414"/>
+  <text class="t5" x="224" y="43.1" style="font-size:5.8px">1,284</text>
+</g>
+<g class="s-chip s-chip-2">
+  <rect class="ln soft w" x="204.5" y="56.5" width="65" height="20" rx="10"/>
+  <use href="#i-comment" x="210" y="61.5" width="10" height="10" color="#141414" style="--sw:2.2"/>
+  <text class="t5" x="224" y="69.1" style="font-size:5.8px">54</text>
+</g>
+<g class="s-chip s-chip-3">
+  <rect class="ln soft w" x="204.5" y="82.5" width="65" height="20" rx="10"/>
+  <use href="#i-send" x="210" y="87.5" width="10" height="10" color="#141414" style="--sw:2.2"/>
+  <text class="t5" x="224" y="95.1" style="font-size:5.8px">90</text>
+</g>
+<text class="lbl" x="204.5" y="124">Engagement</text>
+
+<script><![CDATA[
+/* Likes count up fast right after the heart pops, then match the heart chip (1,284). */
+(function () {
+  var likes = document.querySelector('.s-likes'), heart = document.querySelector('.s-heart');
+  if (!likes || !heart || !heart.getAnimations) return;
+  var TOTAL = 1284, CYCLE = 6000, START = 0.12, END = 0.28, RESET = 0.94;
+  function label(n) { return n === 0 ? 'Be the first to like this' : n === 1 ? '1 like' : n.toLocaleString('en-US') + ' likes'; }
+  var last = -1;
+  (function tick() {
+    var a = heart.getAnimations()[0];
+    if (a) {
+      var t = ((a.currentTime || 0) % CYCLE) / CYCLE, n;
+      if (t < START || t >= RESET) n = 0;
+      else if (t < END) { var p = (t - START) / (END - START); n = Math.round(TOTAL * (1 - Math.pow(1 - p, 3))); }
+      else n = TOTAL;
+      if (n !== last) { likes.textContent = label(n); last = n; }
+    }
+    requestAnimationFrame(tick);
+  })();
+})();
+]]></script>
+</svg>

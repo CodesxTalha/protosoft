@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 160" width="280" height="160" role="img" aria-label="web-apps">
+<style><![CDATA[
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap');
+svg { font-family: "Inter Tight", system-ui, -apple-system, sans-serif; }
+.ln { fill: none; stroke-width: 1; }
+.ink { stroke: #141414; }
+.soft { stroke: #e0e0de; }
+.mid { stroke: #b4b4b2; }
+.w { fill: #fff; }
+.bg { fill: #fafafa; }
+.f1 { fill: #1f1f1f; }
+.f2 { fill: #ececea; }
+.f3 { fill: #d6d6d4; }
+.lbl { font-size: 6.2px; font-weight: 500; letter-spacing: .09em; text-transform: uppercase; fill: #8a8a88; }
+.t5 { font-size: 5px; font-weight: 500; fill: #141414; }
+.t6 { font-size: 6px; font-weight: 600; fill: #141414; }
+.mu { fill: #8a8a88; font-weight: 400; }
+.inv { fill: #fafafa; }
+symbol.ic * { fill: none; stroke: currentColor; stroke-width: var(--sw, 2); stroke-linecap: round; stroke-linejoin: round; }
+symbol.ic .solid { fill: currentColor; }
+
+
+.a-spark { stroke-dasharray: 100; animation: a-draw 8s ease-in-out infinite; }
+.a-dot   { animation: a-dot 8s ease-in-out infinite; }
+.a-area  { animation: a-area 8s ease-in-out infinite; }
+.a-list  { animation: a-scroll 8s cubic-bezier(.5, 0, .15, 1) infinite; }
+@keyframes a-draw {
+  0%       { stroke-dashoffset: 100; opacity: 1; }
+  40%, 84% { stroke-dashoffset: 0; opacity: 1; }
+  94%      { stroke-dashoffset: 0; opacity: 0; }
+  100%     { stroke-dashoffset: 100; opacity: 0; }
+}
+@keyframes a-dot {
+  0%, 38%  { opacity: 0; }
+  44%, 84% { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+@keyframes a-area {
+  0%, 38%  { opacity: 0; }
+  42%, 90% { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+@keyframes a-scroll {
+  0%, 16%   { transform: translateY(0); }
+  20%, 36%  { transform: translateY(-18px); }
+  40%, 56%  { transform: translateY(-36px); }
+  60%, 76%  { transform: translateY(-54px); }
+  80%, 96%  { transform: translateY(-72px); }
+  100%      { transform: translateY(-90px); }
+}
+
+]]></style>
+<defs>
+  <symbol id="i-heart" class="ic" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-heart-solid" class="ic" viewBox="0 0 24 24"><path class="solid" d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-comment" class="ic" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+  <symbol id="i-send" class="ic" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="i-bookmark" class="ic" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></symbol>
+  <symbol id="i-check" class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-up" class="ic" viewBox="0 0 24 24"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></symbol>
+  <symbol id="plus" viewBox="0 0 24 24"><path d="M12 2.5v19M2.5 12h19" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></symbol>
+</defs>
+<rect width="280" height="160" class="bg"/>
+
+<g transform="translate(8.5 0)">
+<defs><clipPath id="a-screen"><rect x="183" y="68" width="59" height="69"/></clipPath></defs>
+
+<!-- Browser -->
+<rect class="ln ink w" x="12.5" y="14.5" width="180" height="124" rx="6"/>
+<line class="ln soft" x1="13" y1="30.5" x2="192" y2="30.5"/>
+<circle fill="#d6d6d4" cx="22" cy="22.5" r="2.1"/><circle fill="#d6d6d4" cx="29" cy="22.5" r="2.1"/><circle fill="#d6d6d4" cx="36" cy="22.5" r="2.1"/>
+<rect fill="#efefed" x="48" y="18" width="84" height="9" rx="4.5"/>
+<text class="t5 mu" x="90" y="24.3" text-anchor="middle" style="font-size:4.7px">app.koa.co/dashboard</text>
+<line class="ln soft" x1="58.5" y1="31" x2="58.5" y2="138"/>
+
+<!-- sidebar -->
+<circle class="f1" cx="21" cy="40" r="2.4"/>
+<text x="26.5" y="42" font-size="6" font-weight="600" letter-spacing="-.1" fill="#141414">Koa</text>
+<rect fill="#efefed" x="17" y="48" width="38" height="10.4" rx="3"/><rect class="ln" x="21" y="50.7" width="4.6" height="4.6" rx="1.2" stroke="#141414"/><text x="29" y="54.6" font-size="5" font-weight="500" fill="#141414">Overview</text><rect class="ln" x="21" y="62.2" width="4.6" height="4.6" rx="1.2" stroke="#b4b4b2"/><text x="29" y="66.1" font-size="5" font-weight="500" fill="#8a8a88">Orders</text><rect class="ln" x="21" y="73.7" width="4.6" height="4.6" rx="1.2" stroke="#b4b4b2"/><text x="29" y="77.6" font-size="5" font-weight="500" fill="#8a8a88">Customers</text><rect class="ln" x="21" y="85.2" width="4.6" height="4.6" rx="1.2" stroke="#b4b4b2"/><text x="29" y="89.1" font-size="5" font-weight="500" fill="#8a8a88">Settings</text>
+
+<!-- main -->
+<text x="66" y="43.4" font-size="7.2" font-weight="600" letter-spacing="-.2" fill="#141414">Overview</text>
+<rect class="ln soft" x="149.5" y="36.5" width="36" height="9" rx="4.5"/>
+<text class="t5 mu" x="167.5" y="42.6" text-anchor="middle" style="font-size:4.5px">Last 7 days</text>
+
+<rect class="ln soft w" x="66.5" y="50.5" width="57" height="26" rx="4"/>
+<text class="t5 mu" x="72" y="59" style="font-size:4.6px">Revenue</text>
+<text x="72" y="70" font-size="9" font-weight="600" letter-spacing="-.3" fill="#141414">$24.8k</text>
+<text x="118.5" y="70" text-anchor="end" font-size="4.6" font-weight="600" fill="#141414">+12%</text>
+
+<rect class="ln soft w" x="128.5" y="50.5" width="57" height="26" rx="4"/>
+<text class="t5 mu" x="134" y="59" style="font-size:4.6px">Orders</text>
+<text x="134" y="70" font-size="9" font-weight="600" letter-spacing="-.3" fill="#141414">312</text>
+<text x="180.5" y="70" text-anchor="end" font-size="4.6" font-weight="600" fill="#141414">+8%</text>
+
+<rect class="ln soft w" x="66.5" y="82.5" width="119" height="52" rx="4"/>
+<text class="t5" x="72" y="90.8" style="font-size:5px">Sales</text>
+<g class="ln soft" stroke-width="1">
+  <line class="ln" x1="84" y1="100.5" x2="180" y2="100.5" stroke="#ececea" stroke-dasharray="2 2"/>
+  <line class="ln" x1="84" y1="112.5" x2="180" y2="112.5" stroke="#ececea" stroke-dasharray="2 2"/>
+  <line class="ln" x1="84" y1="124.5" x2="180" y2="124.5" stroke="#e0e0de"/>
+</g>
+<text x="81" y="101.8" text-anchor="end" font-size="4" font-weight="500" fill="#a0a09e">5k</text>
+<text x="81" y="113.8" text-anchor="end" font-size="4" font-weight="500" fill="#a0a09e">2.5k</text>
+<text x="81" y="125.8" text-anchor="end" font-size="4" font-weight="500" fill="#a0a09e">0</text>
+<text x="88" y="130.8" text-anchor="middle" font-size="4" font-weight="500" fill="#a0a09e">M</text><text x="101.5" y="130.8" text-anchor="middle" font-size="4" font-weight="500" fill="#a0a09e">T</text><text x="115" y="130.8" text-anchor="middle" font-size="4" font-weight="500" fill="#a0a09e">W</text><text x="128.5" y="130.8" text-anchor="middle" font-size="4" font-weight="500" fill="#a0a09e">T</text><text x="142" y="130.8" text-anchor="middle" font-size="4" font-weight="500" fill="#a0a09e">F</text><text x="155.5" y="130.8" text-anchor="middle" font-size="4" font-weight="500" fill="#a0a09e">S</text><text x="169" y="130.8" text-anchor="middle" font-size="4" font-weight="500" fill="#a0a09e">S</text>
+<path class="a-area" d="M88 118.2 L101.5 113.9 L115 115.8 L128.5 109.6 L142 111.5 L155.5 107.2 L169 103.4 L169 124 L88 124 Z" fill="#efefed" opacity=".9"/>
+<polyline class="ln ink a-spark" pathLength="100" stroke-linejoin="round" stroke-linecap="round" points="88,118.2 101.5,113.9 115,115.8 128.5,109.6 142,111.5 155.5,107.2 169,103.4"/>
+<g class="a-dot">
+  <path class="f1" d="M166 94.4 h6 l-3 3 z"/>
+  <rect class="f1" x="157" y="85" width="24" height="9.6" rx="3"/>
+  <text x="169" y="91.7" text-anchor="middle" font-size="5" font-weight="600" class="inv">$4.3k</text>
+  <circle class="w" cx="169" cy="103.4" r="2.7" stroke="#141414" stroke-width="1"/>
+</g>
+
+<!-- Phone -->
+<g transform="translate(8 0)">
+<rect class="ln ink w" x="182.5" y="38.5" width="60" height="108" rx="10"/>
+<text x="190" y="49.2" font-size="4.8" font-weight="600" fill="#141414">9:41</text>
+<rect class="f1" x="204.5" y="42" width="16" height="4.6" rx="2.3"/>
+<rect class="ln ink" x="229" y="45.4" width="7" height="3.6" rx="1"/><rect class="f1" x="230" y="46.4" width="4.2" height="1.6" rx=".5"/>
+<text x="190" y="63" font-size="7.4" font-weight="600" letter-spacing="-.2" fill="#141414">Orders</text>
+<g clip-path="url(#a-screen)"><g class="a-list"><g><circle class="f1" cx="193.5" cy="77" r="4.8"/><text x="193.5" y="78.6" text-anchor="middle" font-size="4.8" font-weight="600" fill="#fafafa">M</text>
+    <text class="t5" x="201.5" y="76.2" style="font-size:5.1px">Maya Rao</text>
+    <text class="t5 mu" x="201.5" y="82.6" style="font-size:4.4px">Shipped · $42.00</text>
+    <line class="ln" x1="189" y1="87.5" x2="236" y2="87.5" stroke="#eeeeec"/></g>
+    <g><circle fill="#e4e4e2" cx="193.5" cy="95" r="4.8"/><text x="193.5" y="96.6" text-anchor="middle" font-size="4.8" font-weight="600" fill="#141414">O</text>
+    <text class="t5" x="201.5" y="94.2" style="font-size:5.1px">Omar Khan</text>
+    <text class="t5 mu" x="201.5" y="100.6" style="font-size:4.4px">Packed · $18.50</text>
+    <line class="ln" x1="189" y1="105.5" x2="236" y2="105.5" stroke="#eeeeec"/></g>
+    <g><circle fill="#e4e4e2" cx="193.5" cy="113" r="4.8"/><text x="193.5" y="114.6" text-anchor="middle" font-size="4.8" font-weight="600" fill="#141414">Z</text>
+    <text class="t5" x="201.5" y="112.2" style="font-size:5.1px">Zoya Ali</text>
+    <text class="t5 mu" x="201.5" y="118.6" style="font-size:4.4px">Delivered · $64.20</text>
+    <line class="ln" x1="189" y1="123.5" x2="236" y2="123.5" stroke="#eeeeec"/></g>
+    <g><circle class="f1" cx="193.5" cy="131" r="4.8"/><text x="193.5" y="132.6" text-anchor="middle" font-size="4.8" font-weight="600" fill="#fafafa">B</text>
+    <text class="t5" x="201.5" y="130.2" style="font-size:5.1px">Ben Carter</text>
+    <text class="t5 mu" x="201.5" y="136.6" style="font-size:4.4px">New order · $27.00</text>
+    <line class="ln" x1="189" y1="141.5" x2="236" y2="141.5" stroke="#eeeeec"/></g>
+    <g><circle fill="#e4e4e2" cx="193.5" cy="149" r="4.8"/><text x="193.5" y="150.6" text-anchor="middle" font-size="4.8" font-weight="600" fill="#141414">H</text>
+    <text class="t5" x="201.5" y="148.2" style="font-size:5.1px">Hina Malik</text>
+    <text class="t5 mu" x="201.5" y="154.6" style="font-size:4.4px">Shipped · $39.90</text>
+    <line class="ln" x1="189" y1="159.5" x2="236" y2="159.5" stroke="#eeeeec"/></g>
+    <g><circle class="f1" cx="193.5" cy="167" r="4.8"/><text x="193.5" y="168.6" text-anchor="middle" font-size="4.8" font-weight="600" fill="#fafafa">M</text>
+    <text class="t5" x="201.5" y="166.2" style="font-size:5.1px">Maya Rao</text>
+    <text class="t5 mu" x="201.5" y="172.6" style="font-size:4.4px">Shipped · $42.00</text>
+    <line class="ln" x1="189" y1="177.5" x2="236" y2="177.5" stroke="#eeeeec"/></g>
+    <g><circle fill="#e4e4e2" cx="193.5" cy="185" r="4.8"/><text x="193.5" y="186.6" text-anchor="middle" font-size="4.8" font-weight="600" fill="#141414">O</text>
+    <text class="t5" x="201.5" y="184.2" style="font-size:5.1px">Omar Khan</text>
+    <text class="t5 mu" x="201.5" y="190.6" style="font-size:4.4px">Packed · $18.50</text>
+    <line class="ln" x1="189" y1="195.5" x2="236" y2="195.5" stroke="#eeeeec"/></g>
+    <g><circle fill="#e4e4e2" cx="193.5" cy="203" r="4.8"/><text x="193.5" y="204.6" text-anchor="middle" font-size="4.8" font-weight="600" fill="#141414">Z</text>
+    <text class="t5" x="201.5" y="202.2" style="font-size:5.1px">Zoya Ali</text>
+    <text class="t5 mu" x="201.5" y="208.6" style="font-size:4.4px">Delivered · $64.20</text>
+    <line class="ln" x1="189" y1="213.5" x2="236" y2="213.5" stroke="#eeeeec"/></g>
+    <g><circle class="f1" cx="193.5" cy="221" r="4.8"/><text x="193.5" y="222.6" text-anchor="middle" font-size="4.8" font-weight="600" fill="#fafafa">B</text>
+    <text class="t5" x="201.5" y="220.2" style="font-size:5.1px">Ben Carter</text>
+    <text class="t5 mu" x="201.5" y="226.6" style="font-size:4.4px">New order · $27.00</text>
+    <line class="ln" x1="189" y1="231.5" x2="236" y2="231.5" stroke="#eeeeec"/></g>
+    <g><circle fill="#e4e4e2" cx="193.5" cy="239" r="4.8"/><text x="193.5" y="240.6" text-anchor="middle" font-size="4.8" font-weight="600" fill="#141414">H</text>
+    <text class="t5" x="201.5" y="238.2" style="font-size:5.1px">Hina Malik</text>
+    <text class="t5 mu" x="201.5" y="244.6" style="font-size:4.4px">Shipped · $39.90</text>
+    <line class="ln" x1="189" y1="249.5" x2="236" y2="249.5" stroke="#eeeeec"/></g>
+    </g></g>
+<rect class="f1" x="202" y="141.2" width="21" height="1.8" rx=".9"/>
+</g>
+
+<text class="lbl" x="12.5" y="153.5">Web app</text>
+<text class="lbl" x="220.5" y="153.5" text-anchor="middle">Mobile</text>
+</g>
+
+
+</svg>

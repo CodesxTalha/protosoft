@@ -14,11 +14,6 @@
   --radius: 8px;
   --content-width: 700px;
   --services-width: 960px;
-
-  /* Hero plus grid animation (script sets --speed) */
-  --speed: 1;
-  --tone-duration: calc(9s / var(--speed));
-  --fade-duration: calc(13s / var(--speed));
 }
 
 /* ---------- Base ---------- */
@@ -152,50 +147,11 @@ a { color: inherit; }
 .btn--dark { background: var(--btn-dark); color: #fafafa; }
 .btn--dark:hover { background: #000; }
 
-/* ---------- Plus shape (shared) ---------- */
-.plus-grid {
-  display: grid;
-  grid-template-columns: repeat(var(--cols, 20), minmax(0, 1fr));
-  width: 100%;
-}
-
-.plus-grid__cell {
-  aspect-ratio: 1 / 1;
-  display: grid;
-  place-items: center;
-}
-
-/*
-  The plus: one SVG symbol (#plus, top of <body>) used everywhere — logo, hero, services.
-  Both arms are the same stroke, so they're identical in length and thickness.
-  Size it with width only; it always stays square.
-*/
-.plus {
+/* ---------- Hero grid (canvas, drawn by static/js/hero-grid.js) ---------- */
+.hero__grid {
   display: block;
-  flex: none;
-  width: min(18px, 62%);
-  height: auto;
-  aspect-ratio: 1 / 1;
-  color: #dcdcdc;
-}
-
-/* Hero grid: only the gray tone moves */
-.plus-grid--hero .plus {
-  animation:
-    plus-tone var(--tone-duration) ease-in-out var(--t, 0s) infinite,
-    plus-fade var(--fade-duration) ease-in-out var(--f, 0s) infinite;
-}
-
-@keyframes plus-tone {
-  0%, 100% { color: #f7f7f6; }
-  30%      { color: #c9c9c8; }
-  55%      { color: #3a3a3a; }
-  78%      { color: #a3a3a3; }
-}
-
-@keyframes plus-fade {
-  0%, 100% { opacity: .55; }
-  50%      { opacity: 1; }
+  width: 100%;
+  aspect-ratio: 20 / 7;   /* keep in sync with data-cols / data-rows */
 }
 
 /* ---------- Services ---------- */
@@ -235,6 +191,12 @@ a { color: inherit; }
 }
 
 .card__art { margin: 0 0 18px; }
+
+.card__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
 
 .card__head {
   display: flex;

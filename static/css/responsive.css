@@ -1,8 +1,6 @@
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .plus-grid--hero .plus { animation: none; color: #bcbcbc; }
-  .illo, .illo * { animation: none !important; }
 }
 
 /* ---------- Small screens ---------- */
