@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="static/css/responsive.css">
 </head>
 <body>
-  <!-- Master plus icon. Use it with: <svg class="plus"><use href="#plus"></use></svg> -->
+  <!-- Brand plus icon. Use it with: <svg><use href="#plus"></use></svg> -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <symbol id="plus" viewBox="0 0 24 24">
       <path d="M12 2.5v19M2.5 12h19" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
@@ -49,17 +49,14 @@
 
         <div class="hero__actions">
           <a class="btn btn--light" href="#contact">Book a call</a>
-          <a class="btn btn--dark" href="#services">Services <span aria-hidden="true">→</span></a>
+          <a class="btn btn--dark" href="#services">Services <span aria-hidden="true">↓</span></a>
         </div>
       </div>
     </main>
 
   </div>
 
-  <!--
-    Services: four cards in a 2×2 grid with shared hairline borders.
-    Each illustration is inline SVG drawn with 1px lines; motion is CSS and pauses while a card is off screen.
-  -->
+  <!-- Services: four cards in a 2×2 grid. Each illustration is a canvas drawn by static/js/illustrations.js. -->
   <section class="services" id="services" aria-labelledby="services-title" data-rail-label="Services">
     <div class="column">
       <h2 class="services__title" id="services-title"><span class="muted">What we</span> offer.</h2>

@@ -342,7 +342,6 @@
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) { cancelAnimationFrame(raf); raf = 0; } else if (live.length && !raf) raf = requestAnimationFrame(tick);
     });
-    window.__illo = { items: items, render: render };   // handy for debugging / screenshots
   }
 
   // wait for the page font so text is measured and drawn correctly
