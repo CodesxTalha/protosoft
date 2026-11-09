@@ -192,10 +192,10 @@ a { color: inherit; }
 
 .card__art { margin: 0 0 18px; }
 
-.card__img {
+.card__canvas {
   display: block;
   width: 100%;
-  height: auto;
+  aspect-ratio: 7 / 4;   /* matches the 280x160 design space in illustrations.js */
 }
 
 .card__head {
