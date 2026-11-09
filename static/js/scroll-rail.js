@@ -43,7 +43,7 @@
     return idx;
   }
 
-  // Cursor y on the rail → the scroll position it stands for
+  // Cursor y on the rail, converted to the scroll position it stands for
   function scrollForY(clientY) {
     var y = clientY - track.getBoundingClientRect().top - THUMB / 2;
     return Math.max(0, Math.min(1, travel ? y / travel : 0)) * maxScroll;
