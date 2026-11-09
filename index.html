@@ -12,6 +12,7 @@
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.css">
   <link rel="stylesheet" href="static/css/main.css">
+  <link rel="stylesheet" href="static/css/process.css">
   <link rel="stylesheet" href="static/css/rail.css">
   <link rel="stylesheet" href="static/css/responsive.css">
 </head>
@@ -115,6 +116,75 @@
     </div>
   </section>
 
+  <!-- Process: sticky ring (built by static/js/process.js) beside a timeline of steps. -->
+  <section class="process" id="process" aria-labelledby="process-title" data-rail-label="Process">
+    <div class="column">
+      <h2 class="process__title" id="process-title"><span class="muted">How we</span> work.</h2>
+
+      <div class="process__body">
+        <aside class="process__ring" aria-hidden="true"></aside>
+
+        <div class="timeline">
+          <div class="tl-rail" aria-hidden="true"><span class="tl-rail__fill"></span><span class="tl-rail__dot"></span></div>
+        <ol class="steps">
+        <li class="step" data-name="Discovery">
+          <span class="step__node" aria-hidden="true"></span>
+          <div class="step__card">
+            <span class="step__no">Step 01</span>
+            <h3 class="step__title">Discovery</h3>
+            <p class="step__desc">We start with a call to understand your business, audience and goals, then agree on scope, timeline and budget.</p>
+          </div>
+        </li>
+
+        <li class="step" data-name="Planning">
+          <span class="step__node" aria-hidden="true"></span>
+          <div class="step__card">
+            <span class="step__no">Step 02</span>
+            <h3 class="step__title">Planning</h3>
+            <p class="step__desc">We turn what we learned into a clear plan: pages and features, content structure, timeline and milestones, so everyone agrees before design begins.</p>
+          </div>
+        </li>
+        <li class="step" data-name="Design">
+          <span class="step__node" aria-hidden="true"></span>
+          <div class="step__card">
+            <span class="step__no">Step 03</span>
+            <h3 class="step__title">Design</h3>
+            <p class="step__desc">Brand, layout and key screens are designed first and shared for feedback, so the direction is settled before any code is written.</p>
+          </div>
+        </li>
+
+        <li class="step" data-name="Development">
+          <span class="step__node" aria-hidden="true"></span>
+          <div class="step__card">
+            <span class="step__no">Step 04</span>
+            <h3 class="step__title">Development</h3>
+            <p class="step__desc">We build your website or app with clean, fast code, share regular previews, and test it on real devices.</p>
+          </div>
+        </li>
+
+        <li class="step" data-name="Launch">
+          <span class="step__node" aria-hidden="true"></span>
+          <div class="step__card">
+            <span class="step__no">Step 05</span>
+            <h3 class="step__title">Launch</h3>
+            <p class="step__desc">Final checks, domain and hosting setup, and a smooth go-live, with a walkthrough so your team can manage it.</p>
+          </div>
+        </li>
+
+        <li class="step" data-name="Support">
+          <span class="step__node" aria-hidden="true"></span>
+          <div class="step__card">
+            <span class="step__no">Step 06</span>
+            <h3 class="step__title">Support</h3>
+            <p class="step__desc">After launch we stay close with fixes, updates and improvements, plus marketing and automation when you are ready to grow.</p>
+          </div>
+        </li>
+        </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Scroll rail (desktop). Sections are any element with data-rail-label. -->
   <div class="rail" aria-hidden="true">
     <div class="rail__track"><div class="rail__thumb"></div></div>
@@ -125,6 +195,7 @@
   <script src="static/js/smooth-scroll.js" defer></script>
   <script src="static/js/hero-grid.js" defer></script>
   <script src="static/js/illustrations.js" defer></script>
+  <script src="static/js/process.js" defer></script>
   <script src="static/js/scroll-rail.js" defer></script>
 </body>
 </html>

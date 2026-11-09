@@ -167,7 +167,8 @@ a { color: inherit; }
 }
 
 /* Services use a wider column than the hero (no effect below ~960px) */
-.services .column { max-width: var(--services-width); }
+.services .column,
+.process .column { max-width: var(--services-width); }
 
 /* Cards: flat rounded tiles in the same light fill as the buttons */
 .cards {

@@ -1,6 +1,8 @@
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .step__card, .step__node, .step__no, .step__title, .step__desc,
+  .rdot, .rdot circle, .rdot text { transition: none; }
 }
 
 /* ---------- Small screens ---------- */
@@ -12,4 +14,9 @@
 
 @media (max-width: 560px) {
   .cards { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 800px) {
+  .process__body { grid-template-columns: minmax(0, 1fr); }
+  .process__ring { display: none; }
 }
