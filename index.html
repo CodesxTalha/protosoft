@@ -1,0 +1,950 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Protosoft — Websites, apps and automation from Islamabad</title>
+  <meta name="description" content="Protosoft is a small startup in Islamabad building websites, apps and automation, with design, development and marketing services.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ---------- Tokens ---------- */
+    :root {
+      --bg: #f0f0ee;
+      --surface: #fafafa;
+      --ink: #141414;
+      --ink-muted: #6a6a6a;
+      --btn-dark: #1f1f1f;
+      --line: rgba(20, 20, 20, .1);
+
+      --plus-on: #1f1f1f;
+
+      --font-sans: "Inter Tight", system-ui, -apple-system, sans-serif;
+
+      --radius: 8px;
+      --content-width: 700px;
+
+      /* Hero plus grid animation (script sets --speed) */
+      --speed: 1;
+      --tone-duration: calc(9s / var(--speed));
+      --fade-duration: calc(13s / var(--speed));
+    }
+
+    /* ---------- Base ---------- */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body { margin: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; }
+
+    /* Shared column used by every section */
+    .column {
+      width: 100%;
+      max-width: var(--content-width);
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    /* ---------- Layout ---------- */
+    .page {
+      display: flex;
+      flex-direction: column;
+      padding: 24px clamp(20px, 4vw, 48px) 0;
+    }
+
+    /* ---------- Nav ---------- */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .brand__mark {
+      display: block;
+      width: 15px;
+      height: 15px;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(72px, 15vh, 160px) 0 0;
+    }
+
+    .hero__title {
+      margin: 0;
+      font-weight: 500;
+      font-size: clamp(26px, 2.6vw, 32px);
+      line-height: 1.1;
+      letter-spacing: -0.035em;
+    }
+
+    .muted { color: var(--ink-muted); }
+
+    .lead {
+      margin: 0;
+      font-size: clamp(17px, 1.8vw, 21px);
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      color: var(--ink-muted);
+    }
+
+    .lead .hl { color: var(--ink); }
+
+    .hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* ---------- Buttons (flat, no shadows) ---------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 34px;
+      min-width: 112px;
+      padding: 0 22px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background-color .18s ease, color .18s ease;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--ink);
+      outline-offset: 2px;
+    }
+
+    .btn--sm {
+      min-height: 32px;
+      min-width: 0;
+      padding: 0 16px;
+      font-size: 13px;
+    }
+
+    .btn--light { background: var(--surface); color: var(--ink); }
+    .btn--light:hover { background: #fff; }
+
+    .btn--dark { background: var(--btn-dark); color: #fafafa; }
+    .btn--dark:hover { background: #000; }
+
+    /* ---------- Plus shape (shared) ---------- */
+    .plus-grid {
+      display: grid;
+      grid-template-columns: repeat(var(--cols, 20), minmax(0, 1fr));
+      width: 100%;
+    }
+
+    .plus-grid__cell {
+      aspect-ratio: 1 / 1;
+      display: grid;
+      place-items: center;
+    }
+
+    /*
+      The plus: one SVG symbol (#plus, top of <body>) used everywhere — logo, hero, services.
+      Both arms are the same stroke, so they're identical in length and thickness.
+      Size it with width only; it always stays square.
+    */
+    .plus {
+      display: block;
+      flex: none;
+      width: min(18px, 62%);
+      height: auto;
+      aspect-ratio: 1 / 1;
+      color: #dcdcdc;
+    }
+
+    /* Hero grid: only the gray tone moves */
+    .plus-grid--hero .plus {
+      animation:
+        plus-tone var(--tone-duration) ease-in-out var(--t, 0s) infinite,
+        plus-fade var(--fade-duration) ease-in-out var(--f, 0s) infinite;
+    }
+
+    @keyframes plus-tone {
+      0%, 100% { color: #f7f7f6; }
+      30%      { color: #c9c9c8; }
+      55%      { color: #3a3a3a; }
+      78%      { color: #a3a3a3; }
+    }
+
+    @keyframes plus-fade {
+      0%, 100% { opacity: .55; }
+      50%      { opacity: 1; }
+    }
+
+    /* ---------- Services ---------- */
+    .services {
+      display: flex;
+      justify-content: center;
+      padding: 112px clamp(20px, 4vw, 48px) 128px;
+    }
+
+    .services__title {
+      margin: 0;
+      font-weight: 500;
+      font-size: clamp(22px, 2.2vw, 26px);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    /* Cards: flat rounded tiles in the same light fill as the buttons */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      border-radius: 14px;
+      background: var(--surface);
+    }
+
+    .card__art { margin: 0 0 18px; }
+
+    .card__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .card__title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+
+    .card__num {
+      flex: none;
+      font-size: 13px;
+      color: var(--ink-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .card__desc {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--ink-muted);
+    }
+
+    /* ---------- Illustrations ---------- */
+    .illo {
+      display: block;
+      width: 100%;
+      height: auto;
+      font-family: var(--font-sans);
+    }
+
+    .illo .ln       { fill: none; stroke-width: 1; }
+    .illo .ln-ink   { stroke: var(--ink); }
+    .illo .ln-mid   { stroke: #a9a9a7; }
+    .illo .ln-soft  { stroke: #d0d0ce; }
+    .illo .fl-surface { fill: var(--surface); }
+    .illo .fl-soft  { fill: #e6e6e4; }
+    .illo .fl-mid   { fill: #d2d2d0; }
+    .illo .fl-ink   { fill: #1f1f1f; }
+
+    .illo .lbl {
+      font-size: 7.5px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      fill: #8a8a88;
+    }
+
+    .illo .lbl-inv { fill: #8f8f8d; }
+    .illo .txt     { font-size: 8.5px; font-weight: 500; fill: var(--ink); }
+    .illo .txt-inv { fill: #fafafa; }
+
+    /* Pause everything while a card is off screen */
+    .illo.is-paused,
+    .illo.is-paused * { animation-play-state: paused !important; }
+
+    /* Design: cursor selects the gray button, picks the black swatch, button turns black, cursor leaves */
+    .d-cursor { transform: translate(239px, 57px); opacity: 0; animation: d-cursor 7s cubic-bezier(.45, 0, .25, 1) infinite; }
+    .d-click  { transform-box: fill-box; transform-origin: 0 0; animation: d-click 7s ease infinite; }
+    .d-sel    { animation: d-sel 7s ease infinite; }
+    .d-btn    { fill: #1f1f1f; animation: d-btn 7s ease infinite; }
+    .d-ring   { transform-box: fill-box; transform-origin: center; animation: d-ring 7s ease infinite; }
+
+    @keyframes d-cursor {
+      0%, 6%   { transform: translate(262px, 150px); opacity: 0; }
+      10%      { opacity: 1; }
+      28%, 36% { transform: translate(126px, 119px); }
+      54%, 64% { transform: translate(239px, 57px); opacity: 1; }
+      80%, 100% { transform: translate(292px, 57px); opacity: 0; }
+    }
+    @keyframes d-click {
+      0%, 30%  { transform: scale(1); }
+      32%      { transform: scale(.8); }
+      34%, 57% { transform: scale(1); }
+      59%      { transform: scale(.8); }
+      61%, 100% { transform: scale(1); }
+    }
+    @keyframes d-sel {
+      0%, 32%  { opacity: 0; }
+      35%, 86% { opacity: 1; }
+      90%, 100% { opacity: 0; }
+    }
+    @keyframes d-btn {
+      0%, 59%  { fill: #c4c4c2; }
+      63%, 88% { fill: #1f1f1f; }
+      94%, 100% { fill: #c4c4c2; }
+    }
+    @keyframes d-ring {
+      0%, 58%  { opacity: 0; transform: scale(.75); }
+      62%, 88% { opacity: 1; transform: scale(1); }
+      94%, 100% { opacity: 0; transform: scale(1); }
+    }
+
+    /* Websites & apps: chart draws in, phone list steps up one row at a time */
+    .a-spark { stroke-dasharray: 100; animation: a-draw 6s ease-in-out infinite; }
+    .a-dot   { animation: a-dot 6s ease-in-out infinite; }
+    .a-list  { animation: a-scroll 8s cubic-bezier(.6, 0, .2, 1) infinite; }
+
+    @keyframes a-draw {
+      0%       { stroke-dashoffset: 100; opacity: 1; }
+      45%, 84% { stroke-dashoffset: 0; opacity: 1; }
+      94%      { stroke-dashoffset: 0; opacity: 0; }
+      100%     { stroke-dashoffset: 100; opacity: 0; }
+    }
+    @keyframes a-dot {
+      0%, 42%  { opacity: 0; }
+      48%, 84% { opacity: 1; }
+      94%, 100% { opacity: 0; }
+    }
+    @keyframes a-scroll {
+      0%, 18%  { transform: translateY(0); }
+      25%, 43% { transform: translateY(-20px); }
+      50%, 68% { transform: translateY(-40px); }
+      75%, 93% { transform: translateY(-60px); }
+      100%     { transform: translateY(-80px); }
+    }
+
+    /* Automation: a message arrives, the agent types and replies, actions tick off */
+    .b-unread { fill: #d2d2d0; animation: b-unread 6s ease infinite; }
+    .b-in     { animation: b-in 6s cubic-bezier(.3, 0, .2, 1) infinite; }
+    .b-typing { opacity: 0; animation: b-typing 6s ease infinite; }
+    .b-dot    { animation: b-dot 1s ease-in-out infinite; }
+    .b-dot-2  { animation-delay: .15s; }
+    .b-dot-3  { animation-delay: .3s; }
+    .b-reply  { animation: b-reply 6s cubic-bezier(.3, 0, .2, 1) infinite; }
+    .b-thanks { animation: b-thanks 6s cubic-bezier(.3, 0, .2, 1) infinite; }
+    .b-chip   { animation: b-chip 6s cubic-bezier(.3, 0, .2, 1) infinite; }
+    .b-chip-2 { animation-name: b-chip-2; }
+    .b-chip-3 { animation-name: b-chip-3; }
+
+    @keyframes b-unread {
+      0%, 6%   { fill: #1f1f1f; }
+      10%, 88% { fill: #d2d2d0; }
+      94%, 100% { fill: #1f1f1f; }
+    }
+    @keyframes b-in {
+      0%, 3%   { opacity: 0; transform: translateY(6px); }
+      9%, 88%  { opacity: 1; transform: none; }
+      94%, 100% { opacity: 0; transform: none; }
+    }
+    @keyframes b-typing {
+      0%, 12%  { opacity: 0; }
+      15%, 30% { opacity: 1; }
+      32%, 100% { opacity: 0; }
+    }
+    @keyframes b-dot {
+      0%, 100% { opacity: .35; }
+      50%      { opacity: 1; }
+    }
+    @keyframes b-reply {
+      0%, 31%  { opacity: 0; transform: translateY(6px); }
+      36%, 88% { opacity: 1; transform: none; }
+      94%, 100% { opacity: 0; transform: none; }
+    }
+    @keyframes b-thanks {
+      0%, 70%  { opacity: 0; transform: translateY(6px); }
+      75%, 88% { opacity: 1; transform: none; }
+      94%, 100% { opacity: 0; transform: none; }
+    }
+    @keyframes b-chip {
+      0%, 38%  { opacity: 0; transform: translateX(-6px); }
+      44%, 88% { opacity: 1; transform: none; }
+      94%, 100% { opacity: 0; transform: none; }
+    }
+    @keyframes b-chip-2 {
+      0%, 48%  { opacity: 0; transform: translateX(-6px); }
+      54%, 88% { opacity: 1; transform: none; }
+      94%, 100% { opacity: 0; transform: none; }
+    }
+    @keyframes b-chip-3 {
+      0%, 58%  { opacity: 0; transform: translateX(-6px); }
+      64%, 88% { opacity: 1; transform: none; }
+      94%, 100% { opacity: 0; transform: none; }
+    }
+
+    /* Social: reel plays, heart pops, likes count up fast (script), chips slide in with the same totals, a post gets scheduled */
+    .s-progress { transform-box: fill-box; transform-origin: left center; transform: scaleX(.62); animation: s-progress 6s linear infinite; }
+    .s-heart    { transform-box: fill-box; transform-origin: center; animation: s-heart 6s ease infinite; }
+    .illo .s-likes, .illo .s-num { font-variant-numeric: tabular-nums; }
+    .s-chip     { animation: s-chip 6s cubic-bezier(.3, 0, .2, 1) infinite; }
+    .s-chip-2   { animation-name: s-chip-2; }
+    .s-chip-3   { animation-name: s-chip-3; }
+    .s-slot     { fill: #1f1f1f; transform-box: fill-box; transform-origin: center; animation: s-slot 6s ease infinite; }
+
+    @keyframes s-progress {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+    @keyframes s-heart {
+      0%, 12%  { transform: scale(0); }
+      17%      { transform: scale(1.25); }
+      21%, 88% { transform: scale(1); }
+      94%, 100% { transform: scale(0); }
+    }
+    @keyframes s-chip {
+      0%, 29%  { opacity: 0; transform: translateX(-6px); }
+      35%, 88% { opacity: 1; transform: none; }
+      94%, 100% { opacity: 0; transform: none; }
+    }
+    @keyframes s-chip-2 {
+      0%, 39%  { opacity: 0; transform: translateX(-6px); }
+      45%, 88% { opacity: 1; transform: none; }
+      94%, 100% { opacity: 0; transform: none; }
+    }
+    @keyframes s-chip-3 {
+      0%, 49%  { opacity: 0; transform: translateX(-6px); }
+      55%, 88% { opacity: 1; transform: none; }
+      94%, 100% { opacity: 0; transform: none; }
+    }
+    @keyframes s-slot {
+      0%, 60%  { fill: #e6e6e4; transform: scale(1); }
+      64%      { fill: #1f1f1f; transform: scale(1.2); }
+      68%, 88% { fill: #1f1f1f; transform: scale(1); }
+      94%, 100% { fill: #e6e6e4; transform: scale(1); }
+    }
+
+    /* ---------- Reduced motion ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .plus-grid--hero .plus { animation: none; color: #bcbcbc; }
+      .illo, .illo * { animation: none !important; }
+    }
+
+    /* ---------- Small screens ---------- */
+    @media (max-width: 480px) {
+      .hero { padding: 64px 0 0; }
+      .column { gap: 18px; }
+      .services { padding: 88px 20px 96px; }
+    }
+
+    @media (max-width: 560px) {
+      .cards { grid-template-columns: minmax(0, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Master plus icon. Use it with: <svg class="plus"><use href="#plus"></use></svg> -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="plus" viewBox="0 0 24 24">
+      <path d="M12 2.5v19M2.5 12h19" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+    </symbol>
+  </svg>
+
+  <div class="page">
+
+    <header class="nav">
+      <a class="brand" href="/" aria-label="Protosoft home">
+        <svg class="brand__mark" aria-hidden="true"><use href="#plus"></use></svg>
+        Protosoft
+      </a>
+      <a class="btn btn--light btn--sm" href="#contact">Book a call</a>
+    </header>
+
+    <main class="hero">
+      <div class="column">
+        <h1 class="hero__title"><span class="muted">Hi, we're</span> Protosoft.</h1>
+
+        <!-- Filled by the script. Change data-cols / data-rows / data-speed to tune it. -->
+        <div class="plus-grid plus-grid--hero" data-cols="20" data-rows="7" data-speed="1" aria-hidden="true"></div>
+
+        <p class="lead">
+          We're a small startup based in Islamabad, building
+          <span class="hl">websites</span>, <span class="hl">apps</span> and
+          <span class="hl">automation</span>, with design, development and
+          marketing services to take you from idea to launch.
+        </p>
+
+        <div class="hero__actions">
+          <a class="btn btn--light" href="#contact">Book a call</a>
+          <a class="btn btn--dark" href="#services">Services <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <!--
+    Services: four cards in a 2×2 grid with shared hairline borders.
+    Each illustration is inline SVG drawn with 1px lines; motion is CSS and pauses while a card is off screen.
+  -->
+  <section class="services" id="services" aria-labelledby="services-title">
+    <div class="column">
+      <h2 class="services__title" id="services-title"><span class="muted">What we</span> offer.</h2>
+
+      <ul class="cards">
+
+        <!-- 01 Design -->
+        <li class="card">
+          <div class="card__art">
+            <svg class="illo" viewBox="0 0 280 160" aria-hidden="true">
+              <g transform="translate(6 0)">
+              <!-- Type specimen -->
+              <line class="ln ln-soft" x1="16" y1="69.5" x2="58" y2="69.5" stroke-dasharray="2 2" />
+              <line class="ln ln-soft" x1="16" y1="88.5" x2="58" y2="88.5" stroke-dasharray="2 2" />
+              <text x="20" y="88" font-size="26" font-weight="500" letter-spacing="-0.6" fill="#141414">Aa</text>
+              <text class="lbl" x="20" y="104">Type</text>
+
+              <!-- Artboard -->
+              <text class="lbl" x="76" y="16">Frame · 1440</text>
+              <rect class="ln ln-ink fl-surface" x="76.5" y="22.5" width="128" height="112" rx="6" />
+              <circle class="fl-mid" cx="92" cy="40" r="6" />
+              <rect class="fl-mid" x="104" y="35" width="52" height="4" rx="2" />
+              <rect class="fl-soft" x="104" y="43" width="32" height="3" rx="1.5" />
+              <rect class="fl-soft" x="86" y="56" width="108" height="40" rx="4" />
+              <circle fill="#dcdcda" cx="104" cy="69" r="5" />
+              <path fill="#d2d2d0" d="M90 92 L112 74 L126 84 L146 66 L190 92 Z" />
+              <rect class="d-btn" x="86" y="108" width="46" height="14" rx="4" />
+              <rect fill="#fafafa" x="97" y="114" width="24" height="2" rx="1" />
+              <rect class="fl-mid" x="140" y="113.5" width="32" height="3" rx="1.5" />
+
+              <!-- Selection on the button -->
+              <g class="d-sel">
+                <rect class="ln ln-ink" x="83.5" y="105.5" width="52" height="20" />
+                <rect class="ln ln-ink fl-surface" x="81.5" y="103.5" width="4" height="4" />
+                <rect class="ln ln-ink fl-surface" x="133.5" y="103.5" width="4" height="4" />
+                <rect class="ln ln-ink fl-surface" x="81.5" y="123.5" width="4" height="4" />
+                <rect class="ln ln-ink fl-surface" x="133.5" y="123.5" width="4" height="4" />
+                <rect class="fl-ink" x="92" y="131" width="35" height="11" rx="2.5" />
+                <text x="109.5" y="138.8" font-size="7" font-weight="500" fill="#fafafa" text-anchor="middle">46 × 14</text>
+              </g>
+
+              <!-- Swatches -->
+              <circle class="fl-ink" cx="240" cy="56" r="8" />
+              <circle fill="#8f8f8d" cx="240" cy="78" r="8" />
+              <circle class="ln ln-mid" fill="#e6e6e4" cx="240" cy="100" r="7.5" />
+              <circle class="ln ln-ink d-ring" cx="240" cy="56" r="11.5" />
+              <text class="lbl" x="240" y="128" text-anchor="middle">Color</text>
+
+              <!-- Cursor -->
+              <g class="d-cursor">
+                <g class="d-click">
+                  <path class="fl-ink" stroke="#fafafa" stroke-width=".8" stroke-linejoin="round" d="M0 0 L0 13 L3.6 9.9 L6.1 15.2 L8.3 14.2 L5.9 9.1 L10.4 9 Z" />
+                </g>
+              </g>
+              </g>
+            </svg>
+          </div>
+          <div class="card__head">
+            <h3 class="card__title">Design</h3>
+            <span class="card__num">01</span>
+          </div>
+          <p class="card__desc">Brand identity, UI and UX: the look and feel, worked out before a line of code.</p>
+        </li>
+
+        <!-- 02 Websites & apps -->
+        <li class="card">
+          <div class="card__art">
+            <svg class="illo" viewBox="0 0 280 160" aria-hidden="true">
+              <g transform="translate(11 0)">
+              <defs>
+                <clipPath id="a-screen"><rect x="182" y="57" width="52" height="84" rx="2" /></clipPath>
+              </defs>
+
+              <!-- Browser / dashboard -->
+              <rect class="ln ln-ink fl-surface" x="18.5" y="16.5" width="186" height="122" rx="6" />
+              <line class="ln ln-soft" x1="19" y1="32.5" x2="204" y2="32.5" />
+              <circle class="fl-mid" cx="29" cy="24.5" r="2.2" />
+              <circle class="fl-mid" cx="37" cy="24.5" r="2.2" />
+              <circle class="fl-mid" cx="45" cy="24.5" r="2.2" />
+              <rect class="fl-soft" x="62" y="20.5" width="96" height="8" rx="4" />
+              <line class="ln ln-soft" x1="58.5" y1="33" x2="58.5" y2="138" />
+              <rect class="fl-ink" x="26" y="44" width="22" height="3" rx="1.5" />
+              <rect class="fl-mid" x="26" y="54" width="18" height="3" rx="1.5" />
+              <rect class="fl-mid" x="26" y="64" width="20" height="3" rx="1.5" />
+              <rect class="fl-mid" x="26" y="74" width="14" height="3" rx="1.5" />
+
+              <rect class="fl-mid" x="66" y="42" width="44" height="4" rx="2" />
+              <rect class="ln ln-soft" x="66.5" y="52.5" width="46" height="26" rx="3" />
+              <rect class="fl-mid" x="72" y="58" width="18" height="2.5" rx="1.25" />
+              <rect class="fl-ink" x="72" y="66" width="26" height="6" rx="1.5" />
+              <rect class="ln ln-soft" x="118.5" y="52.5" width="46" height="26" rx="3" />
+              <rect class="fl-mid" x="124" y="58" width="18" height="2.5" rx="1.25" />
+              <rect class="fl-mid" x="124" y="66" width="22" height="6" rx="1.5" />
+
+              <rect class="ln ln-soft" x="66.5" y="84.5" width="98" height="46" rx="3" />
+              <line class="ln ln-soft" x1="67" y1="100.5" x2="164" y2="100.5" stroke-dasharray="2 3" />
+              <line class="ln ln-soft" x1="67" y1="115.5" x2="164" y2="115.5" stroke-dasharray="2 3" />
+              <polyline class="ln ln-ink a-spark" pathLength="100" stroke-linejoin="round" stroke-linecap="round"
+                points="72,124 84,117 96,120 108,108 120,111 132,99 144,102 157,92" />
+              <circle class="fl-ink a-dot" cx="157" cy="92" r="2.4" />
+
+              <!-- Phone -->
+              <rect class="ln ln-ink fl-surface" x="176.5" y="42.5" width="64" height="106" rx="10" />
+              <rect class="fl-mid" x="200" y="47" width="17" height="4" rx="2" />
+              <g clip-path="url(#a-screen)">
+                <g class="a-list">
+                  <g><circle class="fl-mid" cx="190" cy="66" r="4" /><rect class="fl-mid" x="198" y="62.5" width="28" height="3" rx="1.5" /><rect class="fl-soft" x="198" y="67.5" width="18" height="2.5" rx="1.25" /></g>
+                  <g><circle class="fl-ink" cx="190" cy="86" r="4" /><rect class="fl-mid" x="198" y="82.5" width="22" height="3" rx="1.5" /><rect class="fl-soft" x="198" y="87.5" width="14" height="2.5" rx="1.25" /></g>
+                  <g><circle class="fl-mid" cx="190" cy="106" r="4" /><rect class="fl-mid" x="198" y="102.5" width="30" height="3" rx="1.5" /><rect class="fl-soft" x="198" y="107.5" width="20" height="2.5" rx="1.25" /></g>
+                  <g><circle class="fl-mid" cx="190" cy="126" r="4" /><rect class="fl-mid" x="198" y="122.5" width="18" height="3" rx="1.5" /><rect class="fl-soft" x="198" y="127.5" width="12" height="2.5" rx="1.25" /></g>
+                  <g><circle class="fl-mid" cx="190" cy="146" r="4" /><rect class="fl-mid" x="198" y="142.5" width="28" height="3" rx="1.5" /><rect class="fl-soft" x="198" y="147.5" width="18" height="2.5" rx="1.25" /></g>
+                  <g><circle class="fl-ink" cx="190" cy="166" r="4" /><rect class="fl-mid" x="198" y="162.5" width="22" height="3" rx="1.5" /><rect class="fl-soft" x="198" y="167.5" width="14" height="2.5" rx="1.25" /></g>
+                  <g><circle class="fl-mid" cx="190" cy="186" r="4" /><rect class="fl-mid" x="198" y="182.5" width="30" height="3" rx="1.5" /><rect class="fl-soft" x="198" y="187.5" width="20" height="2.5" rx="1.25" /></g>
+                  <g><circle class="fl-mid" cx="190" cy="206" r="4" /><rect class="fl-mid" x="198" y="202.5" width="18" height="3" rx="1.5" /><rect class="fl-soft" x="198" y="207.5" width="12" height="2.5" rx="1.25" /></g>
+                  <g><circle class="fl-mid" cx="190" cy="226" r="4" /><rect class="fl-mid" x="198" y="222.5" width="28" height="3" rx="1.5" /><rect class="fl-soft" x="198" y="227.5" width="18" height="2.5" rx="1.25" /></g>
+                </g>
+              </g>
+              <rect class="fl-mid" x="200" y="143" width="17" height="2" rx="1" />
+
+              <text class="lbl" x="18" y="158">Web app</text>
+              <text class="lbl" x="208.5" y="158" text-anchor="middle">Mobile</text>
+              </g>
+            </svg>
+          </div>
+          <div class="card__head">
+            <h3 class="card__title">Websites &amp; Apps</h3>
+            <span class="card__num">02</span>
+          </div>
+          <p class="card__desc">Marketing sites, web and mobile apps and custom software, shipped fast.</p>
+        </li>
+
+        <!-- 03 Automation -->
+        <li class="card">
+          <div class="card__art">
+            <svg class="illo" viewBox="0 0 280 160" aria-hidden="true">
+              <!-- Inbox -->
+              <g>
+                <rect class="ln ln-soft fl-surface" x="18.5" y="51.5" width="58" height="16" rx="5" />
+                <circle class="fl-mid" cx="27.5" cy="59.5" r="3.5" />
+                <rect class="fl-mid" x="35" y="58.25" width="26" height="2.5" rx="1.25" />
+                <circle class="b-unread" cx="69" cy="59.5" r="2" />
+
+                <rect class="ln ln-soft fl-surface" x="18.5" y="71.5" width="58" height="16" rx="5" />
+                <circle class="fl-mid" cx="27.5" cy="79.5" r="3.5" />
+                <rect class="fl-mid" x="35" y="78.25" width="20" height="2.5" rx="1.25" />
+                <circle class="fl-ink" cx="69" cy="79.5" r="2" />
+
+                <rect class="ln ln-soft fl-surface" x="18.5" y="91.5" width="58" height="16" rx="5" />
+                <circle class="fl-mid" cx="27.5" cy="99.5" r="3.5" />
+                <rect class="fl-mid" x="35" y="98.25" width="24" height="2.5" rx="1.25" />
+                <circle class="fl-mid" cx="69" cy="99.5" r="2" />
+              </g>
+              <text class="lbl" x="18" y="126">Inbox</text>
+
+              <!-- Agent chat -->
+              <rect class="ln ln-ink fl-surface" x="88.5" y="12.5" width="103" height="135" rx="10" />
+              <rect class="fl-ink" x="96" y="19" width="11" height="11" rx="3.5" />
+              <path fill="#fafafa" d="M101.5 21.3 C101.85 23.3 102.7 24.15 104.7 24.5 C102.7 24.85 101.85 25.7 101.5 27.7 C101.15 25.7 100.3 24.85 98.3 24.5 C100.3 24.15 101.15 23.3 101.5 21.3 Z" />
+              <text class="txt" x="112" y="27.3" font-size="8">AI agent</text>
+              <line class="ln ln-soft" x1="89" y1="36.5" x2="191" y2="36.5" />
+
+              <!-- User message (dark, right) -->
+              <g class="b-in">
+                <rect class="fl-ink" x="122" y="44" width="62" height="20" rx="7" />
+                <rect fill="#fafafa" x="128" y="50" width="46" height="2.5" rx="1.25" />
+                <rect fill="#8f8f8d" x="128" y="56" width="30" height="2.5" rx="1.25" />
+              </g>
+
+              <!-- Agent typing, then replying (light, left) -->
+              <g class="b-typing">
+                <rect class="fl-soft" x="96" y="70" width="26" height="14" rx="7" />
+                <circle class="b-dot b-dot-1" cx="103" cy="77" r="1.4" fill="#8f8f8d" />
+                <circle class="b-dot b-dot-2" cx="109" cy="77" r="1.4" fill="#8f8f8d" />
+                <circle class="b-dot b-dot-3" cx="115" cy="77" r="1.4" fill="#8f8f8d" />
+              </g>
+              <g class="b-reply">
+                <rect class="fl-soft" x="96" y="70" width="62" height="26" rx="7" />
+                <rect class="fl-mid" x="102" y="76" width="46" height="2.5" rx="1.25" />
+                <rect class="fl-mid" x="102" y="82" width="38" height="2.5" rx="1.25" />
+                <rect fill="#dcdcda" x="102" y="88" width="24" height="2.5" rx="1.25" />
+              </g>
+
+              <!-- User again -->
+              <g class="b-thanks">
+                <rect class="fl-ink" x="146" y="102" width="38" height="14" rx="7" />
+                <rect fill="#fafafa" x="152" y="107.75" width="24" height="2.5" rx="1.25" />
+              </g>
+
+              <!-- Composer -->
+              <rect class="ln ln-soft" x="96.5" y="128.5" width="88" height="12" rx="6" />
+              <rect class="fl-soft" x="102" y="133.25" width="30" height="2.5" rx="1.25" />
+              <circle class="fl-ink" cx="178.5" cy="134.5" r="4" />
+              <path fill="none" stroke="#fafafa" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" d="M178.5 136.6 V132.5 M176.8 134.2 L178.5 132.5 L180.2 134.2" />
+
+              <!-- Done -->
+              <g class="b-chip b-chip-1">
+                <rect class="ln ln-soft fl-surface" x="208.5" y="51.5" width="54" height="18" rx="9" />
+                <circle class="fl-ink" cx="218.5" cy="60.5" r="4" />
+                <path fill="none" stroke="#fafafa" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" d="M216.6 60.6 L218 62 L220.5 59.2" />
+                <text class="txt" x="227" y="63.5">Replied</text>
+              </g>
+              <g class="b-chip b-chip-2">
+                <rect class="ln ln-soft fl-surface" x="208.5" y="73.5" width="54" height="18" rx="9" />
+                <circle class="fl-ink" cx="218.5" cy="82.5" r="4" />
+                <path fill="none" stroke="#fafafa" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" d="M216.6 82.6 L218 84 L220.5 81.2" />
+                <text class="txt" x="227" y="85.5">In CRM</text>
+              </g>
+              <g class="b-chip b-chip-3">
+                <rect class="ln ln-soft fl-surface" x="208.5" y="95.5" width="54" height="18" rx="9" />
+                <circle class="fl-ink" cx="218.5" cy="104.5" r="4" />
+                <path fill="none" stroke="#fafafa" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" d="M216.6 104.6 L218 106 L220.5 103.2" />
+                <text class="txt" x="227" y="107.5">Booked</text>
+              </g>
+              <text class="lbl" x="208" y="126">Done</text>
+            </svg>
+          </div>
+          <div class="card__head">
+            <h3 class="card__title">Automation</h3>
+            <span class="card__num">03</span>
+          </div>
+          <p class="card__desc">AI agents and workflows that answer, sort and follow up while you sleep.</p>
+        </li>
+
+        <!-- 04 Marketing -->
+        <li class="card">
+          <div class="card__art">
+            <svg class="illo" viewBox="0 0 280 160" aria-hidden="true">
+              <!-- Content calendar -->
+              <g>
+                <rect class="fl-mid"  x="18" y="54" width="10" height="10" rx="3" />
+                <rect class="fl-soft" x="32" y="54" width="10" height="10" rx="3" />
+                <rect class="fl-ink"  x="46" y="54" width="10" height="10" rx="3" />
+                <rect class="fl-soft" x="60" y="54" width="10" height="10" rx="3" />
+                <rect class="fl-soft" x="18" y="68" width="10" height="10" rx="3" />
+                <rect class="fl-mid"  x="32" y="68" width="10" height="10" rx="3" />
+                <rect class="fl-soft" x="46" y="68" width="10" height="10" rx="3" />
+                <rect class="fl-ink"  x="60" y="68" width="10" height="10" rx="3" />
+                <rect class="fl-ink"  x="18" y="82" width="10" height="10" rx="3" />
+                <rect class="fl-soft" x="32" y="82" width="10" height="10" rx="3" />
+                <rect class="fl-mid"  x="46" y="82" width="10" height="10" rx="3" />
+                <rect class="fl-soft" x="60" y="82" width="10" height="10" rx="3" />
+                <rect class="fl-soft" x="18" y="96" width="10" height="10" rx="3" />
+                <rect class="fl-soft s-slot" x="32" y="96" width="10" height="10" rx="3" />
+                <rect class="fl-soft" x="46" y="96" width="10" height="10" rx="3" />
+                <rect class="fl-soft" x="60" y="96" width="10" height="10" rx="3" />
+              </g>
+              <text class="lbl" x="18" y="126">Calendar</text>
+
+              <!-- Post -->
+              <rect class="ln ln-ink fl-surface" x="88.5" y="12.5" width="103" height="135" rx="10" />
+              <circle class="fl-ink" cx="101" cy="26" r="6" />
+              <rect class="fl-mid" x="112" y="21.5" width="36" height="3.5" rx="1.75" />
+              <rect class="fl-soft" x="112" y="28" width="22" height="2.5" rx="1.25" />
+              <g class="fl-mid"><circle cx="174" cy="26" r="1.1" /><circle cx="178" cy="26" r="1.1" /><circle cx="182" cy="26" r="1.1" /></g>
+
+              <rect class="fl-soft" x="96" y="38" width="88" height="66" rx="5" />
+              <circle fill="#fafafa" cx="140" cy="69" r="10" />
+              <path class="fl-ink" d="M137.2 64.6 L144.6 69 L137.2 73.4 Z" stroke="#1f1f1f" stroke-width="1" stroke-linejoin="round" />
+              <rect fill="#d2d2d0" x="102" y="97" width="76" height="2" rx="1" />
+              <rect class="fl-ink s-progress" x="102" y="97" width="76" height="2" rx="1" />
+
+              <!-- Actions -->
+              <g transform="translate(96 110)">
+                <path class="ln ln-ink" stroke-linejoin="round" d="M5 9 C5 9 0 5.8 0 2.8 C0 1.2 1.2 0 2.7 0 C3.7 0 4.5 .6 5 1.4 C5.5 .6 6.3 0 7.3 0 C8.8 0 10 1.2 10 2.8 C10 5.8 5 9 5 9 Z" />
+                <path class="fl-ink s-heart" d="M5 9 C5 9 0 5.8 0 2.8 C0 1.2 1.2 0 2.7 0 C3.7 0 4.5 .6 5 1.4 C5.5 .6 6.3 0 7.3 0 C8.8 0 10 1.2 10 2.8 C10 5.8 5 9 5 9 Z" />
+              </g>
+              <circle class="ln ln-ink" cx="118.5" cy="114.5" r="4.5" />
+              <path class="ln ln-ink fl-surface" stroke-linejoin="round" d="M115.4 117.6 L114.2 120 L117 118.9" />
+              <path class="ln ln-ink" stroke-linejoin="round" d="M128.5 110.5 L138.5 114.5 L128.5 118.5 L130.5 114.5 Z" />
+              <path class="ln ln-ink" stroke-linejoin="round" d="M178.5 110.5 H184.5 V119.5 L181.5 117 L178.5 119.5 Z" />
+
+              <text class="txt s-likes" x="96" y="133" font-size="7.5">1,284 likes</text>
+              <rect class="fl-soft" x="96" y="138" width="64" height="2.5" rx="1.25" />
+
+              <!-- Engagement chips -->
+              <g class="s-chip s-chip-1">
+                <rect class="ln ln-soft fl-surface" x="208.5" y="51.5" width="54" height="18" rx="9" />
+                <path class="fl-ink" transform="translate(216 57) scale(.7)" d="M5 9 C5 9 0 5.8 0 2.8 C0 1.2 1.2 0 2.7 0 C3.7 0 4.5 .6 5 1.4 C5.5 .6 6.3 0 7.3 0 C8.8 0 10 1.2 10 2.8 C10 5.8 5 9 5 9 Z" />
+                <text class="txt s-num" x="228" y="63.5">1,284</text>
+              </g>
+              <g class="s-chip s-chip-2">
+                <rect class="ln ln-soft fl-surface" x="208.5" y="73.5" width="54" height="18" rx="9" />
+                <circle class="ln ln-ink" cx="219.5" cy="80.6" r="1.9" />
+                <path class="ln ln-ink" stroke-linecap="round" d="M216.4 86.3 C216.9 84.4 218 83.6 219.5 83.6 C221 83.6 222.1 84.4 222.6 86.3" />
+                <text class="txt" x="228" y="85.5">54</text>
+              </g>
+              <g class="s-chip s-chip-3">
+                <rect class="ln ln-soft fl-surface" x="208.5" y="95.5" width="54" height="18" rx="9" />
+                <circle class="ln ln-ink" cx="219.5" cy="104.2" r="3.3" />
+                <path class="ln ln-ink fl-surface" stroke-linejoin="round" d="M217.2 106.5 L216.4 108.2 L218.4 107.4" />
+                <text class="txt" x="228" y="107.5">90</text>
+              </g>
+              <text class="lbl" x="208" y="126">Reach</text>
+            </svg>
+          </div>
+          <div class="card__head">
+            <h3 class="card__title">Marketing</h3>
+            <span class="card__num">04</span>
+          </div>
+          <p class="card__desc">Social media content, campaigns and community that grow your audience.</p>
+        </li>
+
+      </ul>
+    </div>
+  </section>
+
+  <script>
+    /* ---------- Shared: one plus icon from the #plus symbol ---------- */
+    var SVG_NS = 'http://www.w3.org/2000/svg';
+    function makePlus() {
+      var svg = document.createElementNS(SVG_NS, 'svg');
+      svg.setAttribute('class', 'plus');
+      svg.setAttribute('aria-hidden', 'true');
+      var use = document.createElementNS(SVG_NS, 'use');
+      use.setAttribute('href', '#plus');
+      svg.appendChild(use);
+      return svg;
+    }
+
+    /* ---------- Shared: build a grid of plus cells ---------- */
+    function buildPlusGrid(grid, cols, rows, decorate) {
+      grid.style.setProperty('--cols', cols);
+      var frag = document.createDocumentFragment();
+      for (var r = 0; r < rows; r++) {
+        for (var c = 0; c < cols; c++) {
+          var cell = document.createElement('div');
+          cell.className = 'plus-grid__cell';
+          var plus = makePlus();
+          decorate(plus, r, c);
+          cell.appendChild(plus);
+          frag.appendChild(cell);
+        }
+      }
+      grid.replaceChildren(frag);
+    }
+
+    // Same seed → same pattern on every load
+    function jitter(r, c) {
+      var x = Math.sin(r * 12.9898 + c * 78.233) * 43758.5453;
+      return x - Math.floor(x);
+    }
+
+    /* ---------- Hero: gray tone travels as a diagonal wave (motion lives in CSS) ---------- */
+    (function () {
+      var grid = document.querySelector('.plus-grid--hero');
+      if (!grid) return;
+      var cols = parseInt(grid.dataset.cols, 10) || 20;
+      var rows = parseInt(grid.dataset.rows, 10) || 7;
+      var speed = parseFloat(grid.dataset.speed) || 1;
+      document.documentElement.style.setProperty('--speed', Math.max(0.2, speed));
+
+      buildPlusGrid(grid, cols, rows, function (plus, r, c) {
+        var j = jitter(r, c);
+        plus.style.setProperty('--t', (-(c * 0.2 + r * 0.32 + j * 1.2)).toFixed(2) + 's');
+        plus.style.setProperty('--f', (-(j * 13)).toFixed(2) + 's');
+      });
+    })();
+
+    /* ---------- Marketing card: likes count up fast, then the heart chip shows the same total ---------- */
+    (function () {
+      var likes = document.querySelector('.s-likes');
+      var heart = document.querySelector('.s-heart');
+      if (!likes || !heart) return;
+
+      var TOTAL = 1284;             // keep in sync with the heart chip (.s-num)
+      var CYCLE = 6000;             // same length as the social animations (6s)
+      var START = 0.12, END = 0.28; // count runs from the heart pop until the chip slides in
+      var RESET = 0.94;
+
+      function label(n) { return n.toLocaleString('en-US') + ' likes'; }
+
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduced || typeof heart.getAnimations !== 'function') { likes.textContent = label(TOTAL); return; }
+
+      var last = -1;
+      function tick() {
+        var anim = heart.getAnimations()[0];
+        if (anim) {
+          var t = ((anim.currentTime || 0) % CYCLE) / CYCLE;
+          var n;
+          if (t < START || t >= RESET) n = 0;
+          else if (t < END) {
+            var p = (t - START) / (END - START);
+            n = Math.round(TOTAL * (1 - Math.pow(1 - p, 3)));   // fast, easing out as it lands
+          } else n = TOTAL;
+          if (n !== last) { likes.textContent = label(n); last = n; }
+        }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    })();
+
+    /* ---------- Services: run each card's animation only while it's on screen ---------- */
+    (function () {
+      var illos = Array.prototype.slice.call(document.querySelectorAll('.illo'));
+      if (!illos.length) return;
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function setPlaying(svg, playing) {
+        svg.classList.toggle('is-paused', !playing);
+        if (typeof svg.pauseAnimations === 'function') {
+          playing ? svg.unpauseAnimations() : svg.pauseAnimations();
+        }
+      }
+
+      if (reduced) {
+        // Freeze on a representative frame (packets mid-flight, finished states shown by CSS)
+        illos.forEach(function (svg) {
+          if (typeof svg.setCurrentTime === 'function') svg.setCurrentTime(2.2);
+          setPlaying(svg, false);
+        });
+        return;
+      }
+
+      if (!('IntersectionObserver' in window)) return;
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) { setPlaying(entry.target, entry.isIntersecting); });
+      }, { threshold: 0.2 });
+      illos.forEach(function (svg) { setPlaying(svg, false); io.observe(svg); });
+    })();
+  </script>
+</body>
+</html>
