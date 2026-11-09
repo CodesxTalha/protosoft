@@ -90,7 +90,9 @@
   });
   thumb.addEventListener('pointermove', function (e) {
     if (!dragging || !travel) return;
-    window.scrollTo({ top: startScroll + (e.clientY - startY) * (maxScroll / travel), behavior: 'instant' });
+    var top = startScroll + (e.clientY - startY) * (maxScroll / travel);
+    if (window.lenis) window.lenis.scrollTo(top, { immediate: true });
+    else window.scrollTo({ top: top, behavior: 'instant' });
     placeLabel(e.clientY);
   });
   function endDrag(e) {
@@ -106,7 +108,8 @@
   // Click the track to jump there
   track.addEventListener('click', function (e) {
     if (e.target === thumb || !travel) return;
-    window.scrollTo({ top: scrollForY(e.clientY), behavior: 'smooth' });
+    if (window.lenis) window.lenis.scrollTo(scrollForY(e.clientY));
+    else window.scrollTo({ top: scrollForY(e.clientY), behavior: 'smooth' });
   });
 
   function enable() {
