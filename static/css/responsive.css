@@ -1,6 +1,7 @@
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .footer__nav a, .footer__totop,
   .faq__icon, .faq.is-ready .faq__a, .faq.is-ready .faq__a > div,
   .btn__icon, .btn__icon svg, .seg label span,  .svc, .svc__name, .switch__track, .switch__track::after,
   .step__card, .step__node, .step__no, .step__title, .step__desc,
@@ -71,4 +72,18 @@
   .faq__list { padding: 2px 20px; }
   .faq__q { padding: 18px 0; font-size: 16px; }
   .faq__a p { padding-right: 0; }
+}
+
+@media (max-width: 800px) {
+  .footer__top { grid-template-columns: minmax(0, 1fr); row-gap: 32px; }
+}
+
+@media (max-width: 560px) {
+  .footer__inner { padding-top: 36px; }
+  .footer__brand { gap: 12px; }
+  /* links fill the width in two even columns, with comfortable tap targets */
+  .footer__nav { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 24px; padding-top: 28px; border-top: 1px solid var(--line); }
+  .footer__nav ul { gap: 0; }
+  .footer__nav a { padding: 11px 0; font-size: 16px; }
+  .footer__bottom { margin-top: 28px; padding-top: 18px; }
 }
