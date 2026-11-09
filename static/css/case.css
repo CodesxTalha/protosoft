@@ -1,0 +1,52 @@
+/* ---------- Case study page ---------- */
+.case-top { padding: 24px clamp(20px, 4vw, 48px) 0; }
+
+.case {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding: clamp(56px, 10vh, 112px) clamp(20px, 4vw, 48px) 128px;
+}
+
+/* Reading column (text) and a wider column (media) */
+.case__text { width: 100%; max-width: var(--content-width); }
+
+.case__intro { display: flex; flex-direction: column; gap: 18px; }
+.case__eyebrow { font-size: 13px; color: var(--ink-muted); }
+
+.case__title {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(32px, 4.4vw, 46px);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+.case__lead { margin: 0; font-size: clamp(17px, 1.8vw, 21px); line-height: 1.3; letter-spacing: -0.01em; color: var(--ink-muted); }
+
+.case__meta { display: flex; flex-wrap: wrap; gap: 8px 40px; margin: 10px 0 0; padding-top: 22px; border-top: 1px solid var(--line); }
+.case__meta dt { margin-bottom: 4px; font-size: 13px; color: var(--ink-muted); }
+.case__meta dd { margin: 0; font-size: 15px; }
+
+.case__h2 { margin: 56px 0 12px; font-size: clamp(22px, 2.6vw, 28px); font-weight: 500; line-height: 1.1; letter-spacing: -0.035em; }
+.case__p { margin: 0; max-width: 56ch; font-size: 16px; line-height: 1.55; color: var(--ink-muted); }
+
+/* Media */
+.media, .video-frame { width: 100%; max-width: var(--services-width); margin: 0; border-radius: 14px; overflow: hidden; }
+
+.media--logo { position: relative; aspect-ratio: 16 / 9; background: #faf8f3; }
+.media--logo img { position: absolute; inset: 0; margin: auto; display: block; height: 88%; width: auto; max-width: 90%; object-fit: contain; }
+
+/* Screenshots keep their own aspect ratio (up to the max width) */
+.media--shot img { display: block; width: 100%; height: auto; }
+
+/* Website recording: shown at its own ratio, up to the max width */
+.video-frame { background: var(--surface); }
+.video-frame__video { display: block; width: 100%; height: auto; }
+
+/* Closing call to action */
+.case__cta { margin-top: 24px; text-align: center; }
+.case__cta .case__h2 { margin-top: 40px; }
+.case__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 22px; }
+.btn--lg { min-height: 40px; border-radius: 10px; }

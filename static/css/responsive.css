@@ -27,3 +27,9 @@
   .project__media { min-height: 0; aspect-ratio: 1 / 1; }
   .project__body { padding: 8px 12px 14px; }
 }
+
+@media (max-width: 560px) {
+  .case { gap: 28px; }
+  .case__h2 { margin-top: 36px; }
+  .media--logo { aspect-ratio: 4 / 3; }
+}
