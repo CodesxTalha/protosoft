@@ -1,0 +1,192 @@
+/* ---------- Illustrations ---------- */
+.illo {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: var(--font-sans);
+}
+
+.illo .ln       { fill: none; stroke-width: 1; }
+.illo .ln-ink   { stroke: var(--ink); }
+.illo .ln-mid   { stroke: #a9a9a7; }
+.illo .ln-soft  { stroke: #d0d0ce; }
+.illo .fl-surface { fill: var(--surface); }
+.illo .fl-soft  { fill: #e6e6e4; }
+.illo .fl-mid   { fill: #d2d2d0; }
+.illo .fl-ink   { fill: #1f1f1f; }
+
+.illo .lbl {
+  font-size: 7.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: #8a8a88;
+}
+
+.illo .lbl-inv { fill: #8f8f8d; }
+.illo .txt     { font-size: 8.5px; font-weight: 500; fill: var(--ink); }
+.illo .txt-inv { fill: #fafafa; }
+
+/* Pause everything while a card is off screen */
+.illo.is-paused,
+.illo.is-paused * { animation-play-state: paused !important; }
+
+/* Design: cursor selects the gray button, picks the black swatch, button turns black, cursor leaves */
+.d-cursor { transform: translate(239px, 57px); opacity: 0; animation: d-cursor 7s cubic-bezier(.45, 0, .25, 1) infinite; }
+.d-click  { transform-box: fill-box; transform-origin: 0 0; animation: d-click 7s ease infinite; }
+.d-sel    { animation: d-sel 7s ease infinite; }
+.d-btn    { fill: #1f1f1f; animation: d-btn 7s ease infinite; }
+.d-ring   { transform-box: fill-box; transform-origin: center; animation: d-ring 7s ease infinite; }
+
+@keyframes d-cursor {
+  0%, 6%   { transform: translate(262px, 150px); opacity: 0; }
+  10%      { opacity: 1; }
+  28%, 36% { transform: translate(126px, 119px); }
+  54%, 64% { transform: translate(239px, 57px); opacity: 1; }
+  80%, 100% { transform: translate(292px, 57px); opacity: 0; }
+}
+@keyframes d-click {
+  0%, 30%  { transform: scale(1); }
+  32%      { transform: scale(.8); }
+  34%, 57% { transform: scale(1); }
+  59%      { transform: scale(.8); }
+  61%, 100% { transform: scale(1); }
+}
+@keyframes d-sel {
+  0%, 32%  { opacity: 0; }
+  35%, 86% { opacity: 1; }
+  90%, 100% { opacity: 0; }
+}
+@keyframes d-btn {
+  0%, 59%  { fill: #c4c4c2; }
+  63%, 88% { fill: #1f1f1f; }
+  94%, 100% { fill: #c4c4c2; }
+}
+@keyframes d-ring {
+  0%, 58%  { opacity: 0; transform: scale(.75); }
+  62%, 88% { opacity: 1; transform: scale(1); }
+  94%, 100% { opacity: 0; transform: scale(1); }
+}
+
+/* Websites & apps: chart draws in, phone list steps up one row at a time */
+.a-spark { stroke-dasharray: 100; animation: a-draw 6s ease-in-out infinite; }
+.a-dot   { animation: a-dot 6s ease-in-out infinite; }
+.a-list  { animation: a-scroll 8s cubic-bezier(.6, 0, .2, 1) infinite; }
+
+@keyframes a-draw {
+  0%       { stroke-dashoffset: 100; opacity: 1; }
+  45%, 84% { stroke-dashoffset: 0; opacity: 1; }
+  94%      { stroke-dashoffset: 0; opacity: 0; }
+  100%     { stroke-dashoffset: 100; opacity: 0; }
+}
+@keyframes a-dot {
+  0%, 42%  { opacity: 0; }
+  48%, 84% { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+@keyframes a-scroll {
+  0%, 18%  { transform: translateY(0); }
+  25%, 43% { transform: translateY(-20px); }
+  50%, 68% { transform: translateY(-40px); }
+  75%, 93% { transform: translateY(-60px); }
+  100%     { transform: translateY(-80px); }
+}
+
+/* Automation: a message arrives, the agent types and replies, actions tick off */
+.b-unread { fill: #d2d2d0; animation: b-unread 6s ease infinite; }
+.b-in     { animation: b-in 6s cubic-bezier(.3, 0, .2, 1) infinite; }
+.b-typing { opacity: 0; animation: b-typing 6s ease infinite; }
+.b-dot    { animation: b-dot 1s ease-in-out infinite; }
+.b-dot-2  { animation-delay: .15s; }
+.b-dot-3  { animation-delay: .3s; }
+.b-reply  { animation: b-reply 6s cubic-bezier(.3, 0, .2, 1) infinite; }
+.b-thanks { animation: b-thanks 6s cubic-bezier(.3, 0, .2, 1) infinite; }
+.b-chip   { animation: b-chip 6s cubic-bezier(.3, 0, .2, 1) infinite; }
+.b-chip-2 { animation-name: b-chip-2; }
+.b-chip-3 { animation-name: b-chip-3; }
+
+@keyframes b-unread {
+  0%, 6%   { fill: #1f1f1f; }
+  10%, 88% { fill: #d2d2d0; }
+  94%, 100% { fill: #1f1f1f; }
+}
+@keyframes b-in {
+  0%, 3%   { opacity: 0; transform: translateY(6px); }
+  9%, 88%  { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+@keyframes b-typing {
+  0%, 12%  { opacity: 0; }
+  15%, 30% { opacity: 1; }
+  32%, 100% { opacity: 0; }
+}
+@keyframes b-dot {
+  0%, 100% { opacity: .35; }
+  50%      { opacity: 1; }
+}
+@keyframes b-reply {
+  0%, 31%  { opacity: 0; transform: translateY(6px); }
+  36%, 88% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+@keyframes b-thanks {
+  0%, 70%  { opacity: 0; transform: translateY(6px); }
+  75%, 88% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+@keyframes b-chip {
+  0%, 38%  { opacity: 0; transform: translateX(-6px); }
+  44%, 88% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+@keyframes b-chip-2 {
+  0%, 48%  { opacity: 0; transform: translateX(-6px); }
+  54%, 88% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+@keyframes b-chip-3 {
+  0%, 58%  { opacity: 0; transform: translateX(-6px); }
+  64%, 88% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+
+/* Social: reel plays, heart pops, likes count up fast (script), chips slide in with the same totals, a post gets scheduled */
+.s-progress { transform-box: fill-box; transform-origin: left center; transform: scaleX(.62); animation: s-progress 6s linear infinite; }
+.s-heart    { transform-box: fill-box; transform-origin: center; animation: s-heart 6s ease infinite; }
+.illo .s-likes, .illo .s-num { font-variant-numeric: tabular-nums; }
+.s-chip     { animation: s-chip 6s cubic-bezier(.3, 0, .2, 1) infinite; }
+.s-chip-2   { animation-name: s-chip-2; }
+.s-chip-3   { animation-name: s-chip-3; }
+.s-slot     { fill: #1f1f1f; transform-box: fill-box; transform-origin: center; animation: s-slot 6s ease infinite; }
+
+@keyframes s-progress {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes s-heart {
+  0%, 12%  { transform: scale(0); }
+  17%      { transform: scale(1.25); }
+  21%, 88% { transform: scale(1); }
+  94%, 100% { transform: scale(0); }
+}
+@keyframes s-chip {
+  0%, 29%  { opacity: 0; transform: translateX(-6px); }
+  35%, 88% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+@keyframes s-chip-2 {
+  0%, 39%  { opacity: 0; transform: translateX(-6px); }
+  45%, 88% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+@keyframes s-chip-3 {
+  0%, 49%  { opacity: 0; transform: translateX(-6px); }
+  55%, 88% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+@keyframes s-slot {
+  0%, 60%  { fill: #e6e6e4; transform: scale(1); }
+  64%      { fill: #1f1f1f; transform: scale(1.2); }
+  68%, 88% { fill: #1f1f1f; transform: scale(1); }
+  94%, 100% { fill: #e6e6e4; transform: scale(1); }
+}

@@ -1,0 +1,17 @@
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .plus-grid--hero .plus { animation: none; color: #bcbcbc; }
+  .illo, .illo * { animation: none !important; }
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 480px) {
+  .hero { padding: 64px 0 0; }
+  .column { gap: 18px; }
+  .services { padding: 88px 20px 96px; }
+}
+
+@media (max-width: 560px) {
+  .cards { grid-template-columns: minmax(0, 1fr); }
+}
