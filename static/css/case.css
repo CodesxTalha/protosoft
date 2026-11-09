@@ -49,4 +49,3 @@
 .case__cta { margin-top: 24px; text-align: center; }
 .case__cta .case__h2 { margin-top: 40px; }
 .case__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 22px; }
-.btn--lg { min-height: 40px; border-radius: 10px; }

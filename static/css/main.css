@@ -152,6 +152,7 @@ a { color: inherit; }
   stroke-linejoin: round;
 }
 
+.btn--lg { min-height: 40px; border-radius: 10px; }
 .btn--light { background: var(--surface); color: var(--ink); }
 .btn--light:hover { background: #fff; }
 
@@ -189,7 +190,8 @@ a { color: inherit; }
 /* Services use a wider column than the hero (no effect below ~960px) */
 .services .column,
 .process .column,
-.work .column { max-width: var(--services-width); }
+.work .column,
+.pricing .column { max-width: var(--services-width); }
 
 /* Cards: flat rounded tiles in the same light fill as the buttons */
 .cards {

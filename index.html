@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="static/css/main.css">
   <link rel="stylesheet" href="static/css/process.css">
   <link rel="stylesheet" href="static/css/work.css">
+  <link rel="stylesheet" href="static/css/pricing.css">
   <link rel="stylesheet" href="static/css/rail.css">
   <link rel="stylesheet" href="static/css/responsive.css">
 </head>
@@ -229,6 +230,92 @@
     </div>
   </section>
 
+  <!-- Pricing: pick a service, set its options, see the price (static/js/pricing.js).
+       PKR in Pakistan, USD elsewhere, with a manual switch. Prices live in PLANS at the top of pricing.js. -->
+  <section class="pricing" id="pricing" aria-labelledby="pricing-title" data-rail-label="Pricing">
+    <div class="column">
+      <div class="pricing__head">
+        <h2 class="pricing__title" id="pricing-title"><span class="muted">Simple</span> pricing.</h2>
+        <div class="seg currency" role="group" aria-label="Currency">
+          <button type="button" data-cur="PKR" aria-pressed="true">PKR</button>
+          <button type="button" data-cur="USD" aria-pressed="false">USD</button>
+        </div>
+      </div>
+
+      <div class="builder">
+        <div class="builder__services" role="radiogroup" aria-label="Choose a service">
+          <p class="svc-group">Recommended</p>
+          <label class="svc">
+            <input type="radio" name="service" value="package" checked>
+            <span class="svc__body"><span class="svc__name">Launch Package</span><span class="svc__desc">Brand identity and a dynamic website, together.</span></span>
+            <span class="svc__hint" data-hint="package"></span>
+          </label>
+          <p class="svc-group">Or choose a single service</p>
+          <div class="svc-singles">
+            <label class="svc">
+              <input type="radio" name="service" value="website">
+              <span class="svc__body"><span class="svc__name">Website</span><span class="svc__desc">Static or dynamic, built from scratch.</span></span>
+              <span class="svc__hint" data-hint="website"></span>
+            </label>
+            <label class="svc">
+              <input type="radio" name="service" value="branding">
+              <span class="svc__body"><span class="svc__name">Branding</span><span class="svc__desc">Logo and brand identity.</span></span>
+              <span class="svc__hint" data-hint="branding"></span>
+            </label>
+            <label class="svc">
+              <input type="radio" name="service" value="design">
+              <span class="svc__body"><span class="svc__name">Web design</span><span class="svc__desc">UI and UX, with or without development.</span></span>
+              <span class="svc__hint" data-hint="design"></span>
+            </label>
+            <label class="svc">
+              <input type="radio" name="service" value="automation">
+              <span class="svc__body"><span class="svc__name">Automation</span><span class="svc__desc">AI agents and workflows.</span></span>
+              <span class="svc__hint" data-hint="automation"></span>
+            </label>
+            <label class="svc">
+              <input type="radio" name="service" value="marketing">
+              <span class="svc__body"><span class="svc__name">Marketing</span><span class="svc__desc">Content, campaigns and community.</span></span>
+              <span class="svc__hint" data-hint="marketing"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="builder__card">
+          <div class="plan">
+            <span class="plan__eyebrow">Starting price</span>
+            <h3 class="plan__name">Launch Package</h3>
+            <p class="plan__blurb"></p>
+          </div>
+
+          <div class="plan__mid">
+            <div class="opts">
+              <div class="opt" data-opt="website" hidden>
+                <span class="opt__label">Type</span>
+                <div class="seg seg--dark" role="radiogroup" aria-label="Website type">
+                  <label><input type="radio" name="wtype" value="static" checked><span>Static</span></label>
+                  <label><input type="radio" name="wtype" value="dynamic"><span>Dynamic</span></label>
+                </div>
+              </div>
+              <div class="opt" data-opt="design" hidden>
+                <span class="opt__text"><span class="opt__label">Add development</span><span class="opt__delta" data-extra></span></span>
+                <label class="switch"><input type="checkbox" name="dev" aria-label="Add development"><span class="switch__track"></span></label>
+              </div>
+            </div>
+
+            <ul class="plan__list"></ul>
+          </div>
+
+          <div class="plan__foot">
+            <div class="plan__price"><span class="plan__amount">PKR 150,000</span><span class="plan__note">Starting price, one-time</span></div>
+            <a class="btn btn--light btn--lg plan__cta" href="#contact">Book a call</a>
+          </div>
+        </div>
+      </div>
+
+      <p class="pricing__note">These are starting prices. The final quote depends on your scope and is confirmed after a call.</p>
+    </div>
+  </section>
+
   <!-- Scroll rail (desktop). Sections are any element with data-rail-label. -->
   <div class="rail" aria-hidden="true">
     <div class="rail__track"><div class="rail__thumb"></div></div>
@@ -240,6 +327,7 @@
   <script src="static/js/hero-grid.js" defer></script>
   <script src="static/js/illustrations.js" defer></script>
   <script src="static/js/process.js" defer></script>
+  <script src="static/js/pricing.js" defer></script>
   <script src="static/js/scroll-rail.js" defer></script>
 </body>
 </html>
