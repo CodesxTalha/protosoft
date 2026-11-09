@@ -3,24 +3,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap');
 svg { font-family: "Inter Tight", system-ui, -apple-system, sans-serif; }
 .ln { fill: none; stroke-width: 1; }
-.ink { stroke: #141414; }
-.soft { stroke: #e0e0de; }
-.mid { stroke: #b4b4b2; }
-.w { fill: #fff; }
-.bg { fill: #fafafa; }
-.f1 { fill: #1f1f1f; }
-.f2 { fill: #ececea; }
-.f3 { fill: #d6d6d4; }
-.lbl { font-size: 6.2px; font-weight: 500; letter-spacing: .09em; text-transform: uppercase; fill: #8a8a88; }
-.t5 { font-size: 5px; font-weight: 500; fill: #141414; }
-.t6 { font-size: 6px; font-weight: 600; fill: #141414; }
-.mu { fill: #8a8a88; font-weight: 400; }
+.ln-ink  { stroke: #141414; }
+.ln-mid  { stroke: #b4b4b2; }
+.ln-soft { stroke: #dcdcda; }
+.fl-w    { fill: #fff; }
+.fl-soft { fill: #ececea; }
+.fl-mid  { fill: #d6d6d4; }
+.fl-ink  { fill: #1f1f1f; }
+.lbl { font-size: 7px; font-weight: 500; letter-spacing: .09em; text-transform: uppercase; fill: #8a8a88; }
+.txt { font-size: 8.5px; font-weight: 500; fill: #141414; }
 .inv { fill: #fafafa; }
 symbol.ic * { fill: none; stroke: currentColor; stroke-width: var(--sw, 2); stroke-linecap: round; stroke-linejoin: round; }
 symbol.ic .solid { fill: currentColor; }
 
 
-.b-unread { fill: #1f1f1f; animation: b-unread 6s ease infinite; }
+.b-unread { fill: #d6d6d4; animation: b-unread 6s ease infinite; }
 .b-in     { animation: b-in 6s cubic-bezier(.3, 0, .2, 1) infinite; }
 .b-typing { opacity: 0; animation: b-typing 6s ease infinite; }
 .b-dot    { animation: b-dot 1s ease-in-out infinite; }
@@ -33,7 +30,7 @@ symbol.ic .solid { fill: currentColor; }
 .b-chip-3 { animation-name: b-chip-3; }
 @keyframes b-unread {
   0%, 6%    { fill: #1f1f1f; }
-  10%, 88%  { fill: #d2d2d0; }
+  10%, 88%  { fill: #d6d6d4; }
   94%, 100% { fill: #1f1f1f; }
 }
 @keyframes b-in {
@@ -84,79 +81,64 @@ symbol.ic .solid { fill: currentColor; }
   <symbol id="i-up" class="ic" viewBox="0 0 24 24"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></symbol>
   <symbol id="plus" viewBox="0 0 24 24"><path d="M12 2.5v19M2.5 12h19" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></symbol>
 </defs>
-<rect width="280" height="160" class="bg"/>
+<rect width="280" height="160" fill="#fafafa"/>
 
-<rect class="ln soft w" x="12.5" y="30.5" width="66" height="22" rx="5"/>
-    <circle fill="#e4e4e2" cx="23" cy="41.5" r="5.2"/>
-    <text x="23" y="43.2" text-anchor="middle" font-size="5" font-weight="600" fill="#141414">M</text>
-    <text class="t5" x="31.5" y="40.1" style="font-size:5.2px;font-weight:600">Maya R.</text>
-    <text class="t5 mu" x="31.5" y="47.1" style="font-size:4.3px">Can we book a demo?</text>
-    <circle class="b-unread" cx="72.5" cy="37.5" r="2"/><rect class="ln soft w" x="12.5" y="56.5" width="66" height="22" rx="5"/>
-    <circle fill="#e4e4e2" cx="23" cy="67.5" r="5.2"/>
-    <text x="23" y="69.2" text-anchor="middle" font-size="5" font-weight="600" fill="#141414">O</text>
-    <text class="t5" x="31.5" y="66.1" style="font-size:5.2px;font-weight:600">Omar K.</text>
-    <text class="t5 mu" x="31.5" y="73.1" style="font-size:4.3px">Pricing for 3 sites</text>
-    <circle class="f1" cx="72.5" cy="63.5" r="2"/><rect class="ln soft w" x="12.5" y="82.5" width="66" height="22" rx="5"/>
-    <circle fill="#e4e4e2" cx="23" cy="93.5" r="5.2"/>
-    <text x="23" y="95.2" text-anchor="middle" font-size="5" font-weight="600" fill="#141414">Z</text>
-    <text class="t5" x="31.5" y="92.1" style="font-size:5.2px;font-weight:600">Zoya A.</text>
-    <text class="t5 mu" x="31.5" y="99.1" style="font-size:4.3px">Thanks, all received</text>
-    
-<text class="lbl" x="12.5" y="124">Inbox</text>
+<rect class="ln ln-soft fl-w" x="18.5" y="51.5" width="58" height="16" rx="5"/><circle class="fl-mid" cx="27.5" cy="59.5" r="3.5"/><rect class="fl-mid" x="35" y="58.25" width="26" height="2.5" rx="1.25"/><circle class="b-unread" cx="69" cy="59.5" r="2"/><rect class="ln ln-soft fl-w" x="18.5" y="71.5" width="58" height="16" rx="5"/><circle class="fl-mid" cx="27.5" cy="79.5" r="3.5"/><rect class="fl-mid" x="35" y="78.25" width="20" height="2.5" rx="1.25"/><circle class="fl-ink" cx="69" cy="79.5" r="2"/><rect class="ln ln-soft fl-w" x="18.5" y="91.5" width="58" height="16" rx="5"/><circle class="fl-mid" cx="27.5" cy="99.5" r="3.5"/><rect class="fl-mid" x="35" y="98.25" width="24" height="2.5" rx="1.25"/><circle class="fl-mid" cx="69" cy="99.5" r="2"/>
+<text class="lbl" x="18" y="126">Inbox</text>
 
-<!-- Chat -->
-<rect class="ln ink w" x="88.5" y="12.5" width="103" height="135" rx="10"/>
-<circle class="f1" cx="101" cy="26" r="6"/>
-<use href="#plus" x="98" y="23" width="6" height="6" color="#fafafa"/>
-<text class="t6" x="111" y="25" style="font-size:6.4px">Assistant</text>
-<circle class="f1" cx="112.2" cy="30.4" r="1.2"/>
-<text class="t5 mu" x="115.6" y="32" style="font-size:4.5px">Online</text>
-<line class="ln soft" x1="89" y1="38.5" x2="191" y2="38.5"/>
+<!-- Agent chat -->
+<rect class="ln ln-ink fl-w" x="88.5" y="12.5" width="103" height="135" rx="10"/>
+<rect class="fl-ink" x="96" y="19" width="11" height="11" rx="3.5"/>
+<use href="#plus" x="99" y="22" width="5" height="5" color="#fafafa"/>
+<text class="txt" x="112" y="27.3" font-size="8">AI agent</text>
+<line class="ln ln-soft" x1="89" y1="36.5" x2="191" y2="36.5"/>
 
 <g class="b-in">
-  <rect class="f1" x="108" y="45" width="76" height="17" rx="7"/>
-  <text x="114" y="55.6" font-size="5.2" font-weight="500" class="inv">Do you have time Thursday?</text>
+  <rect class="fl-ink" x="122" y="44" width="62" height="20" rx="7"/>
+  <rect fill="#fafafa" x="128" y="50" width="46" height="2.5" rx="1.25"/>
+  <rect fill="#8f8f8d" x="128" y="56" width="30" height="2.5" rx="1.25"/>
 </g>
 <g class="b-typing">
-  <rect class="f2" x="96" y="69" width="26" height="14" rx="7"/>
-  <circle class="b-dot b-dot-1" cx="103.5" cy="76" r="1.4" fill="#8f8f8d"/>
-  <circle class="b-dot b-dot-2" cx="109" cy="76" r="1.4" fill="#8f8f8d"/>
-  <circle class="b-dot b-dot-3" cx="114.5" cy="76" r="1.4" fill="#8f8f8d"/>
+  <rect class="fl-soft" x="96" y="70" width="26" height="14" rx="7"/>
+  <circle class="b-dot b-dot-1" cx="103" cy="77" r="1.4" fill="#8f8f8d"/>
+  <circle class="b-dot b-dot-2" cx="109" cy="77" r="1.4" fill="#8f8f8d"/>
+  <circle class="b-dot b-dot-3" cx="115" cy="77" r="1.4" fill="#8f8f8d"/>
 </g>
 <g class="b-reply">
-  <rect class="f2" x="96" y="69" width="74" height="27" rx="7"/>
-  <text x="102" y="79.6" font-size="5.2" font-weight="500" fill="#141414">Yes! Thursday at 3 PM</text>
-  <text x="102" y="87.8" font-size="5.2" font-weight="500" fill="#141414">works. Invite sent.</text>
+  <rect class="fl-soft" x="96" y="70" width="62" height="26" rx="7"/>
+  <rect class="fl-mid" x="102" y="76" width="46" height="2.5" rx="1.25"/>
+  <rect class="fl-mid" x="102" y="82" width="38" height="2.5" rx="1.25"/>
+  <rect fill="#e0e0de" x="102" y="88" width="24" height="2.5" rx="1.25"/>
 </g>
 <g class="b-thanks">
-  <rect class="f1" x="132" y="102" width="52" height="16" rx="7"/>
-  <text x="138" y="112" font-size="5.2" font-weight="500" class="inv">Perfect, thanks!</text>
+  <rect class="fl-ink" x="146" y="102" width="38" height="14" rx="7"/>
+  <rect fill="#fafafa" x="152" y="107.75" width="24" height="2.5" rx="1.25"/>
 </g>
 
-<rect class="ln soft w" x="96.5" y="128.5" width="88" height="13" rx="6.5"/>
-<text class="t5 mu" x="103" y="136.8" style="font-size:5px;fill:#b0b0ae">Message…</text>
-<circle class="f1" cx="177.5" cy="135" r="4.6"/>
-<use href="#i-up" x="174.5" y="132" width="6" height="6" color="#fafafa" style="--sw:4"/>
+<rect class="ln ln-soft fl-w" x="96.5" y="128.5" width="88" height="12" rx="6"/>
+<rect class="fl-soft" x="102" y="133.25" width="30" height="2.5" rx="1.25"/>
+<circle class="fl-ink" cx="178.5" cy="134.5" r="4.2"/>
+<use href="#i-up" x="175.5" y="131.5" width="6" height="6" color="#fafafa" style="--sw:4"/>
 
 <g class="b-chip b-chip-1">
-  <rect class="ln soft w" x="204.5" y="30.5" width="65" height="20" rx="10"/>
-  <circle class="f1" cx="215" cy="40.5" r="4.6"/>
-  <use href="#i-check" x="212" y="37.5" width="6" height="6" color="#fafafa" style="--sw:4"/>
-  <text class="t5" x="223.5" y="43.1" style="font-size:5.6px">Replied</text>
+  <rect class="ln ln-soft fl-w" x="208.5" y="51.5" width="54" height="18" rx="9"/>
+  <circle class="fl-ink" cx="218.5" cy="60.5" r="4"/>
+  <use href="#i-check" x="215.5" y="57.5" width="6" height="6" color="#fafafa" style="--sw:4"/>
+  <text class="txt" x="227" y="63.5">Replied</text>
 </g>
 <g class="b-chip b-chip-2">
-  <rect class="ln soft w" x="204.5" y="56.5" width="65" height="20" rx="10"/>
-  <circle class="f1" cx="215" cy="66.5" r="4.6"/>
-  <use href="#i-check" x="212" y="63.5" width="6" height="6" color="#fafafa" style="--sw:4"/>
-  <text class="t5" x="223.5" y="69.1" style="font-size:5.6px">In CRM</text>
+  <rect class="ln ln-soft fl-w" x="208.5" y="73.5" width="54" height="18" rx="9"/>
+  <circle class="fl-ink" cx="218.5" cy="82.5" r="4"/>
+  <use href="#i-check" x="215.5" y="79.5" width="6" height="6" color="#fafafa" style="--sw:4"/>
+  <text class="txt" x="227" y="85.5">In CRM</text>
 </g>
 <g class="b-chip b-chip-3">
-  <rect class="ln soft w" x="204.5" y="82.5" width="65" height="20" rx="10"/>
-  <circle class="f1" cx="215" cy="92.5" r="4.6"/>
-  <use href="#i-check" x="212" y="89.5" width="6" height="6" color="#fafafa" style="--sw:4"/>
-  <text class="t5" x="223.5" y="95.1" style="font-size:5.6px">Booked · Thu</text>
+  <rect class="ln ln-soft fl-w" x="208.5" y="95.5" width="54" height="18" rx="9"/>
+  <circle class="fl-ink" cx="218.5" cy="104.5" r="4"/>
+  <use href="#i-check" x="215.5" y="101.5" width="6" height="6" color="#fafafa" style="--sw:4"/>
+  <text class="txt" x="227" y="107.5">Booked</text>
 </g>
-<text class="lbl" x="204.5" y="124">Done</text>
+<text class="lbl" x="208" y="126">Done</text>
 
 
 </svg>

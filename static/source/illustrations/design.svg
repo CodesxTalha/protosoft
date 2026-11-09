@@ -3,37 +3,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap');
 svg { font-family: "Inter Tight", system-ui, -apple-system, sans-serif; }
 .ln { fill: none; stroke-width: 1; }
-.ink { stroke: #141414; }
-.soft { stroke: #e0e0de; }
-.mid { stroke: #b4b4b2; }
-.w { fill: #fff; }
-.bg { fill: #fafafa; }
-.f1 { fill: #1f1f1f; }
-.f2 { fill: #ececea; }
-.f3 { fill: #d6d6d4; }
-.lbl { font-size: 6.2px; font-weight: 500; letter-spacing: .09em; text-transform: uppercase; fill: #8a8a88; }
-.t5 { font-size: 5px; font-weight: 500; fill: #141414; }
-.t6 { font-size: 6px; font-weight: 600; fill: #141414; }
-.mu { fill: #8a8a88; font-weight: 400; }
+.ln-ink  { stroke: #141414; }
+.ln-mid  { stroke: #b4b4b2; }
+.ln-soft { stroke: #dcdcda; }
+.fl-w    { fill: #fff; }
+.fl-soft { fill: #ececea; }
+.fl-mid  { fill: #d6d6d4; }
+.fl-ink  { fill: #1f1f1f; }
+.lbl { font-size: 7px; font-weight: 500; letter-spacing: .09em; text-transform: uppercase; fill: #8a8a88; }
+.txt { font-size: 8.5px; font-weight: 500; fill: #141414; }
 .inv { fill: #fafafa; }
 symbol.ic * { fill: none; stroke: currentColor; stroke-width: var(--sw, 2); stroke-linecap: round; stroke-linejoin: round; }
 symbol.ic .solid { fill: currentColor; }
 
 
-.d-cursor { transform: translate(243px, 55px); opacity: 0; animation: d-cursor 7s cubic-bezier(.45, 0, .25, 1) infinite; }
+.d-cursor { transform: translate(239px, 57px); opacity: 0; animation: d-cursor 7s cubic-bezier(.45, 0, .25, 1) infinite; }
 .d-click  { transform-box: fill-box; transform-origin: 0 0; animation: d-click 7s ease infinite; }
 .d-sel    { animation: d-sel 7s ease infinite; }
-.d-btn    { animation: d-btn 7s ease infinite; }
-.d-btxt   { animation: d-btxt 7s ease infinite; }
+.d-btn    { fill: #1f1f1f; animation: d-btn 7s ease infinite; }
 .d-ring   { transform-box: fill-box; transform-origin: center; animation: d-ring 7s ease infinite; }
-.d-hex    { animation: d-sel 7s ease infinite; }
-.fname { font-size: 6.2px; font-weight: 500; fill: #8a8a88; }
 @keyframes d-cursor {
   0%, 6%    { transform: translate(262px, 150px); opacity: 0; }
   10%       { opacity: 1; }
-  28%, 36%  { transform: translate(113px, 91px); }
-  54%, 64%  { transform: translate(243px, 56px); opacity: 1; }
-  80%, 100% { transform: translate(292px, 56px); opacity: 0; }
+  28%, 36%  { transform: translate(126px, 119px); }
+  54%, 64%  { transform: translate(239px, 57px); opacity: 1; }
+  80%, 100% { transform: translate(292px, 57px); opacity: 0; }
 }
 @keyframes d-click {
   0%, 30%   { transform: scale(1); }
@@ -48,14 +42,9 @@ symbol.ic .solid { fill: currentColor; }
   90%, 100% { opacity: 0; }
 }
 @keyframes d-btn {
-  0%, 59%   { fill: #d2d2d0; }
+  0%, 59%   { fill: #cfcfcd; }
   63%, 88%  { fill: #1f1f1f; }
-  94%, 100% { fill: #d2d2d0; }
-}
-@keyframes d-btxt {
-  0%, 59%   { fill: #141414; }
-  63%, 88%  { fill: #fafafa; }
-  94%, 100% { fill: #141414; }
+  94%, 100% { fill: #cfcfcd; }
 }
 @keyframes d-ring {
   0%, 58%   { opacity: 0; transform: scale(.75); }
@@ -74,67 +63,58 @@ symbol.ic .solid { fill: currentColor; }
   <symbol id="i-up" class="ic" viewBox="0 0 24 24"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></symbol>
   <symbol id="plus" viewBox="0 0 24 24"><path d="M12 2.5v19M2.5 12h19" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></symbol>
 </defs>
-<rect width="280" height="160" class="bg"/>
+<rect width="280" height="160" fill="#fafafa"/>
 
-<!-- Type specimen -->
-<line class="ln soft" x1="12" y1="62.5" x2="62" y2="62.5" stroke-dasharray="2 2"/>
-<line class="ln soft" x1="12" y1="81.5" x2="62" y2="81.5" stroke-dasharray="2 2"/>
-<text x="15" y="81" font-size="27" font-weight="500" letter-spacing="-0.7" fill="#141414">Aa</text>
-<text class="t5" x="14" y="96.5" style="font-size:6.2px">Inter Tight</text>
-<text class="t5 mu" x="14" y="104.5" style="font-size:5.4px">Medium · 500</text>
+<g transform="translate(6 0)">
+  <defs><clipPath id="d-img"><rect x="86" y="56" width="108" height="40" rx="4"/></clipPath></defs>
 
-<!-- Frame -->
-<text class="fname" x="76" y="17.6">Home · 1440 × 900</text>
-<defs><clipPath id="d-img"><rect x="86" y="99" width="109" height="28" rx="3"/></clipPath></defs>
-<rect class="ln ink w" x="76.5" y="22.5" width="128" height="112" rx="3"/>
+  <!-- Type specimen -->
+  <line class="ln ln-soft" x1="16" y1="68.5" x2="58" y2="68.5" stroke-dasharray="2 2"/>
+  <line class="ln ln-soft" x1="16" y1="88.5" x2="58" y2="88.5" stroke-dasharray="2 2"/>
+  <text x="20" y="88" font-size="26" font-weight="500" letter-spacing="-0.6" fill="#141414">Aa</text>
+  <text class="lbl" x="20" y="104">Type</text>
 
-<!-- site nav -->
-<circle class="f1" cx="87" cy="31" r="2.6"/>
-<text x="92.5" y="33" font-size="6.4" font-weight="600" letter-spacing="-.1" fill="#141414">Koa</text>
-<text class="t5 mu" x="150" y="32.6" style="font-size:4.9px">Menu</text>
-<text class="t5 mu" x="164" y="32.6" style="font-size:4.9px">Shop</text>
-<text class="t5 mu" x="177" y="32.6" style="font-size:4.9px">About</text>
-<line class="ln soft" x1="77" y1="39.5" x2="204" y2="39.5"/>
+  <!-- Artboard -->
+  <text class="lbl" x="76" y="16">Frame · 1440</text>
+  <rect class="ln ln-ink fl-w" x="76.5" y="22.5" width="128" height="112" rx="6"/>
+  <circle class="fl-mid" cx="92" cy="40" r="6"/>
+  <rect class="fl-mid" x="104" y="35" width="52" height="4" rx="2"/>
+  <rect class="fl-soft" x="104" y="43" width="32" height="3" rx="1.5"/>
 
-<!-- hero copy -->
-<text x="86" y="55" font-size="9" font-weight="600" letter-spacing="-.35" fill="#141414">Good coffee,</text>
-<text x="86" y="65.4" font-size="9" font-weight="600" letter-spacing="-.35" fill="#141414">made simple.</text>
-<text class="t5 mu" x="86" y="74.4" style="font-size:4.7px">Small-batch roasts, delivered weekly.</text>
-<rect class="d-btn" x="86" y="80" width="40" height="13" rx="3.5"/>
-<text class="d-btxt" x="106" y="88.4" text-anchor="middle" font-size="5.2" font-weight="500">Order now</text>
-<text class="t5 mu" x="133" y="88.4" style="font-size:5px">See menu →</text>
+  <g clip-path="url(#d-img)">
+    <rect x="86" y="56" width="108" height="40" fill="#ececea"/>
+    <circle cx="176" cy="68" r="5.5" fill="#fff"/>
+    <path fill="#dcdcda" d="M86 96V84C98 72 108 72 118 79C126 84 134 85 142 79C152 71 164 72 194 84V96Z"/>
+    <path fill="#cbcbc9" d="M86 96V88C100 82 112 85 124 88C140 92 156 85 168 83C178 82 187 85 194 88V96Z"/>
+  </g>
 
-<!-- hero image: layered hills + sun -->
-<g clip-path="url(#d-img)">
-  <rect x="86" y="99" width="109" height="28" fill="#ececea"/>
-  <circle cx="177" cy="108" r="5" fill="#fafafa"/>
-  <path fill="#d6d6d4" d="M86 127 V117 C98 108 108 108 118 114 C126 118.5 134 119 142 114 C152 107 164 107 195 118 V127 Z"/>
-  <path fill="#bfbfbd" d="M86 127 V121 C100 116 112 118 124 121 C140 125.5 156 118.5 168 117 C178 116 187 118 195 121 V127 Z"/>
+  <rect class="d-btn" x="86" y="108" width="46" height="14" rx="4"/>
+  <rect fill="#fafafa" x="97" y="114" width="24" height="2" rx="1"/>
+  <rect class="fl-mid" x="140" y="113.5" width="32" height="3" rx="1.5"/>
+
+  <!-- Selection on the button -->
+  <g class="d-sel">
+    <rect class="ln ln-ink" x="83.5" y="105.5" width="52" height="20"/>
+    <rect class="ln ln-ink fl-w" x="81.5" y="103.5" width="4" height="4"/>
+    <rect class="ln ln-ink fl-w" x="133.5" y="103.5" width="4" height="4"/>
+    <rect class="ln ln-ink fl-w" x="81.5" y="123.5" width="4" height="4"/>
+    <rect class="ln ln-ink fl-w" x="133.5" y="123.5" width="4" height="4"/>
+    <rect class="fl-ink" x="92" y="131" width="35" height="11" rx="2.5"/>
+    <text x="109.5" y="138.8" font-size="7" font-weight="500" class="inv" text-anchor="middle">46 × 14</text>
+  </g>
+
+  <!-- Swatches -->
+  <circle class="fl-ink" cx="240" cy="56" r="8"/>
+  <circle fill="#8f8f8d" cx="240" cy="78" r="8"/>
+  <circle class="ln fl-w" cx="240" cy="100" r="7.5" stroke="#c4c4c2"/>
+  <circle class="ln ln-ink d-ring" cx="240" cy="56" r="11.5"/>
+  <text class="lbl" x="240" y="128" text-anchor="middle">Color</text>
+
+  <!-- Cursor -->
+  <g class="d-cursor"><g class="d-click">
+    <path class="fl-ink" stroke="#fafafa" stroke-width=".8" stroke-linejoin="round" d="M0 0 L0 13 L3.6 9.9 L6.1 15.2 L8.3 14.2 L5.9 9.1 L10.4 9 Z"/>
+  </g></g>
 </g>
-
-<!-- selection on the button -->
-<g class="d-sel">
-  <rect class="ln ink" x="85.5" y="79.5" width="41" height="14"/>
-  <rect class="ln ink w" x="83.5" y="77.5" width="4" height="4"/>
-  <rect class="ln ink w" x="124.5" y="77.5" width="4" height="4"/>
-  <rect class="ln ink w" x="83.5" y="91.5" width="4" height="4"/>
-  <rect class="ln ink w" x="124.5" y="91.5" width="4" height="4"/>
-  <rect class="f1" x="89.5" y="98" width="33" height="10" rx="2.5"/>
-  <text x="106" y="104.9" text-anchor="middle" font-size="5.3" font-weight="500" class="inv">120 × 40</text>
-</g>
-
-<!-- swatches -->
-<circle class="f1" cx="240" cy="50" r="8"/>
-<circle fill="#8f8f8d" cx="240" cy="72" r="8"/>
-<circle class="ln soft w" cx="240" cy="94" r="7.5" style="stroke:#c4c4c2"/>
-<circle class="ln ink d-ring" cx="240" cy="50" r="11.5"/>
-<text class="lbl" x="240" y="124" text-anchor="middle">Color</text>
-<text class="d-hex" x="240" y="133" text-anchor="middle" font-size="5.6" font-weight="500" fill="#141414">#1F1F1F</text>
-
-<!-- cursor -->
-<g class="d-cursor"><g class="d-click">
-  <path class="f1" stroke="#fafafa" stroke-width=".8" stroke-linejoin="round" d="M0 0 L0 13 L3.6 9.9 L6.1 15.2 L8.3 14.2 L5.9 9.1 L10.4 9 Z"/>
-</g></g>
 
 
 </svg>
