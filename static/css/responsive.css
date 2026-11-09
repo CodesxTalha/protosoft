@@ -90,8 +90,7 @@
 }
 
 @media (max-width: 560px) {
-  /* Phones: a plain dark card with no pattern, and the heading kept on one line (it scales with the screen) */
-  .cta__grid { display: none; }
+  /* Phones: the heading stays on one line (it scales with the screen) */
   .cta__title {
     white-space: nowrap;
     font-size: min(36px, calc((100vw - clamp(20px, 4vw, 48px) * 2 - var(--pad) * 2) / 11.6));
