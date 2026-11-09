@@ -29,7 +29,11 @@
 }
 
 @media (max-width: 560px) {
-  .case { gap: 28px; }
-  .case__h2 { margin-top: 36px; }
+  /* Case study rhythm: a heading sits close to its image (16px), sections are 40px apart,
+     and images in the same section are 12px apart */
+  .case { gap: 16px; padding-top: 40px; padding-bottom: 96px; }
+  .case__h2 { margin-top: 24px; }
+  .case__cta { margin-top: 0; }
+  .media--shot + .media--shot { margin-top: -4px; }
   .media--logo { aspect-ratio: 4 / 3; }
 }
