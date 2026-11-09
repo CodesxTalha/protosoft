@@ -1,0 +1,51 @@
+/* ---------- Closing call to action ---------- */
+.cta {
+  display: flex;
+  justify-content: center;
+  padding: 0 clamp(20px, 4vw, 48px) 96px;
+}
+
+.cta__card {
+  --pad: clamp(22px, 3.4vw, 36px);   /* the text's padding, and the plus grid's margin: they line up */
+  position: relative;
+  overflow: hidden;
+  padding: var(--pad);
+  border-radius: 14px;
+  background: var(--btn-dark);
+  color: #fafafa;
+}
+
+/* A background of plus marks across the whole card: soft, slightly blurred, dimmer behind the text */
+.cta__grid {
+  --cell: 32px;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: blur(.6px);
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, .3) 0%, #000 70%);
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, .3) 0%, #000 70%);
+}
+
+.cta__body { position: relative; display: grid; gap: 14px; justify-items: start; max-width: 520px; }
+
+.cta__title {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(28px, 3.6vw, 40px);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.cta__text { margin: 0 0 12px; font-size: 16px; line-height: 1.5; color: #bdbdbb; max-width: 40ch; }
+
+/* Entrance: the text eases up one piece after another when the card scrolls into view */
+.cta.is-ready .cta__body > * {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .6s ease, transform .7s cubic-bezier(.2, .7, .2, 1);
+}
+.cta.is-ready .cta__body > :nth-child(2) { transition-delay: .09s; }
+.cta.is-ready .cta__body > :nth-child(3) { transition-delay: .18s; }
+.cta.is-in .cta__body > * { opacity: 1; transform: none; }

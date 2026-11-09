@@ -1,6 +1,7 @@
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .cta.is-ready .cta__body > *,
   .footer__nav a, .footer__totop,
   .faq__icon, .faq.is-ready .faq__a, .faq.is-ready .faq__a > div,
   .btn__icon, .btn__icon svg, .seg label span,  .svc, .svc__name, .switch__track, .switch__track::after,
@@ -86,4 +87,13 @@
   .footer__nav ul { gap: 0; }
   .footer__nav a { padding: 11px 0; font-size: 16px; }
   .footer__bottom { margin-top: 28px; padding-top: 18px; }
+}
+
+@media (max-width: 560px) {
+  /* Phones: a plain dark card with no pattern, and the heading kept on one line (it scales with the screen) */
+  .cta__grid { display: none; }
+  .cta__title {
+    white-space: nowrap;
+    font-size: min(36px, calc((100vw - clamp(20px, 4vw, 48px) * 2 - var(--pad) * 2) / 11.6));
+  }
 }

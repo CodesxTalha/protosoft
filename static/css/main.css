@@ -193,7 +193,8 @@ a { color: inherit; }
 .work .column,
 .pricing .column,
 .testimonials .column,
-.faq .column { max-width: var(--services-width); }
+.faq .column,
+.cta .column { max-width: var(--services-width); }
 
 /* Cards: flat rounded tiles in the same light fill as the buttons */
 .cards {
