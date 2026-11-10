@@ -18,9 +18,6 @@
 
   var COLS = parseInt(canvas.dataset.cols, 10) || 20;
   var ROWS = parseInt(canvas.dataset.rows, 10) || 7;
-  if (window.innerHeight < 800 && window.innerWidth > 560 && ROWS > 5) {            // a short screen: a shorter grid, so the basket below it stays on the first screen
-    ROWS = 5; canvas.style.aspectRatio = COLS + ' / ' + ROWS;
-  }
   var SPEED = Math.max(0.2, parseFloat(canvas.dataset.speed) || 1);
   var MAX_PLUS = 18;                                    // px
   var FADE = 1.4;                                       // seconds that one move melts into the next
@@ -83,7 +80,7 @@
   var REACH = 3.4;                                       // radius of its influence, in cells
   var ptr = { x: 0, y: 0, sx: 0, sy: 0, on: false, k: 0 };   // raw position (screen px), smoothed position (canvas px), strength 0 to 1
   var pulses = [];                                       // click rings: { x, y, t } in canvas px and ms
-  var interactive = !window.matchMedia('(prefers-reduced-motion: reduce)').matches && canvas.dataset.cursor !== 'off';   // off: the toybox pieces answer the cursor instead
+  var interactive = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var lastNow = 0;
 
   function track(e) { ptr.x = e.clientX; ptr.y = e.clientY; ptr.on = true; }
