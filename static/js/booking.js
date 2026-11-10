@@ -11,7 +11,7 @@
   var form = document.getElementById('booking');
   if (!form) return;
 
-  var STEPS = ['details', 'services', 'budget', 'confirm'], LAST = 3;
+  var STEPS = ['details', 'services', 'budget', 'time', 'confirm'], LAST = 4;
   var BUDGETS = {                                           // edit the ranges here
     PKR: ['Under PKR 50,000', 'PKR 50,000 – 150,000', 'PKR 150,000 – 300,000', 'PKR 300,000 and above'],
     USD: ['Under $500', '$500 – $1,000', '$1,000 – $2,500', '$2,500 and above']
@@ -90,7 +90,13 @@
     }
     return bad;
   }
-  var VALIDATE = [validateDetails, validateServices, validateBudget];
+  function validateTime() {
+    var ok = !!(window.ProtosoftCalendar && ProtosoftCalendar.value());
+    setError(null, 'e-time', ok ? '' : 'Please pick a day and a time for the call.');
+    return ok ? null : form.querySelector('.cal__day:not([disabled]), #cal-next');
+  }
+  var VALIDATE = [validateDetails, validateServices, validateBudget, validateTime];
+  if (window.ProtosoftCalendar) ProtosoftCalendar.onChange(function () { setError(null, 'e-time', ''); paintRail(); });
 
   // errors clear as soon as the visitor fixes the field
   form.addEventListener('input', function (e) {
@@ -116,6 +122,7 @@
     }
     if (k === 1) return services().length ? 1 : 0;
     if (k === 2) return !$('input[name="budget"]:checked') ? 0 : customChosen() ? (customValid() ? 1 : 0.5) : 1;
+    if (k === 3) return window.ProtosoftCalendar ? ProtosoftCalendar.progress() : 0;
     return state.finished ? 1 : 0.5 + (val('note') ? 0.5 : 0);   // confirm: reading the summary is half, adding a note the rest
   }
 
@@ -171,6 +178,8 @@
     if (val('phone')) rows.push(['Phone', val('phone')]);
     if (val('profession')) rows.push(['Profession', val('profession')]);
     rows.push(['Services', services().join(', ')], ['Budget', budgetLabel()]);
+    var call = window.ProtosoftCalendar && ProtosoftCalendar.value();
+    if (call) rows.push(['Call', call.label]);
     var dl = $('#summary'); dl.textContent = '';
     rows.forEach(function (r) {
       var row = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd');
@@ -182,6 +191,7 @@
     var data = {
       name: val('name'), email: val('email'), phone: val('phone'), profession: val('profession'),
       services: services(), budget: budgetLabel(), currency: state.cur, note: val('note'),
+      call: window.ProtosoftCalendar ? ProtosoftCalendar.value() : null,
       source: 'book page', sentAt: new Date().toISOString()
     };
     if (form.dataset.accessKey) { data.access_key = form.dataset.accessKey; data.subject = 'New booking from ' + data.name; }
