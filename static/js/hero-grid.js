@@ -98,7 +98,31 @@
     window.addEventListener('pointerup', function (e) { if (e.pointerType !== 'mouse') leave(); }, { passive: true });
     window.addEventListener('pointercancel', leave, { passive: true });
     document.addEventListener('mouseleave', leave);
+
+    /* On a touch screen the browser normally turns a dragging finger into a scroll, and then stops sending its movements here.
+       So a touch that starts on the grid is claimed, and the page does not scroll, when the finger rests for a moment before moving
+       or when it moves sideways. A quick swipe up or down still scrolls the page as usual. */
+    var touch = { on: false, claimed: false, x: 0, y: 0, t: 0 };
+    window.addEventListener('touchstart', function (e) {
+      var t = e.touches[0], r = canvas.getBoundingClientRect();
+      touch.on = !!t && e.touches.length === 1 && t.clientX > r.left - 8 && t.clientX < r.right + 8 && t.clientY > r.top - 8 && t.clientY < r.bottom + 8;
+      touch.claimed = false;
+      if (touch.on) { touch.x = t.clientX; touch.y = t.clientY; touch.t = performance.now(); }
+    }, { passive: true });
+    window.addEventListener('touchmove', function (e) {
+      if (!touch.on) return;
+      var t = e.touches[0], dx = Math.abs(t.clientX - touch.x), dy = Math.abs(t.clientY - touch.y);
+      if (!touch.claimed) {
+        if (performance.now() - touch.t > 200) touch.claimed = true;        // held still first, then moved: it is for the grid
+        else if (dx > 5 && dx >= dy) touch.claimed = true;                  // moving sideways: it is for the grid
+        else if (dy > 7) { touch.on = false; return; }                      // moving up or down quickly: let the page scroll
+      }
+      if (touch.claimed && e.cancelable) e.preventDefault();
+    }, { passive: false });
+    window.addEventListener('touchend', function () { touch.on = false; touch.claimed = false; }, { passive: true });
+    window.addEventListener('touchcancel', function () { touch.on = false; touch.claimed = false; }, { passive: true });
   }
+  canvas._reaction = function () { return ptr.k; };       // for checking the effect
 
   // Called once per frame: follows the cursor with a little weight, and fades the effect in and out
   function step(now) {
