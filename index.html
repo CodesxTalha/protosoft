@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="static/css/main.css">
   <link rel="stylesheet" href="static/css/secnav.css">
   <link rel="stylesheet" href="static/css/topbar.css">
+  <link rel="stylesheet" href="static/css/toybox.css">
   <link rel="stylesheet" href="static/css/process.css">
   <link rel="stylesheet" href="static/css/work.css">
   <link rel="stylesheet" href="static/css/testimonials.css">
@@ -82,7 +83,7 @@
         <h1 class="hero__title"><span class="muted">Hi, we're</span> Protosofts.</h1>
 
         <!-- Drawn by static/js/hero-grid.js. Change data-cols / data-rows / data-speed to tune it (and aspect-ratio in main.css). -->
-        <canvas class="hero__grid" data-cols="20" data-rows="7" data-speed="1" aria-hidden="true"></canvas>
+        <canvas class="hero__grid" data-cursor="off" data-cols="20" data-rows="7" data-speed="1" aria-hidden="true"></canvas>
 
         <p class="lead">
           We're a small startup based in Islamabad, building
@@ -97,6 +98,11 @@
         </div>
       </div>
     </main>
+
+    <!-- Where the basket of pieces sits (static/js/toybox.js) -->
+    <div class="hero__stage" aria-hidden="true"></div>
+
+    <canvas class="toybox" aria-hidden="true"></canvas>
 
   </div>
 
@@ -490,6 +496,8 @@
   <script src="static/js/secnav.js" defer></script>
   <script src="static/js/topbar.js" defer></script>
   <script src="static/js/hero-grid.js" defer></script>
+  <script src="static/js/toybox-logos.js" defer></script>
+  <script src="static/js/toybox.js" defer></script>
   <script src="static/js/illustrations.js" defer></script>
   <script src="static/js/process.js" defer></script>
   <script src="static/js/geo.js" defer></script>

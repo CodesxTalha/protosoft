@@ -110,3 +110,7 @@
   .opts, .fields__row { grid-template-columns: minmax(0, 1fr); }
   .panel__foot .btn { flex: 1 1 0; }
 }
+
+/* Tablet and phone: the home page bar sits flush with the top of the screen, so the bars on the other pages do too
+   (the logo stays in the same place from page to page) */
+@media (max-width: 999px) { .book__top, .legal-top, .case-top { padding-top: 0; } }

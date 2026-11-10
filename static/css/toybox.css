@@ -1,0 +1,14 @@
+/* ---------- Hero toybox (static/js/toybox.js) ---------- */
+.page { position: relative; }
+
+/* The room under the hero text where the logos land. The floor is the very bottom edge of the hero. */
+.page:has(> .hero__stage) { padding-bottom: 0; }
+.hero__stage { flex: none; width: 100%; height: clamp(150px, 19svh, 220px); }
+@media (max-width: 560px) { .hero__stage { margin-top: 44px; } }   /* on a phone, more air between the buttons and the logos */
+
+/* One canvas over the first screen. It never takes the pointer; pieces are picked up by testing the pointer against them. */
+.toybox { position: absolute; inset: 0; z-index: 4; width: 100%; height: 100%; pointer-events: none; }
+
+html.piece-hover, html.piece-hover * { cursor: grab !important; }
+html.piece-drag, html.piece-drag * { cursor: grabbing !important; }
+html.piece-drag { -webkit-user-select: none; user-select: none; }
