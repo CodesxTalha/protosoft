@@ -1,21 +1,77 @@
 /* ---------- Top bar (home page) ----------
-   The logo and the booking button. It floats over the hero with no background; once you scroll it gets a soft blurred
-   background, slides away as you read down, and comes back the moment you scroll up, so Book a call is always one flick away.
-   (static/js/topbar.js) */
-.topbar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 60;
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  height: 64px; padding: 0 clamp(20px, 4vw, 48px);
-  transition: transform .4s cubic-bezier(.2, .7, .2, 1), background-color .3s ease, box-shadow .3s ease;
-}
-.topbar.is-scrolled {
-  background: rgba(240, 240, 238, .82);
-  -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
-  box-shadow: 0 1px 0 var(--line);
-}
-.topbar.is-hidden { transform: translateY(-100%); }
-.topbar:focus-within { transform: none; }
+   Desktop: the first thing on the page, as wide as the content (so its edges line up with the cards). It is not fixed:
+   it scrolls away with the hero, and the section rings on the left do the navigating.
+   Tablet and phone (under 1000px): a flat bar across the top of the screen, no floating card, that stays fixed at the top, frosted so the page
+   blurs behind it. The toggle opens the links as a frosted panel that unrolls from the bar. (static/js/topbar.js) */
+.topbar { position: relative; width: 100%; max-width: var(--services-width); margin: 0 auto; }
+.topbar__scrim, .menu, .topbar__menu { display: none; }
 
-.page:has(> .topbar) { padding-top: 64px; }
+.topbar__bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 56px; }
+.topbar__actions { display: flex; align-items: center; gap: 8px; }
+.topbar__cta { min-height: 34px; }
 
-@media (prefers-reduced-motion: reduce) { .topbar { transition: none; } }
+@media (max-width: 999px) {
+  .page:has(> .topbar) { padding-top: 56px; }
+
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 60; max-width: none; margin: 0;
+  }
+
+  .topbar__bar {
+    position: relative; z-index: 1; height: 56px; padding: 0 clamp(20px, 4vw, 48px);
+    background: rgba(240, 240, 238, .7);
+    -webkit-backdrop-filter: blur(18px) saturate(1.5); backdrop-filter: blur(18px) saturate(1.5);
+    box-shadow: 0 1px 0 var(--line);
+  }
+  .topbar__cta { display: none; }
+  .topbar__actions { margin-right: -10px; }
+  .topbar__menu {
+    display: grid; width: 44px; height: 44px; margin: 0; padding: 0; border: 0; border-radius: 8px;
+    background: none; color: var(--ink); cursor: pointer; place-items: center;
+    -webkit-appearance: none; appearance: none;
+  }
+  .topbar__menu:focus-visible, .menu a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .topbar__bars { position: relative; display: block; width: 18px; height: 10px; }
+  .topbar__bars i { position: absolute; left: 0; width: 18px; height: 1.8px; border-radius: 1px; background: currentColor; transition: transform .4s cubic-bezier(.2, .7, .2, 1), top .4s cubic-bezier(.2, .7, .2, 1); }
+  .topbar__bars i:first-child { top: 1px; }
+  .topbar__bars i:last-child { top: 7px; }
+  .topbar.is-open .topbar__bars i:first-child { top: 4px; transform: rotate(45deg); }
+  .topbar.is-open .topbar__bars i:last-child { top: 4px; transform: rotate(-45deg); }
+
+  /* The links unroll from the bar, edge to edge, and the page behind softens */
+  .menu, .topbar__scrim { display: block; visibility: hidden; }
+  .topbar__scrim { position: fixed; inset: 0; z-index: 0; opacity: 0; background: rgba(240, 240, 238, .55); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); transition: opacity .4s ease, visibility 0s linear .4s; pointer-events: none; }
+  .menu {
+    position: relative; z-index: 1; padding: 4px clamp(20px, 4vw, 48px) 20px;
+    background: rgba(240, 240, 238, .78);
+    -webkit-backdrop-filter: blur(22px) saturate(1.5); backdrop-filter: blur(22px) saturate(1.5);
+    box-shadow: 0 1px 0 var(--line);
+    clip-path: inset(0 0 100% 0); transition: clip-path .5s cubic-bezier(.2, .7, .2, 1), visibility 0s linear .5s;
+  }
+  .topbar.is-open .menu { visibility: visible; clip-path: inset(0); transition-delay: 0s; }
+  .topbar.is-open .topbar__scrim { visibility: visible; opacity: 1; transition-delay: 0s; pointer-events: auto; }
+
+  .menu ul { margin: 0; padding: 0; list-style: none; }
+  .menu li + li { box-shadow: 0 -1px 0 var(--line); }
+  .menu li a {
+    display: flex; align-items: center; justify-content: space-between; min-height: 58px;
+    font-size: 24px; font-weight: 500; letter-spacing: -0.035em; text-decoration: none; color: var(--ink);
+  }
+  .menu li a svg { width: 16px; height: 16px; fill: none; stroke: #8a8a88; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .menu .btn { width: 100%; min-height: 50px; margin-top: 16px; border-radius: 10px; font-size: 15px; }
+
+  .menu li, .menu .btn { opacity: 0; transform: translateY(10px); transition: opacity .35s ease, transform .5s cubic-bezier(.2, .7, .2, 1); }
+  .topbar.is-open .menu li, .topbar.is-open .menu .btn { opacity: 1; transform: none; }
+  .topbar.is-open .menu li:nth-child(1) { transition-delay: .12s; }
+  .topbar.is-open .menu li:nth-child(2) { transition-delay: .16s; }
+  .topbar.is-open .menu li:nth-child(3) { transition-delay: .20s; }
+  .topbar.is-open .menu li:nth-child(4) { transition-delay: .24s; }
+  .topbar.is-open .menu li:nth-child(5) { transition-delay: .28s; }
+  .topbar.is-open .menu .btn { transition-delay: .34s; }
+
+  html.menu-open { overflow: hidden; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topbar, .topbar__bars i, .menu, .topbar__scrim, .menu li, .menu .btn { transition: none; }
+}
