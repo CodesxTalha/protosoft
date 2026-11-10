@@ -355,3 +355,6 @@ fieldset.group { min-width: 0; margin: 0; padding: 0; border: 0; }
 
 /* When the agreement is missing, the links go red along with the box and the message */
 .check__input[aria-invalid="true"] ~ .check__text a { color: #b3261e; }
+
+/* The step buttons are as tall as the inputs above them */
+.panel__foot .btn { min-height: 50px; }
