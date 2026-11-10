@@ -220,6 +220,14 @@
     if (state.step < LAST) next(); else submit();
   });
 
-  history.replaceState({ step: 0 }, '', '#details');
+  // arriving from the pricing card: tick the services chosen there (?services=Website,Web design)
+  try {
+    (new URLSearchParams(location.search).get('services') || '').split(',').forEach(function (v) {
+      var box = $$('input[name="service"]').filter(function (i) { return i.value === v.trim(); })[0];
+      if (box) box.checked = true;
+    });
+  } catch (e) {}
+
+  history.replaceState({ step: 0 }, '', location.pathname + '#details');
   show(0);
 })();

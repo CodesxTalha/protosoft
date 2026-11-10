@@ -150,6 +150,16 @@
   });
   $$('input[name="wtype"]').forEach(function (r) { r.addEventListener('change', function () { state.type = r.value; render(); }); });
   $('input[name="dev"]').addEventListener('change', function (e) { state.dev = e.target.checked; render(); });
+  // "Book a call" carries the chosen service to the booking page, which ticks it there.
+  // Web design with development switched on means both a design and a website are wanted.
+  var BOOK_AS = { package: ['Launch Package'], website: ['Website'], branding: ['Branding'], design: ['Web design'], automation: ['Automation'], marketing: ['Marketing'] };
+  var cta = $('.plan__cta');
+  if (cta) cta.addEventListener('click', function () {
+    var picked = BOOK_AS[state.service].slice();
+    if (state.service === 'design' && state.dev) picked.push('Website');
+    cta.setAttribute('href', 'book.html?services=' + encodeURIComponent(picked.join(',')));
+  });
+
   // start from whatever the form currently shows (browsers restore form choices on reload)
   state.service = ($('input[name="service"]:checked') || {}).value || 'package';
   state.type = ($('input[name="wtype"]:checked') || {}).value || 'static';
