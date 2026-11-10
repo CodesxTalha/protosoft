@@ -5,7 +5,7 @@
 
   var lenis = new Lenis({
     lerp: 0.1,       // lower = smoother / slower to catch up
-    anchors: true    // in-page links (#services, #contact) scroll smoothly too
+    anchors: { offset: -80 }   // in-page links scroll smoothly too, stopping just below the top bar
   });
   window.lenis = lenis;  // used by scroll-rail.js
 

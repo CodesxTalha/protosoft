@@ -1,0 +1,21 @@
+/* ---------- Top bar (home page) ----------
+   The logo and the booking button. It floats over the hero with no background; once you scroll it gets a soft blurred
+   background, slides away as you read down, and comes back the moment you scroll up, so Book a call is always one flick away.
+   (static/js/topbar.js) */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  height: 64px; padding: 0 clamp(20px, 4vw, 48px);
+  transition: transform .4s cubic-bezier(.2, .7, .2, 1), background-color .3s ease, box-shadow .3s ease;
+}
+.topbar.is-scrolled {
+  background: rgba(240, 240, 238, .82);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: 0 1px 0 var(--line);
+}
+.topbar.is-hidden { transform: translateY(-100%); }
+.topbar:focus-within { transform: none; }
+
+.page:has(> .topbar) { padding-top: 64px; }
+
+@media (prefers-reduced-motion: reduce) { .topbar { transition: none; } }

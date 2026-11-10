@@ -12,6 +12,8 @@
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.css">
   <link rel="stylesheet" href="static/css/main.css">
+  <link rel="stylesheet" href="static/css/secnav.css">
+  <link rel="stylesheet" href="static/css/topbar.css">
   <link rel="stylesheet" href="static/css/process.css">
   <link rel="stylesheet" href="static/css/work.css">
   <link rel="stylesheet" href="static/css/testimonials.css">
@@ -28,19 +30,35 @@
     <symbol id="plus" viewBox="0 0 24 24">
       <path d="M12 2.5v19M2.5 12h19" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
     </symbol>
+    <symbol id="secnav-ring" viewBox="0 0 36 36">
+      <circle class="sn__base" cx="18" cy="18" r="16" pathLength="100"/>
+      <circle class="sn__cut" cx="18" cy="18" r="16" pathLength="100"/>
+      <circle class="sn__arc" cx="18" cy="18" r="16" pathLength="100"/>
+    </symbol>
     <symbol id="plus-thin" viewBox="0 0 24 24">
       <path d="M12 3v18M3 12h18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
     </symbol>
   </svg>
 
+  <!-- Section rings: where you are on the page, and a way to jump (static/js/secnav.js). Hidden in the hero until you scroll or move to the left edge. -->
+  <nav class="secnav" aria-label="Sections">
+    <ol class="secnav__list">
+      <li class="secnav__item"><a class="secnav__link" href="#services"><span class="ring" aria-hidden="true"><svg class="ring__svg" viewBox="0 0 36 36"><use href="#secnav-ring"></use></svg></span><span class="secnav__label">Services</span></a></li>
+      <li class="secnav__item"><a class="secnav__link" href="#work"><span class="ring" aria-hidden="true"><svg class="ring__svg" viewBox="0 0 36 36"><use href="#secnav-ring"></use></svg></span><span class="secnav__label">Work</span></a></li>
+      <li class="secnav__item"><a class="secnav__link" href="#process"><span class="ring" aria-hidden="true"><svg class="ring__svg" viewBox="0 0 36 36"><use href="#secnav-ring"></use></svg></span><span class="secnav__label">Process</span></a></li>
+      <li class="secnav__item"><a class="secnav__link" href="#pricing"><span class="ring" aria-hidden="true"><svg class="ring__svg" viewBox="0 0 36 36"><use href="#secnav-ring"></use></svg></span><span class="secnav__label">Pricing</span></a></li>
+      <li class="secnav__item"><a class="secnav__link" href="#faq"><span class="ring" aria-hidden="true"><svg class="ring__svg" viewBox="0 0 36 36"><use href="#secnav-ring"></use></svg></span><span class="secnav__label">FAQ</span></a></li>
+    </ol>
+  </nav>
+
   <div class="page" id="top" data-rail-label="Intro">
 
-    <header class="nav">
-      <a class="brand" href="/" aria-label="Protosofts home">
+    <header class="topbar" id="topbar">
+      <a class="brand" href="#top" aria-label="Protosofts, back to the top">
         <svg class="brand__mark" aria-hidden="true"><use href="#plus"></use></svg>
         Protosofts
       </a>
-      <a class="btn btn--light btn--sm" href="book.html">Book a call</a>
+      <a class="btn btn--dark btn--sm" href="book.html">Book a call</a>
     </header>
 
     <main class="hero">
@@ -453,6 +471,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js" defer></script>
   <script src="static/js/smooth-scroll.js" defer></script>
+  <script src="static/js/secnav.js" defer></script>
+  <script src="static/js/topbar.js" defer></script>
   <script src="static/js/hero-grid.js" defer></script>
   <script src="static/js/illustrations.js" defer></script>
   <script src="static/js/process.js" defer></script>

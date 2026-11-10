@@ -1,0 +1,55 @@
+/* ---------- Section rings (home page) ----------
+   The booking page's progress rings, used to move around the home page. One ring per section: a section you have
+   passed is a complete ring, the one you are in fills as you read it, the rest are dotted.
+   It stays hidden in the hero and fades in once you scroll down; in the hero, moving the cursor to the left edge shows it.
+   Desktop only: a column down the left edge. (static/js/secnav.js) */
+.secnav {
+  position: fixed; z-index: 55; left: clamp(20px, 3vw, 48px); top: 50%;
+  opacity: 0; visibility: hidden; transform: translate(-12px, -50%);
+  transition: opacity .35s ease, transform .45s cubic-bezier(.2, .7, .2, 1), visibility 0s linear .35s;
+}
+.secnav.is-visible, .secnav.is-peek { opacity: 1; visibility: visible; transform: translate(0, -50%); transition-delay: 0s; }
+.secnav__list { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+
+.secnav__link {
+  display: flex; align-items: center; gap: 12px; padding: 4px 0;
+  font-size: 15px; letter-spacing: -0.01em; text-decoration: none; color: var(--ink-muted);
+  transition: color .4s ease;
+}
+.secnav__link:hover { color: var(--ink); }
+.secnav__link:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 8px; }
+.secnav__item.is-current .secnav__link { color: var(--ink); font-weight: 500; }
+.secnav__item.is-done .secnav__link { color: var(--ink-muted); }
+
+/* Names: on narrower desktops they appear when you move onto the column (or the left edge) */
+.secnav__label { opacity: 0; transform: translateX(-6px); white-space: nowrap; transition: opacity .25s ease, transform .3s cubic-bezier(.2, .7, .2, 1); pointer-events: none; }
+.secnav:hover .secnav__label, .secnav.is-peek .secnav__label, .secnav__link:focus-visible .secnav__label { opacity: 1; transform: none; }
+/* Wide screens have room in the left margin: every name is always shown, in gray (the current one in black), so it reads as a menu you can click */
+@media (min-width: 1280px) { .secnav__label { opacity: 1; transform: none; pointer-events: auto; } }
+
+/* The ring (same drawing as the booking page, with its own class names because the process section already uses .ring__arc). The circles live inside the <symbol>, outside .secnav,
+   so they are styled directly and take their colour from variables set on the item. */
+.secnav .ring { position: relative; flex: none; display: block; width: 24px; height: 24px; }
+.secnav .ring__svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.sn__base { fill: none; stroke: var(--ring, #bbbbb9); stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 0 6.25; opacity: var(--ring-o, 1); transition: stroke .4s ease, opacity .4s ease; }
+.sn__cut {
+  fill: none; stroke: var(--bg); stroke-width: 4.2; stroke-linecap: round; stroke-dasharray: 100;
+  stroke-dashoffset: calc(100 - var(--p, 0) * 100);
+  opacity: clamp(0, calc(var(--p, 0) * 60), 1);
+}   /* clears the dots beneath the arc, so none of them peek out along its edges */
+.sn__arc {
+  fill: none; stroke: var(--arc, var(--ink)); stroke-width: 2.9; stroke-linecap: round; stroke-dasharray: 100;
+  stroke-dashoffset: calc(100 - var(--p, 0) * 100);
+  opacity: clamp(0, calc(var(--p, 0) * 60), 1);
+  transition: stroke .4s ease;   /* only the colour fades (black to gray once you pass a section); the fill itself follows the scroll directly */
+}
+.secnav__item:hover { --ring: #8f8f8d; }
+.secnav__item.is-current { --ring: #8f8f8d; }
+.secnav__item.is-done { --ring-o: 0; --arc: #a2a2a0; }   /* a section you have passed: a complete ring, but gray, so the one you are in stands out */
+
+/* Mobile and tablet: no side column, the simple top bar is the only navigation */
+@media (max-width: 999px) { .secnav { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .secnav, .secnav__label, .sn__base, .sn__cut, .sn__arc, .secnav__link { transition: none; }
+}
