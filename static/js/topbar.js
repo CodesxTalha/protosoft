@@ -1,11 +1,25 @@
 /* ---------- Top bar ----------
    Desktop: the bar is part of the page and scrolls away with it, so there is nothing to do here.
-   Under 1000px: the bar stays fixed at the top, and the toggle opens the links. */
+   Under 1000px: the bar is fixed, slides away as you scroll down and back as you scroll up, and the toggle opens the links. */
 (function () {
   var bar = document.querySelector('.topbar');
   if (!bar) return;
   var small = window.matchMedia('(max-width: 999px)'), root = document.documentElement;
   var btn = bar.querySelector('.topbar__menu'), menu = bar.querySelector('.menu');
+  var last = window.scrollY, ticking = false;
+
+  /* Under 1000px: scrolling down slides the bar up out of view, scrolling up slides it back. The slide itself is a CSS animation. */
+  function update() {
+    ticking = false;
+    var y = window.scrollY, dy = y - last;
+    if (!small.matches || bar.classList.contains('is-open') || y < 80) bar.classList.remove('is-hidden');
+    else if (dy > 8) bar.classList.add('is-hidden');
+    else if (dy < -8) bar.classList.remove('is-hidden');
+    if (Math.abs(dy) > 8 || y < 80) last = y;
+  }
+  addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  addEventListener('resize', update);
+  update();
 
   function setOpen(open) {
     bar.classList.toggle('is-open', open); root.classList.toggle('menu-open', open);

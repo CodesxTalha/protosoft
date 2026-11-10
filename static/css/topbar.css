@@ -1,8 +1,8 @@
 /* ---------- Top bar (home page) ----------
    Desktop: the first thing on the page, as wide as the content (so its edges line up with the cards). It is not fixed:
    it scrolls away with the hero, and the section rings on the left do the navigating.
-   Tablet and phone (under 1000px): a flat bar across the top of the screen, no floating card, that stays fixed at the top, frosted so the page
-   blurs behind it. The toggle opens the links as a frosted panel that unrolls from the bar. (static/js/topbar.js) */
+   Tablet and phone (under 1000px): a flat bar across the top of the screen, no floating card, frosted so the page
+   blurs behind it. It slides up out of view as you scroll down and slides back as you scroll up. The toggle opens the links as a frosted panel that unrolls from the bar. (static/js/topbar.js) */
 .topbar { position: relative; width: 100%; max-width: var(--services-width); margin: 0 auto; }
 .topbar__scrim, .menu, .topbar__menu { display: none; }
 
@@ -15,7 +15,10 @@
 
   .topbar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 60; max-width: none; margin: 0;
+    transition: transform .6s cubic-bezier(.2, .7, .2, 1), opacity .45s ease;
   }
+  /* Scrolling down slides the bar up out of view; scrolling up slides it back (static/js/topbar.js) */
+  .topbar.is-hidden:not(.is-open) { transform: translateY(-56px); opacity: 0; pointer-events: none; }
 
   .topbar__bar {
     position: relative; z-index: 1; height: 56px; padding: 0 clamp(20px, 4vw, 48px);
@@ -32,7 +35,7 @@
   }
   .topbar__menu:focus-visible, .menu a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
   .topbar__bars { position: relative; display: block; width: 18px; height: 10px; }
-  .topbar__bars i { position: absolute; left: 0; width: 18px; height: 1.8px; border-radius: 1px; background: currentColor; transition: transform .4s cubic-bezier(.2, .7, .2, 1), top .4s cubic-bezier(.2, .7, .2, 1); }
+  .topbar__bars i { position: absolute; left: 0; width: 18px; height: 2.2px; border-radius: 1.1px; background: currentColor; transition: transform .4s cubic-bezier(.2, .7, .2, 1), top .4s cubic-bezier(.2, .7, .2, 1); }
   .topbar__bars i:first-child { top: 1px; }
   .topbar__bars i:last-child { top: 7px; }
   .topbar.is-open .topbar__bars i:first-child { top: 4px; transform: rotate(45deg); }
@@ -72,6 +75,9 @@
   html.menu-open { overflow: hidden; }
 }
 
+/* Reduced motion: nothing moves, but the bar still fades in and out instead of vanishing at once */
 @media (prefers-reduced-motion: reduce) {
-  .topbar, .topbar__bars i, .menu, .topbar__scrim, .menu li, .menu .btn { transition: none; }
+  .topbar__bars i, .menu, .topbar__scrim, .menu li, .menu .btn { transition: none; }
+  .topbar { transition: opacity .3s ease; }
+  .topbar.is-hidden:not(.is-open) { transform: none; }
 }
