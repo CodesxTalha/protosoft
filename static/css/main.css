@@ -136,6 +136,9 @@ a { color: inherit; }
   transition: background-color .18s ease, color .18s ease;
 }
 
+/* Real <button> elements (forms) must look exactly like the link buttons: no default border, same font */
+button.btn { border: 0; font-family: inherit; cursor: pointer; -webkit-appearance: none; appearance: none; }
+
 .btn:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 2px;

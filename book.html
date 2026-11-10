@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book a call · Protosoft</title>
+  <meta name="description" content="Tell us about your project and book a call with Protosoft.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/main.css">
+  <link rel="stylesheet" href="static/css/book.css">
+  <link rel="stylesheet" href="static/css/responsive.css">
+</head>
+<body class="book">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="plus" viewBox="0 0 24 24">
+      <path d="M12 2.5v19M2.5 12h19" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+    </symbol>
+    <symbol id="ring" viewBox="0 0 36 36">
+      <circle class="ring__base" cx="18" cy="18" r="16" pathLength="100"/>
+      <circle class="ring__arc" cx="18" cy="18" r="16" pathLength="100"/>
+    </symbol>
+  </svg>
+
+  <header class="book__top">
+    <div class="nav">
+      <a class="brand" href="index.html" aria-label="Protosoft home">
+        <svg class="brand__mark" aria-hidden="true"><use href="#plus"></use></svg>
+        Protosoft
+      </a>
+      <a class="btn btn--light btn--sm" href="index.html"><svg class="btn__arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M12.5 8h-9M7 4 3 8l4 4"/></svg> Back to site</a>
+    </div>
+  </header>
+
+  <!-- Progress: a ring per step. The current ring is dotted and a solid arc grows around it as the step is filled in,
+       a step you have passed gets a check (the arc still shows how much was really filled), upcoming steps are gray and dotted.
+       Steps you have already reached are buttons, so you can go back. On desktop this sits at the left of the screen,
+       vertically centered; on smaller screens it moves to the top. (static/js/booking.js) -->
+  <nav class="rail" aria-label="Progress">
+    <ol class="rail__steps">
+      <li class="rail__step is-current">
+        <button class="rail__btn" type="button" data-goto="0" aria-current="step">
+          <span class="ring" aria-hidden="true"><svg class="ring__svg" viewBox="0 0 36 36"><use href="#ring"></use></svg><span class="ring__no">1</span><svg class="ring__check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <span class="rail__label">Your details</span>
+        </button>
+      </li>
+      <li class="rail__step is-next">
+        <button class="rail__btn" type="button" data-goto="1" disabled>
+          <span class="ring" aria-hidden="true"><svg class="ring__svg" viewBox="0 0 36 36"><use href="#ring"></use></svg><span class="ring__no">2</span><svg class="ring__check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <span class="rail__label">Services</span>
+        </button>
+      </li>
+      <li class="rail__step is-later">
+        <button class="rail__btn" type="button" data-goto="2" disabled>
+          <span class="ring" aria-hidden="true"><svg class="ring__svg" viewBox="0 0 36 36"><use href="#ring"></use></svg><span class="ring__no">3</span><svg class="ring__check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <span class="rail__label">Budget</span>
+        </button>
+      </li>
+      <li class="rail__step is-later">
+        <button class="rail__btn" type="button" data-goto="3" disabled>
+          <span class="ring" aria-hidden="true"><svg class="ring__svg" viewBox="0 0 36 36"><use href="#ring"></use></svg><span class="ring__no">4</span><svg class="ring__check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <span class="rail__label">Confirm</span>
+        </button>
+      </li>
+    </ol>
+  </nav>
+
+  <main class="book__main">
+    <!-- To receive bookings, put a form endpoint in data-endpoint (for example a Formspree or Web3Forms URL).
+         Each booking is sent to it as JSON. See static/js/booking.js. -->
+    <form class="booking" id="booking" novalidate data-endpoint="">
+      <noscript><p class="form-error">Please turn on JavaScript to book a call.</p></noscript>
+
+      <!-- Step 1: details -->
+      <section class="panel" data-panel="0" aria-labelledby="h-details">
+        <header class="panel__head">
+          <p class="panel__eyebrow">Step 1 of 4</p>
+          <h1 class="book__h" id="h-details" tabindex="-1">Let&rsquo;s start with you.</h1>
+          <p class="book__sub">Tell us who we&rsquo;ll be talking to.</p>
+        </header>
+
+        <div class="fields">
+          <div class="field">
+            <label class="field__label" for="f-name">Name</label>
+            <input class="field__input" id="f-name" name="name" type="text" autocomplete="name" enterkeyhint="next" aria-describedby="e-name">
+            <p class="field__error" id="e-name" aria-live="polite" hidden></p>
+          </div>
+          <div class="field">
+            <label class="field__label" for="f-email">Email</label>
+            <input class="field__input" id="f-email" name="email" type="email" inputmode="email" autocomplete="email" enterkeyhint="next" aria-describedby="e-email">
+            <p class="field__error" id="e-email" aria-live="polite" hidden></p>
+          </div>
+          <div class="fields__row">
+            <div class="field">
+              <label class="field__label" for="f-phone">Phone <span class="field__opt">optional</span></label>
+              <input class="field__input" id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" aria-describedby="e-phone">
+              <p class="field__error" id="e-phone" aria-live="polite" hidden></p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="f-profession">Profession <span class="field__opt">optional</span></label>
+              <input class="field__input" id="f-profession" name="profession" type="text" autocomplete="organization-title" enterkeyhint="done">
+            </div>
+          </div>
+        </div>
+        <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+
+        <footer class="panel__foot">
+          <button class="btn btn--dark btn--lg" type="submit">Continue <svg class="btn__arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8h9M9 4l4 4-4 4"/></svg></button>
+        </footer>
+      </section>
+
+      <!-- Step 2: services -->
+      <section class="panel" data-panel="1" aria-labelledby="h-services" hidden>
+        <header class="panel__head">
+          <p class="panel__eyebrow">Step 2 of 4</p>
+          <h1 class="book__h" id="h-services" tabindex="-1">What do you need?</h1>
+          <p class="book__sub">Pick everything that applies.</p>
+        </header>
+
+        <fieldset class="group" aria-describedby="e-services">
+          <legend class="field__label">Services <span class="field__opt">select all that apply</span></legend>
+          <div class="opts">
+            <label class="opt"><input type="checkbox" name="service" value="Launch Package"><span class="opt__box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="opt__text">Launch Package</span></label>
+            <label class="opt"><input type="checkbox" name="service" value="Website"><span class="opt__box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="opt__text">Website</span></label>
+            <label class="opt"><input type="checkbox" name="service" value="Branding"><span class="opt__box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="opt__text">Branding</span></label>
+            <label class="opt"><input type="checkbox" name="service" value="Web design"><span class="opt__box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="opt__text">Web design</span></label>
+            <label class="opt"><input type="checkbox" name="service" value="Automation"><span class="opt__box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="opt__text">Automation</span></label>
+            <label class="opt"><input type="checkbox" name="service" value="Marketing"><span class="opt__box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="opt__text">Marketing</span></label>
+          </div>
+          <p class="field__error" id="e-services" aria-live="polite" hidden></p>
+        </fieldset>
+
+        <footer class="panel__foot">
+          <button class="btn btn--ghost btn--lg" type="button" data-back><svg class="btn__arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M12.5 8h-9M7 4 3 8l4 4"/></svg> Back</button>
+          <button class="btn btn--dark btn--lg" type="submit">Continue <svg class="btn__arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8h9M9 4l4 4-4 4"/></svg></button>
+        </footer>
+      </section>
+
+      <!-- Step 3: budget -->
+      <section class="panel" data-panel="2" aria-labelledby="h-budget" hidden>
+        <header class="panel__head">
+          <p class="panel__eyebrow">Step 3 of 4</p>
+          <h1 class="book__h" id="h-budget" tabindex="-1">What&rsquo;s your budget?</h1>
+          <p class="book__sub">A rough range is fine. Choose one, or enter your own amount.</p>
+        </header>
+
+        <fieldset class="group" aria-describedby="e-budget">
+          <legend class="field__label">Budget</legend>
+          <!-- The ranges are filled in by booking.js in PKR or USD, following the visitor's IP country -->
+          <div class="opts opts--radio" id="budget-opts"></div>
+          <p class="field__error" id="e-budget" aria-live="polite" hidden></p>
+        </fieldset>
+
+        <div class="field custom" id="custom-budget" hidden>
+          <label class="field__label" for="f-custom">Your budget</label>
+          <div class="money">
+            <span class="money__cur" id="money-cur">$</span>
+            <input class="money__input" id="f-custom" name="customBudget" type="text" inputmode="numeric" autocomplete="off" aria-describedby="e-custom">
+          </div>
+          <p class="field__error" id="e-custom" aria-live="polite" hidden></p>
+        </div>
+
+        <footer class="panel__foot">
+          <button class="btn btn--ghost btn--lg" type="button" data-back><svg class="btn__arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M12.5 8h-9M7 4 3 8l4 4"/></svg> Back</button>
+          <button class="btn btn--dark btn--lg" type="submit">Continue <svg class="btn__arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8h9M9 4l4 4-4 4"/></svg></button>
+        </footer>
+      </section>
+
+      <!-- Step 4: confirm -->
+      <section class="panel" data-panel="3" aria-labelledby="h-confirm" hidden>
+        <header class="panel__head">
+          <p class="panel__eyebrow">Step 4 of 4</p>
+          <h1 class="book__h" id="h-confirm" tabindex="-1">Almost there.</h1>
+          <p class="book__sub">Check your details and add anything else we should know.</p>
+        </header>
+
+        <dl class="summary" id="summary"></dl>
+
+        <div class="fields">
+          <div class="field">
+            <label class="field__label" for="f-note">Anything else? <span class="field__opt">optional</span></label>
+            <textarea class="field__input field__input--area" id="f-note" name="note" rows="3"></textarea>
+          </div>
+        </div>
+        <p class="form-error" id="e-submit" aria-live="polite" hidden></p>
+
+        <footer class="panel__foot">
+          <button class="btn btn--ghost btn--lg" type="button" data-back><svg class="btn__arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M12.5 8h-9M7 4 3 8l4 4"/></svg> Back</button>
+          <button class="btn btn--dark btn--lg" type="submit" id="submit">Complete booking</button>
+        </footer>
+      </section>
+
+      <!-- Done -->
+      <section class="panel" data-panel="done" aria-labelledby="h-done" hidden>
+        <header class="panel__head">
+          <p class="panel__eyebrow">All done</p>
+          <h1 class="book__h" id="h-done" tabindex="-1">You&rsquo;re all set.</h1>
+          <p class="book__sub" id="done-text">We&rsquo;ve received your request and will be in touch soon.</p>
+        </header>
+        <footer class="panel__foot">
+          <a class="btn btn--dark btn--lg" href="index.html">Back to site</a>
+        </footer>
+      </section>
+    </form>
+
+    <p class="book__note">We only use these details to get in touch about your project.</p>
+  </main>
+
+  <script src="static/js/geo.js" defer></script>
+  <script src="static/js/booking.js" defer></script>
+</body>
+</html>

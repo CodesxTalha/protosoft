@@ -96,3 +96,17 @@
     font-size: min(36px, calc((100vw - clamp(20px, 4vw, 48px) * 2 - var(--pad) * 2) / 11.6));
   }
 }
+
+/* Booking page: below 1000px the rings leave the left edge and sit in a row above the form; only the current step shows its name */
+@media (max-width: 1000px) {
+  .rail { position: static; transform: none; padding: 28px clamp(20px, 4vw, 48px) 0; }
+  .rail__steps { display: flex; align-items: center; gap: 16px; }
+  .rail__btn { gap: 10px; font-size: 14px; }
+  .rail__step:not(.is-current) .rail__label { display: none; }
+  .book__main { padding-top: 36px; }
+}
+
+@media (max-width: 560px) {
+  .opts, .fields__row { grid-template-columns: minmax(0, 1fr); }
+  .panel__foot .btn { flex: 1 1 0; }
+}

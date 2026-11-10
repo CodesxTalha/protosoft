@@ -1,0 +1,160 @@
+/* ---------- Booking page: flat and quiet. Progress rings fixed at the left edge, one step at a time in the middle ---------- */
+.book { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; }
+
+.book__top { padding: 24px clamp(20px, 4vw, 48px) 0; }
+
+.book__main { flex: 1; width: 100%; max-width: 560px; margin: 0 auto; padding: clamp(40px, 9vh, 96px) 20px 80px; }
+
+/* ----- Progress: on desktop, pinned to the left of the screen and vertically centered ----- */
+.rail { position: fixed; left: clamp(20px, 4vw, 48px); top: 50%; transform: translateY(-50%); z-index: 2; }
+.rail__steps { display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
+
+.rail__btn {
+  display: flex; align-items: center; gap: 12px;
+  margin: 0; padding: 0; border: 0; background: none;
+  font: inherit; font-size: 15px; letter-spacing: -0.01em; color: var(--ink-muted); text-align: left;
+  cursor: pointer; transition: color .3s ease;
+}
+.rail__btn[disabled] { cursor: default; }
+.rail__btn:not([disabled]):hover .rail__label { color: var(--ink); }
+.rail__btn:not([disabled]):hover .ring__base { stroke: #8f8f8d; }
+.rail__btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 8px; }
+.rail__step.is-current .rail__btn { color: var(--ink); font-weight: 500; }
+.rail__step.is-done .rail__btn, .rail__step.is-partial .rail__btn { color: #55554f; }
+
+/* The ring: dotted border; a solid arc fills it clockwise (--p is 0 to 1, set by booking.js) */
+.ring { position: relative; flex: none; display: grid; place-items: center; width: 24px; height: 24px; }
+.ring__svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }   /* the arc starts at the top */
+.ring__base { fill: none; stroke: #bbbbb9; stroke-width: 3.4; stroke-linecap: round; stroke-dasharray: 0 6.25; transition: stroke .3s ease, opacity .3s ease; }   /* 16 round dots */
+.ring__arc {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.86;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: calc(100 - var(--p, 0) * 100);
+  opacity: clamp(0, calc(var(--p, 0) * 60), 1);          /* nothing at all while empty (no stray dot) */
+  transition: stroke-dashoffset .5s cubic-bezier(.4, 0, .2, 1), opacity .2s ease;
+}
+.ring__no { display: none; }
+
+.ring__check { position: absolute; width: 12px; height: 12px; fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transform: scale(.6); transition: opacity .3s ease .15s, transform .3s ease .15s; }
+
+.is-current .ring__base { stroke: #8f8f8d; }           /* the step you are on: darker dots, black arc growing */
+.is-current .ring__no { color: var(--ink); }
+.is-partial .ring__base { stroke: #8f8f8d; }           /* passed, but not filled in completely: the ring stays as full as it really is, no check */
+.is-partial .ring__no { color: #55554f; }
+.is-done .ring__base, .is-done .ring__no { opacity: 0; }   /* filled in completely: one full solid ring and a check */
+.is-done .ring__check { opacity: 1; transform: none; }
+
+/* ----- One step at a time, straight on the page: a heading, the fields, and the buttons ----- */
+.booking { width: 100%; }
+
+.panel { animation: panel-in .4s cubic-bezier(.2, .7, .2, 1); }
+.panel[hidden] { display: none; }
+@keyframes panel-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+.panel__head { margin-bottom: 36px; }
+.panel__foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--line); }
+.panel__foot .btn:only-child { margin-left: auto; }
+.panel__foot .btn[disabled] { opacity: .6; cursor: default; }
+.btn--ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px #cfcfcc; }
+.btn--ghost:hover { background: rgba(0, 0, 0, .04); }
+
+.panel__eyebrow { margin: 0 0 14px; font-size: 13px; color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+.book__h { margin: 0 0 10px; font-size: clamp(28px, 3.4vw, 36px); font-weight: 500; line-height: 1.08; letter-spacing: -0.04em; }
+.book__h:focus { outline: none; }
+.book__sub { margin: 0; font-size: 15px; line-height: 1.5; color: var(--ink-muted); }
+.book__note { margin: 28px 0 0; font-size: 13px; line-height: 1.5; color: var(--ink-muted); }
+
+/* ----- Fields: no fill, a hairline border that turns black on focus ----- */
+.fields { display: grid; gap: 22px; }
+.fields__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+
+fieldset.group { min-width: 0; margin: 0; padding: 0; border: 0; }
+.field__label { display: block; margin: 0 0 8px; padding: 0; font-size: 13px; font-weight: 500; color: #55554f; }
+.field__opt { margin-left: 4px; font-weight: 400; color: #8a8a88; }
+
+.field__input, .money {
+  display: block;
+  width: 100%;
+  height: 50px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px #cfcfcc;
+  font: inherit;
+  font-size: 15px;
+  color: var(--ink);
+  transition: box-shadow .18s ease;
+}
+.field__input::placeholder { color: #a0a09e; }
+.field__input:hover, .money:hover { box-shadow: inset 0 0 0 1px #a9a9a7; }
+.field__input:focus, .money:focus-within { outline: none; box-shadow: inset 0 0 0 1.5px var(--ink); }
+.field__input--area { height: auto; padding: 14px 16px; line-height: 1.5; resize: vertical; min-height: 96px; }
+.field__input[aria-invalid="true"], .money:has([aria-invalid="true"]) { box-shadow: inset 0 0 0 1.5px #b3261e; }
+
+.money { display: flex; align-items: center; gap: 10px; }
+.money__cur { flex: none; font-size: 15px; color: var(--ink-muted); }
+.money__input { flex: 1; min-width: 0; height: 100%; padding: 0; border: 0; background: transparent; font: inherit; font-size: 15px; color: var(--ink); }
+.money__input:focus { outline: none; }
+.custom { margin-top: 16px; }
+.custom[hidden] { display: none; }
+
+.field__error, .form-error { margin: 8px 0 0; font-size: 13px; line-height: 1.4; color: #b3261e; }
+.field__error[hidden], .form-error[hidden] { display: none; }
+.form-error { margin: 20px 0 0; }
+
+/* ----- Options: one line each. A hairline row; a picked one gets a thin black border and a filled, drawn check ----- */
+.opts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.opts .opt:last-child:nth-child(odd) { grid-column: 1 / -1; }   /* an odd last option takes the whole row */
+
+.opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 50px;
+  padding: 0 16px;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px #cfcfcc;
+  cursor: pointer;
+  transition: box-shadow .2s ease, background-color .2s ease;
+}
+.opt:hover { box-shadow: inset 0 0 0 1px #a9a9a7; }
+.opt input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.opt:has(input:checked) { box-shadow: inset 0 0 0 1.5px var(--ink); }
+.opt:has(input:focus-visible) { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.opt__text { font-size: 15px; font-weight: 500; letter-spacing: -0.01em; color: #66665f; transition: color .2s ease; }
+.opt:has(input:checked) .opt__text { color: var(--ink); }
+
+.opt__box {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #a9a9a7;
+  border-radius: 6px;                       /* square-ish = pick several */
+  transition: background-color .2s ease, border-color .2s ease;
+}
+.opts--radio .opt__box { border-radius: 50%; }   /* round = pick one */
+.opt__box svg { width: 12px; height: 12px; fill: none; stroke: #fafafa; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transform: scale(.6); transition: opacity .2s ease, transform .2s ease; }
+.opt:has(input:checked) .opt__box { background: var(--ink); border-color: var(--ink); }
+.opt:has(input:checked) .opt__box svg { opacity: 1; transform: none; }
+
+/* ----- Summary on the last step ----- */
+.summary { margin: 0 0 28px; padding: 0; }
+.summary > div { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 16px; padding: 14px 0; border-top: 1px solid var(--line); }
+.summary > div:first-child { border-top: 0; padding-top: 0; }
+.summary dt { font-size: 13px; color: var(--ink-muted); }
+.summary dd { margin: 0; font-size: 15px; line-height: 1.4; overflow-wrap: anywhere; }
+
+/* Bots fill this field; people never see it */
+.hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .panel { animation: none; }
+  .rail__btn, .ring__base, .ring__arc, .ring__no, .ring__check, .opt, .opt__text, .opt__box, .opt__box svg, .field__input, .money { transition: none; }
+}
