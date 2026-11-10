@@ -108,7 +108,8 @@
 
 @media (max-width: 560px) {
   .opts, .fields__row { grid-template-columns: minmax(0, 1fr); }
-  .panel__foot .btn { flex: 1 1 0; }
+  .panel__foot .btn { flex: 1 1 0; white-space: nowrap; }                 /* the main button takes the room; its text stays on one line */
+  .panel__foot [data-back] { flex: 0 0 auto; min-width: 0; padding: 0 22px; }   /* Back is only as wide as it needs to be */
 }
 
 /* Tablet and phone: the home page bar sits flush with the top of the screen, so the bars on the other pages do too
