@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Book a call · Protosoft</title>
-  <meta name="description" content="Tell us about your project and book a call with Protosoft.">
+  <title>Book a call · Protosofts</title>
+  <meta name="description" content="Tell us about your project and book a call with Protosofts.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,9 +27,9 @@
 
   <header class="book__top">
     <div class="nav">
-      <a class="brand" href="index.html" aria-label="Protosoft home">
+      <a class="brand" href="index.html" aria-label="Protosofts home">
         <svg class="brand__mark" aria-hidden="true"><use href="#plus"></use></svg>
-        Protosoft
+        Protosofts
       </a>
       <a class="btn btn--light btn--sm" href="index.html"><svg class="btn__arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M12.5 8h-9M7 4 3 8l4 4"/></svg> Back to site</a>
     </div>
@@ -246,14 +246,24 @@
         </footer>
       </section>
 
-      <!-- Done -->
-      <section class="panel" data-panel="done" aria-labelledby="h-done" hidden>
-        <header class="panel__head">
-          <p class="panel__eyebrow">All done</p>
-          <h1 class="book__h" id="h-done" tabindex="-1">You&rsquo;re all set.</h1>
-          <p class="book__sub" id="done-text">We&rsquo;ve received your request and will be in touch soon.</p>
+      <!-- Done: the five step rings fly in from the left and land as one black tile with a check (booking.js, book.css) -->
+      <section class="panel panel--done" data-panel="done" aria-labelledby="h-done" hidden>
+        <div class="mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M8.5 16.6 13.7 21.8 23.5 10.4" pathLength="100"/></svg></div>
+
+        <header class="done__head done__rise" style="--d:.1s">
+          <h1 class="book__h" id="h-done" tabindex="-1">You&rsquo;re booked.</h1>
+          <p class="book__sub" id="done-text"></p>
         </header>
-        <footer class="panel__foot">
+
+        <div class="done__card done__rise" style="--d:.25s">
+          <span class="done__zone" id="done-zone"></span>
+          <p class="done__time" id="done-time"></p>
+          <p class="done__day" id="done-day"></p>
+        </div>
+
+        <p class="done__meta done__rise" id="done-meta" style="--d:.4s"></p>
+
+        <footer class="done__foot done__rise" style="--d:.5s">
           <a class="btn btn--dark btn--lg" href="index.html">Back to site</a>
         </footer>
       </section>

@@ -274,3 +274,53 @@ fieldset.group { min-width: 0; margin: 0; padding: 0; border: 0; }
 }
 @media (max-width: 400px) { .cal__slots { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (prefers-reduced-motion: reduce) { .cal__head, .cal__slots, .cal__ruler { animation: none; } .cal__day, .cal__slot, .cal__navbtn, .cal__modebtn, .cal__tick::before, .cal__part { transition: none; } }
+
+/* ----- After booking: the five step rings fly in from the left and land as one black tile with a check. Then a dark card with the time ----- */
+.panel--done { animation: none; }
+.book__main:has(.panel--done:not([hidden])) { padding-top: clamp(32px, 9vh, 88px); }
+.book__main:has(.panel--done:not([hidden])) .book__note { display: none; }
+
+.mark { display: grid; place-items: center; width: 64px; height: 64px; margin: 0 0 28px; border-radius: 20px; background: var(--ink); opacity: 0; transform: scale(.6); }
+.mark svg { width: 36px; height: 36px; fill: none; stroke: #fafafa; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 100; }
+.is-landed .mark { opacity: 1; transform: none; transition: opacity .25s ease, transform .55s cubic-bezier(.2, 1.3, .35, 1); }
+.is-landed .mark svg { animation: mark-draw .45s cubic-bezier(.4, 0, .2, 1) .22s both; }
+@keyframes mark-draw { from { stroke-dashoffset: 100; opacity: 0; } 8% { opacity: 1; } }
+
+.done__rise { opacity: 0; }
+.is-landed .done__rise { animation: done-rise .65s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(.3s + var(--d, 0s)); }
+@keyframes done-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+.done__head { margin-bottom: 28px; }
+
+/* the time, in the same dark card as the call-to-action on the home page, with the hero's plus pattern very faint behind it */
+.done__card {
+  position: relative; overflow: hidden;
+  padding: clamp(24px, 4vw, 36px);
+  border-radius: 14px; background: var(--btn-dark); color: #fafafa;
+}
+.done__card::before {
+  content: ""; position: absolute; inset: 0 0 0 52%; pointer-events: none; opacity: .09;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 75%);
+  mask-image: linear-gradient(90deg, transparent, #000 75%);   /* the pluses fade in from the right, like the hero's */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M14 9.5v9M9.5 14h9' stroke='white' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") right top / 28px 28px;
+}
+.done__card p { position: relative; margin: 0; }
+.done__zone { position: absolute; top: clamp(24px, 4vw, 36px); right: clamp(24px, 4vw, 36px); padding: 4px 10px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); font-size: 12px; font-weight: 500; letter-spacing: .01em; color: #bdbdbb; }
+.done__time { font-size: clamp(48px, 8vw, 68px); font-weight: 500; line-height: 1; letter-spacing: -0.055em; font-variant-numeric: tabular-nums; }
+.done__day { margin-top: 14px !important; font-size: 16px; line-height: 1.4; color: #bdbdbb; }
+.done__meta { margin: 20px 0 0; font-size: 14px; line-height: 1.5; color: var(--ink-muted); }
+.done__meta:empty { display: none; }
+.done__foot { margin-top: 28px; }
+
+/* the rings that fly (booking.js copies each step ring from the left and moves the copy to the tile) */
+.fly { position: fixed; z-index: 20; margin: 0; pointer-events: none; will-change: transform, opacity; }
+.fly .ring { width: 100%; height: 100%; }
+.is-booked .rail { visibility: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mark { opacity: 1; transform: none; transition: none; }
+  .mark svg { animation: none !important; }
+  .done__rise { opacity: 1; animation: none !important; }
+}
+
+@media (max-width: 1000px) { .is-booked .rail { display: none; } }   /* the rings row on phones: gone once they have flown, so no empty gap is left */

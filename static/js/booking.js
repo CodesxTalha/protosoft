@@ -198,11 +198,51 @@
     return data;
   }
 
+  /* ----- the finish: the five rings fly in from the left and land as one tile with a check ----- */
+  function flyRings(done) {
+    var mark = $('.mark'), t = mark.getBoundingClientRect(), tx = t.left + t.width / 2, ty = t.top + t.height / 2, flights = [];
+    rail.forEach(function (li, i) {
+      var ring = li.querySelector('.ring'), r = ring.getBoundingClientRect();
+      if (!r.width) return;
+      var fly = document.createElement('div');
+      fly.className = li.className.replace('rail__step', '').trim() + ' fly';
+      fly.style.cssText = 'left:' + r.left + 'px;top:' + r.top + 'px;width:' + r.width + 'px;height:' + r.height + 'px';
+      fly.appendChild(ring.cloneNode(true));
+      document.body.appendChild(fly);
+      var dx = tx - (r.left + r.width / 2), dy = ty - (r.top + r.height / 2), fan = (i - (rail.length - 1) / 2) * 16;
+      flights.push(fly.animate([
+        { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+        { transform: 'translate(' + dx * 0.5 + 'px, ' + (dy * 0.5 + fan) + 'px) scale(1.08)', opacity: 1, offset: 0.5 },
+        { transform: 'translate(' + dx + 'px, ' + dy + 'px) scale(.4)', opacity: 0 }
+      ], { duration: 780, delay: i * 90, easing: 'cubic-bezier(.6, 0, .25, 1)', fill: 'both' }).finished.then(function () { /* stays until all have landed */ }));
+      fly.dataset.fly = '1';
+    });
+    document.body.classList.add('is-booked');                         // the real rail hides; the copies are what you see leave
+    var cleanup = function () { [].slice.call(document.querySelectorAll('.fly')).forEach(function (f) { f.remove(); }); done(); };
+    if (!flights.length) { cleanup(); return; }
+    Promise.all(flights).then(cleanup, cleanup);
+  }
+
   function finish() {
     state.finished = true;
-    $('#done-text').textContent = 'Thanks, ' + val('name').split(/\s+/)[0] + '. We’ve received your request and will get back to you at ' + val('email') + '.';
-    history.replaceState(null, '', '#done');
+    var first = val('name').split(/\s+/)[0], call = window.ProtosoftCalendar && ProtosoftCalendar.value(), when = call && new Date(call.start);
+    $('#h-done').textContent = 'You’re booked, ' + first + '.';
+    $('#done-text').textContent = 'We’ve sent a confirmation to ' + val('email') + '.';
+    $('.done__card').hidden = !when;
+    if (when) {
+      var zone = '';
+      try { zone = new Intl.DateTimeFormat('en-US', { timeZone: call.timezone, timeZoneName: 'short' }).formatToParts(when).filter(function (p) { return p.type === 'timeZoneName'; })[0].value; } catch (e) {}
+      $('#done-zone').textContent = zone; $('#done-zone').hidden = !zone;
+      $('#done-time').textContent = when.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+      var sameYear = when.getFullYear() === new Date().getFullYear();
+      $('#done-day').textContent = when.toLocaleDateString(undefined, sameYear ? { weekday: 'long', day: 'numeric', month: 'long' } : { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    }
+    $('#done-meta').textContent = [services().join(', '), budgetLabel()].filter(Boolean).join('  ·  ');
+    history.replaceState(null, '', location.pathname + '#done');
     showPanel('done');
+    var landed = function () { document.body.classList.add('is-booked', 'is-landed'); };
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { landed(); return; }
+    requestAnimationFrame(function () { flyRings(landed); });
   }
 
   function submit() {
@@ -216,8 +256,21 @@
     }
     var label = btn.textContent;
     btn.disabled = true; btn.textContent = 'Sending…';
-    fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload()) })
-      .then(function (r) { if (!r.ok) throw new Error('status ' + r.status); finish(); })
+    // sent as text/plain (the body is still JSON): that avoids a browser preflight request, which Google Apps Script cannot answer
+    fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload()) })
+      .then(function (r) { if (!r.ok) throw new Error('status ' + r.status); return r.json(); })
+      .then(function (j) {
+        if (j && j.ok) { finish(); return; }
+        if (j && j.error === 'slot_taken') {                   // someone else took the time, or it just closed: back to the calendar
+          btn.disabled = false; btn.textContent = label;
+          go(3);
+          (window.ProtosoftCalendar ? ProtosoftCalendar.reload() : Promise.resolve()).then(function () {   // fresh times first, then the message
+            setError(null, 'e-time', 'That time was just taken. Please pick another one.');
+          });
+          return;
+        }
+        throw new Error((j && j.error) || 'failed');
+      })
       .catch(function () {
         err.textContent = 'Something went wrong, so nothing was sent. Please try again.'; err.hidden = false;
         btn.disabled = false; btn.textContent = label;

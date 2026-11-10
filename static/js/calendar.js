@@ -66,8 +66,8 @@
   function load() {
     var url = form.dataset.availability;
     state.ready = false; state.failed = false; paintStatus();
-    if (!url) { setSlots(ruleSlots()); return; }
-    fetch(url, { headers: { 'Accept': 'application/json' } })
+    if (!url) { setSlots(ruleSlots()); return Promise.resolve(); }
+    return fetch(url, { headers: { 'Accept': 'application/json' } })
       .then(function (r) { if (!r.ok) throw new Error('status ' + r.status); return r.json(); })
       .then(function (j) {
         var now = Date.now();
