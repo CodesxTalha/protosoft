@@ -65,7 +65,6 @@
 .book__h { margin: 0 0 10px; font-size: clamp(28px, 3.4vw, 36px); font-weight: 500; line-height: 1.08; letter-spacing: -0.04em; }
 .book__h:focus { outline: none; }
 .book__sub { margin: 0; font-size: 15px; line-height: 1.5; color: var(--ink-muted); }
-.book__note { margin: 28px 0 0; font-size: 13px; line-height: 1.5; color: var(--ink-muted); }
 
 /* ----- Fields: no fill, a hairline border that turns black on focus ----- */
 .fields { display: grid; gap: 22px; }
@@ -163,7 +162,6 @@ fieldset.group { min-width: 0; margin: 0; padding: 0; border: 0; }
 /* this step is wider than the others so the month and the times sit side by side */
 .book__main:has(.panel--wide:not([hidden])) { max-width: 860px; padding-top: clamp(24px, 6vh, 64px); }
 .panel--wide .panel__head { margin-bottom: 24px; }
-.book__main:has(.panel--wide:not([hidden])) .book__note { display: none; }   /* keeps this step inside the screen */
 .panel--wide .panel__foot { margin-top: 24px; padding-top: 20px; }
 
 .cal { display: grid; grid-template-columns: minmax(0, 1fr) 320px; column-gap: 56px; align-items: start; }
@@ -278,7 +276,6 @@ fieldset.group { min-width: 0; margin: 0; padding: 0; border: 0; }
 /* ----- After booking: the five step rings fly in from the left and land as one black tile with a check. Then a dark card with the time ----- */
 .panel--done { animation: none; }
 .book__main:has(.panel--done:not([hidden])) { padding-top: clamp(32px, 9vh, 88px); }
-.book__main:has(.panel--done:not([hidden])) .book__note { display: none; }
 
 .mark { display: grid; place-items: center; width: 64px; height: 64px; margin: 0 0 28px; border-radius: 20px; background: var(--ink); opacity: 0; transform: scale(.6); }
 .mark svg { width: 36px; height: 36px; fill: none; stroke: #fafafa; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 100; }
@@ -324,3 +321,23 @@ fieldset.group { min-width: 0; margin: 0; padding: 0; border: 0; }
 }
 
 @media (max-width: 1000px) { .is-booked .rail { display: none; } }   /* the rings row on phones: gone once they have flown, so no empty gap is left */
+
+/* Agreement under the details: why we ask, then one checkbox */
+.agree { margin-top: 24px; }
+.agree__note { margin: 0 0 14px; font-size: 13px; line-height: 1.5; color: var(--ink-muted); }
+.check { position: relative; display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+.check__input { position: absolute; width: 20px; height: 20px; margin: 0; opacity: 0; cursor: pointer; }
+.check__box {
+  flex: none; display: grid; place-items: center; width: 20px; height: 20px; margin-top: 1px;
+  border-radius: 6px; background: var(--surface); box-shadow: inset 0 0 0 1px #cfcfcc;
+  transition: background-color .15s ease, box-shadow .15s ease;
+}
+.check__box svg { width: 14px; height: 14px; fill: none; stroke: #fafafa; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transition: opacity .12s ease; }
+.check:hover .check__box { box-shadow: inset 0 0 0 1px #a9a9a7; }
+.check__input:checked + .check__box { background: var(--btn-dark); box-shadow: none; }
+.check__input:checked + .check__box svg { opacity: 1; }
+.check__input:focus-visible + .check__box { outline: 2px solid var(--ink); outline-offset: 2px; }
+.check__input[aria-invalid="true"] + .check__box { box-shadow: inset 0 0 0 1.5px #b3261e; }
+.check__text { font-size: 14px; line-height: 1.45; color: #55554f; }
+.check__text a { color: var(--ink); text-underline-offset: 3px; }
+.agree .field__error { margin-top: 8px; }

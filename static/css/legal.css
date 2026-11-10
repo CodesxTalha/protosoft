@@ -1,0 +1,40 @@
+/* ---------- Policy pages (privacy, refunds, standards) ---------- */
+.legal-top { padding: 24px clamp(20px, 4vw, 48px) 0; }
+
+.legal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(56px, 10vh, 112px) clamp(20px, 4vw, 48px) 128px;
+}
+.legal__inner { width: 100%; max-width: var(--content-width); }
+
+.legal__eyebrow { font-size: 13px; color: var(--ink-muted); }
+.legal__title {
+  margin: 14px 0 0;
+  font-weight: 500;
+  font-size: clamp(32px, 4.4vw, 46px);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+.legal .legal__lead { margin: 18px 0 0; max-width: 52ch; font-size: clamp(17px, 1.8vw, 21px); line-height: 1.3; letter-spacing: -0.01em; color: var(--ink-muted); }
+.legal .legal__updated { margin: 22px 0 0; padding-top: 22px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-muted); }
+
+.legal h2 { margin: 48px 0 12px; font-size: clamp(20px, 2.3vw, 24px); font-weight: 500; line-height: 1.1; letter-spacing: -0.03em; }
+.legal p, .legal li { font-size: 16px; line-height: 1.55; color: var(--ink-muted); }
+.legal p { margin: 0 0 12px; max-width: 60ch; }
+.legal ul { margin: 0 0 12px; padding-left: 20px; max-width: 60ch; }
+.legal li { margin-bottom: 6px; }
+.legal li::marker { color: var(--ink); }
+.legal strong { font-weight: 500; color: var(--ink); }
+.legal a { color: var(--ink); text-underline-offset: 3px; }
+.legal a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
+
+/* The one-line version, at the top of a page */
+.legal .legal__sum { margin: 36px 0 0; }
+.legal .legal__sum h2 { margin: 0 0 8px; }
+.legal .legal__sum p { margin: 0; color: var(--ink); }
+
+.legal__more { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 14px; }
+.legal__more a { color: var(--ink-muted); text-decoration: none; }
+.legal__more a:hover { color: var(--ink); }

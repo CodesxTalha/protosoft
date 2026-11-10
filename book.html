@@ -111,6 +111,15 @@
             </div>
           </div>
         </div>
+        <div class="agree">
+          <p class="agree__note">We only use these details to get in touch about your project.</p>
+          <label class="check" for="f-agree">
+            <input class="check__input" type="checkbox" id="f-agree" name="agree" aria-describedby="e-agree">
+            <span class="check__box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+            <span class="check__text">I have read and agree to the <a href="privacy.html" target="_blank" rel="noopener">privacy policy</a>, <a href="refunds.html" target="_blank" rel="noopener">refund policy</a> and <a href="standards.html" target="_blank" rel="noopener">standards</a>.</span>
+          </label>
+          <p class="field__error" id="e-agree" aria-live="polite" hidden></p>
+        </div>
         <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
 
         <footer class="panel__foot">
@@ -268,8 +277,6 @@
         </footer>
       </section>
     </form>
-
-    <p class="book__note">We only use these details to get in touch about your project.</p>
   </main>
 
   <script src="static/js/geo.js" defer></script>

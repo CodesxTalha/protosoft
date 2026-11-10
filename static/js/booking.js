@@ -70,6 +70,9 @@
     var phoneOk = phoneValid(p);
     setError(phone, 'e-phone', phoneOk ? '' : 'Please check this number, or leave it empty.');
     if (!phoneOk) bad = bad || phone;
+    var agree = form.elements.agree;
+    setError(agree, 'e-agree', agree.checked ? '' : 'Please agree to continue.');
+    if (!agree.checked) bad = bad || agree;
     return bad;
   }
 
