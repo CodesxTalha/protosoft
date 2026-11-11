@@ -11,6 +11,7 @@
      home  the home page: the logo scrolls to the top, the links are on the same page, the button is "Book a call"
      page  booking, privacy, refunds, standards: the button on the right is "Back to site"
      case  a project page: "All work" and "Book a call"
+     lost  the 404 page: only the logo with the name and a "Book a call" button, no menu on any screen
 
    To change a link, a label or the logo for the whole site, change it here, once. */
 (function () {
@@ -28,6 +29,9 @@
   if (variant === 'home') {
     right = '<a class="btn btn--dark btn--sm topbar__cta" href="' + bookUrl + '">Book a call</a>';
     menuButton = '<a class="btn btn--dark btn--lg" href="' + bookUrl + '">Book a call</a>';
+  } else if (variant === 'lost') {                                    // the 404 page: the logo goes home, the button is Book a call
+    right = '<a class="btn btn--dark btn--sm topbar__cta" href="' + bookUrl + '">Book a call</a>';
+    menuButton = '<a class="btn btn--dark btn--lg" href="' + bookUrl + '">Book a call</a>';
   } else if (variant === 'case') {
     right = '<a class="btn btn--light btn--sm topbar__work" href="' + homeUrl + '#work">' + BACK + ' All work</a>' +
             '<a class="btn btn--dark btn--sm topbar__cta" href="' + bookUrl + '">Book a call</a>';
@@ -35,6 +39,16 @@
   } else {
     right = '<a class="btn btn--light btn--sm topbar__work" href="' + homeUrl + '">' + BACK + ' Back to site</a>';
     menuButton = '<a class="btn btn--dark btn--lg" href="' + homeUrl + '">Back to site</a>';
+  }
+
+  if (variant === 'lost') {                                          // the 404 page: only the logo with the name, and the button. No menu, no toggle, on any screen
+    s.insertAdjacentHTML('beforebegin',
+      '<header class="topbar topbar--simple" id="topbar"><div class="topbar__bar">' +
+        '<a class="brand" href="' + homeUrl + '" aria-label="Protosofts home"><img class="brand__mark" src="' + root + 'static/img/logo.svg" alt="" width="24" height="24">Protosofts</a>' +
+        '<div class="topbar__actions">' + right + '</div>' +
+      '</div></header>');
+    s.parentNode.removeChild(s);
+    return;
   }
 
   var items = LINKS.map(function (l) {

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- This file is served for any address that does not exist, at any depth (for example /a/b/c), so its own links
+       must not depend on where it was loaded from. This sets the site's root as the base for every path below. -->
+  <script>
+    (function () {
+      if (/\/404\.html$/.test(location.pathname)) return;                          // opened directly: paths already work
+      var root = location.pathname.indexOf('/protosoft/') === 0 ? '/protosoft/' : '/';   // the project site lives under /protosoft/; a custom domain lives at /
+      document.write('<base href="' + root + '">');
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Page not found · Protosofts</title>
+  <link rel="icon" type="image/svg+xml" href="static/img/favicon.svg">
+  <meta name="description" content="We couldn’t find that page.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/main.css">
+  <link rel="stylesheet" href="static/css/topbar.css">
+  <link rel="stylesheet" href="static/css/notfound.css">
+  <link rel="stylesheet" href="static/css/responsive.css">
+</head>
+<body>
+  <div class="legal-top">
+    <script src="static/js/navbar.js" data-variant="lost"></script>
+  </div>
+
+  <main class="nf">
+    <div class="column">
+      <h1 class="hero__title"><span class="muted">We couldn&rsquo;t find</span> that page.</h1>
+
+      <!-- The address that was asked for, shown back to the visitor (filled in below; hidden when there is none) -->
+      <p class="nf__address" id="nf-address" hidden><span class="nf__label">You asked for</span><code id="nf-path"></code></p>
+
+      <p class="lead">It may have moved, or the link may be old.</p>
+
+      <div class="hero__actions">
+        <a class="btn btn--dark" href="index.html">Back to home</a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      var p = location.pathname;
+      if (/\/404\.html$/.test(p)) return;                                  // opened directly, so there is no missing address to show
+      p = p.replace(/^\/protosoft(?=\/)/, '');
+      try { p = decodeURIComponent(p); } catch (e) {}
+      if (p.length > 80) p = p.slice(0, 77) + '…';
+      document.getElementById('nf-path').textContent = p + location.search.slice(0, 40);        // text only, never HTML
+      document.getElementById('nf-address').hidden = false;
+    })();
+  </script>
+</body>
+</html>

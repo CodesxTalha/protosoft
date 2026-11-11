@@ -31,6 +31,8 @@
     box-shadow: 0 1px 0 var(--line);
   }
   .topbar__cta, .topbar__work { display: none; }
+  .topbar--simple .topbar__cta { display: inline-flex; }   /* the 404 page keeps its one button on a phone */
+  .topbar--simple .topbar__actions { margin-right: 0; }
   .topbar__actions { margin-right: -10px; }
   .topbar__menu {
     display: grid; width: 44px; height: 44px; margin: 0; padding: 0; border: 0; border-radius: 8px;
@@ -85,3 +87,6 @@
   .topbar { transition: opacity .3s ease; }
   .topbar.is-hidden:not(.is-open) { transform: none; opacity: 0; }
 }
+
+/* The 404 page's header button: smaller than the one on the other pages, on every screen */
+.topbar--simple .topbar__cta { min-width: 0; min-height: 30px; padding: 0 14px; border-radius: 6px; font-size: 13px; }
