@@ -12,7 +12,7 @@
 
 @media (max-width: 999px) {
   .page:has(> .topbar) { padding-top: 56px; }
-  .case-top, .book__top { height: 56px; padding: 0; }       /* the project and booking pages: room for the fixed bar */
+  .case-top, .book__top, .legal-top { height: 56px; padding: 0; }   /* the project, booking and policy pages: room for the fixed bar */
 
   .topbar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 60; max-width: none; margin: 0;
