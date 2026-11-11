@@ -14,6 +14,18 @@
      lost  the 404 page: only the logo with the name and a "Book a call" button, no menu on any screen
 
    To change a link, a label or the logo for the whole site, change it here, once. */
+/* Clean addresses: show /privacy instead of /privacy.html, and / instead of /index.html.
+   GitHub Pages serves both forms, so this only tidies what the address bar shows (and what people copy and share).
+   It does nothing when the files are opened straight from disk. The links in the pages still point at the .html files,
+   so everything also works on a plain local server. */
+(function () {
+  try {
+    if (!/^https?:$/.test(location.protocol)) return;
+    var p = location.pathname, clean = p.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+    if (clean !== p && !/\/404$/.test(clean)) history.replaceState(null, '', clean + location.search + location.hash);
+  } catch (e) {}
+})();
+
 (function () {
   var s = document.currentScript;
   if (!s) return;
