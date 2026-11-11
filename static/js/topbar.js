@@ -6,16 +6,16 @@
   if (!bar) return;
   var small = window.matchMedia('(max-width: 999px)'), root = document.documentElement;
   var btn = bar.querySelector('.topbar__menu'), menu = bar.querySelector('.menu');
-  var last = window.scrollY, ticking = false;
+  var last = window.scrollY, ticking = false, down = 0, up = 0, SHOW_AFTER = 36;
 
-  /* Under 1000px: scrolling down slides the bar up out of view, scrolling up slides it back. The slide itself is a CSS animation. */
+  /* Under 1000px: scrolling down slides the bar up out of view. It does not come back at the first touch of a scroll up:
+     the visitor has to scroll up a little (about 36px) first. Near the top of the page it is always there. */
   function update() {
     ticking = false;
-    var y = window.scrollY, dy = y - last;
-    if (!small.matches || bar.classList.contains('is-open') || y < 80) bar.classList.remove('is-hidden');
-    else if (dy > 8) bar.classList.add('is-hidden');
-    else if (dy < -8) bar.classList.remove('is-hidden');
-    if (Math.abs(dy) > 8 || y < 80) last = y;
+    var y = window.scrollY, dy = y - last; last = y;
+    if (!small.matches || bar.classList.contains('is-open') || y < 80) { down = up = 0; bar.classList.remove('is-hidden'); return; }
+    if (dy > 0) { up = 0; down += dy; if (down > 8) bar.classList.add('is-hidden'); }
+    else if (dy < 0) { down = 0; up -= dy; if (up >= SHOW_AFTER) bar.classList.remove('is-hidden'); }
   }
   addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
   addEventListener('resize', update);

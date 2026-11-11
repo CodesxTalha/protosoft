@@ -16,12 +16,12 @@
 
   .topbar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 60; max-width: none; margin: 0;
-    transition: transform .6s cubic-bezier(.2, .7, .2, 1), opacity .45s ease;
+    transition: transform .6s cubic-bezier(.2, .7, .2, 1);
     pointer-events: none;                                  /* the box also holds the hidden menu, so it must not catch taps meant for the page under it */
   }
   .topbar__bar, .menu, .topbar.is-open .topbar__scrim { pointer-events: auto; }
   /* Scrolling down slides the bar up out of view; scrolling up slides it back (static/js/topbar.js) */
-  .topbar.is-hidden:not(.is-open) { transform: translateY(-56px); opacity: 0; pointer-events: none; }
+  .topbar.is-hidden:not(.is-open) { transform: translateY(-57px); pointer-events: none; }      /* it only slides: it never fades, so it is never see-through while it moves */
   .topbar.is-hidden:not(.is-open) .topbar__bar { pointer-events: none; }
 
   .topbar__bar {
@@ -83,5 +83,5 @@
 @media (prefers-reduced-motion: reduce) {
   .topbar__bars i, .menu, .topbar__scrim, .menu li, .menu .btn { transition: none; }
   .topbar { transition: opacity .3s ease; }
-  .topbar.is-hidden:not(.is-open) { transform: none; }
+  .topbar.is-hidden:not(.is-open) { transform: none; opacity: 0; }
 }
