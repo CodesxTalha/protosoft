@@ -1,0 +1,28 @@
+/* ---------- Intro (preloader) ----------
+   The first time someone opens the home page in a visit, a short logo animation plays on a plain page-coloured screen,
+   then the screen fades away. It is switched on by a line in the page's <head> (html.intro-on), so it covers the page
+   from the very first paint, and it is never shown again during the same visit or to people who asked for reduced motion.
+
+   The animation is a square video (a dark tile with the light logo). It is cut to the rounded shape in
+   static/img/intro-mask.svg, so it appears as a rounded tile, not a square. The shape is written into this file as a data
+   address (the mask below), because a mask loaded from a separate file is blocked when the site is opened straight from disk.
+   The video is never shown larger than its own size, 180px, and is smaller on small screens. */
+.intro { display: none; }
+
+html.intro-on .intro {
+  position: fixed; inset: 0; z-index: 300; display: grid; place-items: center;
+  background: var(--bg, #f0f0ee);
+  animation: intro-failsafe .01s linear 6s forwards;            /* if the script never runs, the screen still goes away on its own */
+}
+html.intro-lock { overflow: hidden; }
+
+.intro__video {
+  display: block; width: clamp(104px, 30vw, 180px); aspect-ratio: 1; object-fit: cover; pointer-events: none;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg width=%22180%22 height=%22180%22 viewBox=%220 0 180 180%22 fill=%22none%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%0A%3Cpath d=%22M0 90C0 52.5027 0 33.754 9.54915 20.6107C12.6331 16.366 16.366 12.6331 20.6107 9.54915C33.754 0 52.5027 0 90 0V0C127.497 0 146.246 0 159.389 9.54915C163.634 12.6331 167.367 16.366 170.451 20.6107C180 33.754 180 52.5027 180 90V90C180 127.497 180 146.246 170.451 159.389C167.367 163.634 163.634 167.367 159.389 170.451C146.246 180 127.497 180 90 180V180C52.5027 180 33.754 180 20.6107 170.451C16.366 167.367 12.6331 163.634 9.54915 159.389C0 146.246 0 127.497 0 90V90Z%22 fill=%22%23EFEFED%22/%3E%0A%3C/svg%3E") center / 100% 100% no-repeat; mask: url("data:image/svg+xml,%3Csvg width=%22180%22 height=%22180%22 viewBox=%220 0 180 180%22 fill=%22none%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%0A%3Cpath d=%22M0 90C0 52.5027 0 33.754 9.54915 20.6107C12.6331 16.366 16.366 12.6331 20.6107 9.54915C33.754 0 52.5027 0 90 0V0C127.497 0 146.246 0 159.389 9.54915C163.634 12.6331 167.367 16.366 170.451 20.6107C180 33.754 180 52.5027 180 90V90C180 127.497 180 146.246 170.451 159.389C167.367 163.634 163.634 167.367 159.389 170.451C146.246 180 127.497 180 90 180V180C52.5027 180 33.754 180 20.6107 170.451C16.366 167.367 12.6331 163.634 9.54915 159.389C0 146.246 0 127.497 0 90V90Z%22 fill=%22%23EFEFED%22/%3E%0A%3C/svg%3E") center / 100% 100% no-repeat;
+  opacity: 0; transition: opacity .25s ease;
+}
+.intro__video.is-ready { opacity: 1; }
+
+.intro.is-leaving { opacity: 0; visibility: hidden; transition: opacity .5s ease, visibility 0s linear .5s; }
+
+@keyframes intro-failsafe { to { opacity: 0; visibility: hidden; } }

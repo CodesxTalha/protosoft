@@ -3,6 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    // The intro plays the first time the home page is opened in a visit, and again whenever the page is reloaded.
+    // It does not replay when you come back to the home page from another page, and never with reduced motion.
+    // This runs before anything is painted, so the screen covers the page from the start.
+    (function () {
+      try {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+        var reloaded = !!nav && nav.type === 'reload';
+        if (!reloaded && sessionStorage.getItem('intro-seen')) return;
+        sessionStorage.setItem('intro-seen', '1');
+        document.documentElement.className += ' intro-on';
+      } catch (e) {}
+    })();
+  </script>
   <title>Protosofts — Websites, apps and automation from Islamabad</title>
   <link rel="icon" type="image/svg+xml" href="static/img/favicon.svg">
   <meta name="description" content="Protosofts is a small startup in Islamabad building websites, apps and automation, with design, development and marketing services.">
@@ -13,6 +28,7 @@
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.css">
   <link rel="stylesheet" href="static/css/main.css">
+  <link rel="stylesheet" href="static/css/intro.css">
   <link rel="stylesheet" href="static/css/secnav.css">
   <link rel="stylesheet" href="static/css/topbar.css">
   <link rel="stylesheet" href="static/css/process.css">
@@ -26,6 +42,10 @@
   <link rel="stylesheet" href="static/css/responsive.css">
 </head>
 <body>
+  <!-- Intro screen (static/js/intro.js). Empty and hidden unless the head script switched it on. -->
+  <div class="intro" id="intro" aria-hidden="true"><video class="intro__video" data-src="static/video/intro.webm" muted playsinline preload="auto"></video></div>
+  <script src="static/js/intro.js"></script>
+
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <symbol id="secnav-ring" viewBox="0 0 36 36">
       <circle class="sn__base" cx="18" cy="18" r="16" pathLength="100"/>
