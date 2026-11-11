@@ -34,10 +34,6 @@
   <main class="nf">
     <div class="column">
       <h1 class="hero__title"><span class="muted">We couldn&rsquo;t find</span> that page.</h1>
-
-      <!-- The address that was asked for, shown back to the visitor (filled in below; hidden when there is none) -->
-      <p class="nf__address" id="nf-address" hidden><span class="nf__label">You asked for</span><code id="nf-path"></code></p>
-
       <p class="lead">It may have moved, or the link may be old.</p>
 
       <div class="hero__actions">
@@ -45,17 +41,5 @@
       </div>
     </div>
   </main>
-
-  <script>
-    (function () {
-      var p = location.pathname;
-      if (/\/404\.html$/.test(p)) return;                                  // opened directly, so there is no missing address to show
-      p = p.replace(/^\/protosoft(?=\/)/, '');
-      try { p = decodeURIComponent(p); } catch (e) {}
-      if (p.length > 80) p = p.slice(0, 77) + '…';
-      document.getElementById('nf-path').textContent = p + location.search.slice(0, 40);        // text only, never HTML
-      document.getElementById('nf-address').hidden = false;
-    })();
-  </script>
 </body>
 </html>
