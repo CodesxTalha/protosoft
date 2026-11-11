@@ -86,8 +86,9 @@ a { color: inherit; }
 
 .brand__mark {
   display: block;
-  width: 15px;
-  height: 15px;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
 /* ---------- Hero ---------- */
