@@ -9,25 +9,25 @@
   var PLANS = {
     package: {
       name: 'Launch Package',
-      badge: 'Best for new businesses',
-      blurb: 'Your brand and your website, designed and built together so everything matches from day one.',
+      badge: 'Recommended',
+      blurb: 'A brand identity and a dynamic website, designed and built together by one team.',
       price: function () { return [150000, 1000]; },
       note: 'Starting price, one-time',
-      list: function () { return [['gem', 'Premium, timeless brand identity'], ['devices', 'Responsive website on every device'], ['layers', 'Editable source files for everything'], ['rocket', 'Done for you, start to finish'], ['users', 'One team, one timeline']]; }
+      list: function () { return [['gem', 'Logo and brand identity'], ['devices', 'Dynamic website for every device'], ['layers', 'Editable source files for everything'], ['rocket', 'Handled from start to finish'], ['users', 'One team, one timeline']]; }
     },
     website: {
       name: 'Website',
-      blurb: 'Fast, responsive and built from scratch.',
+      blurb: 'Built from scratch, fast and responsive.',
       price: function (o) { return o.type === 'dynamic' ? [50000, 500] : [20000, 200]; },
       note: 'Starting price, one-time',
-      list: function (o) { return [['devices', 'Responsive on every device'], ['zap', 'Fast loading, clean build'], o.type === 'dynamic' ? ['edit', 'Content you can manage yourself'] : ['layers', 'Simple, fixed content pages'], ['code', 'Full source code handed over']]; }
+      list: function (o) { return [['devices', 'Responsive on every device'], ['zap', 'Fast loading, clean code'], o.type === 'dynamic' ? ['edit', 'Content you can edit yourself'] : ['layers', 'Fixed content pages'], ['code', 'Full source code handed over']]; }
     },
     branding: {
       name: 'Branding',
       blurb: 'A logo and a clear brand identity for your business.',
       price: function () { return [20000, 200]; },
       note: 'Starting price, one-time',
-      list: function () { return [['pen', 'A memorable, timeless logo'], ['type', 'Brand colours and typography'], ['layers', 'Editable source files'], ['download', 'Logo files in every format']]; }
+      list: function () { return [['pen', 'A logo made for your business'], ['type', 'Brand colours and typography'], ['layers', 'Editable source files'], ['download', 'Logo files in every format']]; }
     },
     design: {
       name: 'Web design',
@@ -35,21 +35,21 @@
       price: function (o) { return o.dev ? [70000, 700] : [30000, 400]; },
       extra: [40000, 300],                                   // added when "Add development" is on
       note: 'Starting price, one-time',
-      list: function (o) { return [['devices', 'Responsive on every device'], ['gem', 'Premium, timeless design'], ['layers', 'Editable design files'], o.dev ? ['code', 'Built and launched, in one project'] : ['rocket', 'Ready for development']]; }
+      list: function (o) { return [['devices', 'Responsive on every device'], ['gem', 'Designed around your brand'], ['layers', 'Editable design files'], o.dev ? ['code', 'Built and launched, in one project'] : ['rocket', 'Ready for development']]; }
     },
     automation: {
       name: 'Automation',
       blurb: 'AI agents and workflows built around how you work.',
       custom: 'Custom quote',
       note: 'Scoped around your workflow',
-      list: function () { return [['bot', 'AI agents and workflows'], ['sliders', 'Built around how you work'], ['clock', 'Less manual work, more time back'], ['rocket', 'Set up, tested and handed over']]; }
+      list: function () { return [['bot', 'AI agents and workflows'], ['sliders', 'Built around how you work'], ['clock', 'Fewer repetitive tasks'], ['rocket', 'Set up, tested and handed over']]; }
     },
     marketing: {
       name: 'Marketing',
       blurb: 'Social media content, campaigns and community.',
       custom: 'Let\u2019s talk',
       note: 'Planned monthly, scoped to your goals',
-      list: function () { return [['megaphone', 'Consistent, on-brand content'], ['trend', 'Campaigns that grow your audience'], ['calendar', 'Planned and managed monthly'], ['users', 'Community management']]; }
+      list: function () { return [['megaphone', 'Consistent, on-brand content'], ['trend', 'Campaigns with a clear goal'], ['calendar', 'Planned and managed monthly'], ['users', 'Community management']]; }
     }
   };
 

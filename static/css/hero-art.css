@@ -1,0 +1,48 @@
+/* ---------- Hero art: a small team of cursors building a website (static/js/hero-art.js) ----------
+   On the first visit in a session (or a reload) it opens with the intro: one cursor tries to do everything, gives up and falls,
+   then the team comes in, picks it up, and finishes the job. The intro is switched on by a line in the page's <head>
+   (html.hero-intro), never with reduced motion. While it plays, the headline, intro text, buttons and the rest of the page
+   are hidden; they come back in order at the end. The text is real HTML the whole time. */
+
+.hero .column { position: relative; }
+
+.hero__art { position: relative; z-index: 1; width: 100%; aspect-ratio: 33 / 14; transform-origin: 0 0; }
+.hero__art svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; overflow: visible; }
+
+/* hidden while the intro plays */
+html.hero-intro:not(.hi-ready) .hero__title { opacity: 0; }
+html.hero-intro .hero__title .hw {
+  display: inline-block; opacity: 0; transform: translateY(.45em);
+  transition: opacity .5s ease, transform .7s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--i) * 70ms);
+}
+html.hero-intro.hi-title .hero__title .hw { opacity: 1; transform: none; }
+
+html.hero-intro .lead,
+html.hero-intro .hero__actions { opacity: 0; transform: translateY(18px); transition: opacity .5s ease, transform .6s cubic-bezier(.2, .7, .2, 1); }
+html.hero-intro.hi-lead .lead,
+html.hero-intro.hi-actions .hero__actions { opacity: 1; transform: none; }
+
+html.hero-intro #topbar,
+html.hero-intro .secnav,
+html.hero-intro .rail,
+html.hero-intro .page ~ section,
+html.hero-intro .page ~ footer { opacity: 0; pointer-events: none; transition: opacity .6s ease; }
+html.hero-intro.hi-rest #topbar,
+html.hero-intro.hi-rest .secnav,
+html.hero-intro.hi-rest .rail,
+html.hero-intro.hi-rest .page ~ section,
+html.hero-intro.hi-rest .page ~ footer { opacity: 1; }
+
+/* Skip */
+.hi-skip {
+  position: fixed; right: 24px; bottom: 24px; z-index: 50;
+  display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 0 14px;
+  border: 0; border-radius: 8px; background: var(--surface); color: var(--ink);
+  font: 500 13px/1 var(--font-sans); cursor: pointer; box-shadow: 0 0 0 1px var(--line);
+  transition: opacity .3s ease, background-color .18s ease;
+}
+.hi-skip:hover { background: #fff; }
+.hi-skip:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.hi-skip svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.hi-skip.is-gone { opacity: 0; pointer-events: none; }
+@media (max-width: 560px) { .hi-skip { right: 16px; bottom: 16px; } }

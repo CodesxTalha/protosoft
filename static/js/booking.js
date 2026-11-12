@@ -13,8 +13,8 @@
 
   var STEPS = ['details', 'services', 'budget', 'time', 'confirm'], LAST = 4;
   var BUDGETS = {                                           // edit the ranges here
-    PKR: ['Under PKR 50,000', 'PKR 50,000 – 150,000', 'PKR 150,000 – 300,000', 'PKR 300,000 and above'],
-    USD: ['Under $500', '$500 – $1,000', '$1,000 – $2,500', '$2,500 and above']
+    PKR: ['Under PKR 50,000', 'PKR 50,000 to 150,000', 'PKR 150,000 to 300,000', 'PKR 300,000 and above'],
+    USD: ['Under $500', '$500 to $1,000', '$1,000 to $2,500', '$2,500 and above']
   };
   var SYMBOL = { PKR: 'PKR ', USD: '$' };
   var CHECK = '<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';
@@ -240,7 +240,7 @@
       var sameYear = when.getFullYear() === new Date().getFullYear();
       $('#done-day').textContent = when.toLocaleDateString(undefined, sameYear ? { weekday: 'long', day: 'numeric', month: 'long' } : { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     }
-    $('#done-meta').textContent = [services().join(', '), budgetLabel()].filter(Boolean).join('  ·  ');
+    $('#done-meta').textContent = [services().join(', '), budgetLabel()].filter(Boolean).join('  |  ');
     history.replaceState(null, '', location.pathname + '#done');
     showPanel('done');
     var landed = function () { document.body.classList.add('is-booked', 'is-landed'); };
