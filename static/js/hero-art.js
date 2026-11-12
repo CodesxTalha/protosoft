@@ -83,7 +83,7 @@
   }
 
   var INK = '#141414', MUTED = '#6a6a6a', SOFT = '#e3e3e1', DIM = '#d4d4d2', PAPER = '#fafafa', CARD = '#f4f4f2', NIGHT = '#161616';
-  var LINE = 'rgba(20,20,20,.12)', ERR = '#b3261e';
+  var LINE = 'rgba(20,20,20,.12)', ERR = '#b3261e', EDGE = '#d9d9d7';
   var SANS = 'Inter Tight, system-ui, sans-serif', SERIF = 'Georgia, "Times New Roman", serif', MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
 
   /* ================= data ================= */
@@ -110,8 +110,8 @@
   /* ================= the scene ================= */
   var defs = el('defs', {});
   var grad = el('linearGradient', { id: 'ha-fill', x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
-  el('stop', { offset: 0, 'stop-color': '#fafafa', 'stop-opacity': 0.22 }, grad);
-  el('stop', { offset: 1, 'stop-color': '#fafafa', 'stop-opacity': 0 }, grad);
+  el('stop', { offset: 0, 'stop-color': '#141414', 'stop-opacity': 0.06 }, grad);
+  el('stop', { offset: 1, 'stop-color': '#141414', 'stop-opacity': 0 }, grad);
   var dots = el('pattern', { id: 'ha-dots', width: 8, height: 8, patternUnits: 'userSpaceOnUse' }, defs);
   el('circle', { cx: 1, cy: 1, r: 0.55, fill: '#dcdcda' }, dots);
   var fade = el('linearGradient', { id: 'ha-fade', x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
@@ -124,23 +124,21 @@
 
   /* ---------- the browser ---------- */
   var browser = el('g', {});
-  el('rect', { x: 20, y: 20, width: 380, height: 260, rx: 12, fill: PAPER, stroke: LINE, 'stroke-width': 1.2 }, browser);
-  var siteDots = el('rect', { x: 20, y: 44, width: 380, height: 150, fill: 'url(#ha-dots)', mask: 'url(#ha-mask)' }, browser);
+  el('rect', { x: 20.5, y: 20.5, width: 379, height: 259, rx: 10, fill: '#fff', stroke: EDGE, 'stroke-width': 1 }, browser);
   [34, 44, 54].forEach(function (x) { el('circle', { cx: x, cy: 32, r: 2.5, fill: DIM }, browser); });
   el('rect', { x: 140, y: 26, width: 140, height: 12, rx: 6, fill: '#ececea' }, browser);
   el('path', { d: 'M187 31.2v-1.3a2 2 0 0 1 4 0v1.3M186.2 31.2h5.6v3.6h-5.6z', fill: 'none', stroke: MUTED, 'stroke-width': 0.8, 'stroke-linejoin': 'round' }, browser);
   txt('yourbrand.com', { x: 194, y: 34.4, 'font-size': 6.5, fill: MUTED, 'font-family': SANS }, browser);
-  el('path', { d: 'M20 44h380', stroke: LINE, 'stroke-width': 1.2 }, browser);
+  el('path', { d: 'M21 44.5h378', stroke: '#dcdcda', 'stroke-width': 1 }, browser);
   var loadBar = el('rect', { x: 20, y: 43.2, height: 1.6, fill: INK }, browser);
 
   // the site's own navigation, part of the template from the start
   el('rect', { x: 34, y: 54, width: 10, height: 10, rx: 3, fill: INK }, browser);
   el('path', { d: 'M37 61.5l4-5', stroke: PAPER, 'stroke-width': 1.3, 'stroke-linecap': 'round' }, browser);
   txt('Lumen', { x: 48.5, y: 62, 'font-size': 8, 'font-weight': 600, 'letter-spacing': -0.2, fill: INK, 'font-family': SANS }, browser);
-  [['Product', 226], ['Pricing', 256], ['Docs', 285]].forEach(function (n) { txt(n[0], { x: n[1], y: 62, 'font-size': 6.3, fill: MUTED, 'font-family': SANS }, browser); });
-  txt('Sign in', { x: 312, y: 62, 'font-size': 6.3, fill: INK, 'font-family': SANS }, browser);
-  el('rect', { x: 340, y: 53.5, width: 46, height: 13, rx: 6.5, fill: INK }, browser);
-  txt('Get started', { x: 363, y: 62, 'font-size': 5.9, 'font-weight': 500, 'text-anchor': 'middle', fill: PAPER, 'font-family': SANS }, browser);
+  [['Product', 250], ['Pricing', 280], ['Docs', 309]].forEach(function (n) { txt(n[0], { x: n[1], y: 62, 'font-size': 6.3, fill: MUTED, 'font-family': SANS }, browser); });
+  el('rect', { x: 340.5, y: 54, width: 45, height: 12, rx: 6, fill: '#fff', stroke: EDGE, 'stroke-width': 0.8 }, browser);
+  txt('Get started', { x: 363, y: 62, 'font-size': 5.9, 'font-weight': 500, 'text-anchor': 'middle', fill: INK, 'font-family': SANS }, browser);
 
   /* ---------- hero text ---------- */
   var H1U = 'Know your numbers in real time';
@@ -156,7 +154,7 @@
   var sub2 = txt('set up in minutes, not weeks.', { x: 34, y: 154, 'font-size': 6.6, fill: MUTED, 'font-family': SANS }, subg);
 
   var badge = el('g', {}, browser);                        // added by Code's CSS
-  el('rect', { x: 0, y: 0, width: 88, height: 13, rx: 6.5, fill: '#ececea', stroke: LINE, 'stroke-width': 0.8 }, badge);
+  el('rect', { x: 0, y: 0, width: 88, height: 13, rx: 6.5, fill: '#fff', stroke: '#dcdcda', 'stroke-width': 0.8 }, badge);
   el('rect', { x: 2, y: 2, width: 20, height: 9, rx: 4.5, fill: INK }, badge);
   txt('New', { x: 12, y: 8.6, 'font-size': 5.4, 'font-weight': 600, 'text-anchor': 'middle', fill: PAPER, 'font-family': SANS }, badge);
   txt('Live analytics', { x: 26, y: 8.9, 'font-size': 6, 'font-weight': 500, fill: INK, 'font-family': SANS }, badge);
@@ -184,32 +182,30 @@
     return { h: b[0], el: el('rect', { fill: b[1], stroke: '#555', 'stroke-width': 0.8 }, chartU) };
   });
   var grid = el('g', {}, chart);
-  [128, 148, 168].forEach(function (y) { el('path', { d: 'M' + CH.x + ' ' + y + 'H' + (CH.x + CH.w), stroke: '#2c2c2c', 'stroke-width': 0.6, 'stroke-dasharray': '1.5 2.5' }, grid); });
+  [128, 148, 168].forEach(function (y) { el('path', { d: 'M' + CH.x + ' ' + y + 'H' + (CH.x + CH.w), stroke: '#e4e4e2', 'stroke-width': 0.7, 'stroke-dasharray': '1.5 2.5' }, grid); });
   var head = [];                                           // header pieces, pasted in by Design
-  head.push(txt('Revenue', { x: 224, y: 89, 'font-size': 6, fill: '#8a8a88', 'font-family': SANS }, chart));
-  var valueText = txt(money(VALUE[0]), { x: 224, y: 103, 'font-size': 11.5, 'font-weight': 600, 'letter-spacing': -0.3, fill: PAPER, 'font-family': SANS }, chart);
+  head.push(txt('Revenue', { x: 224, y: 89, 'font-size': 6, fill: MUTED, 'font-family': SANS }, chart));
+  var valueText = txt(money(VALUE[0]), { x: 224, y: 103, 'font-size': 11.5, 'font-weight': 600, 'letter-spacing': -0.3, fill: INK, 'font-family': SANS }, chart);
   head.push(valueText);
   var deltaG = el('g', {}, chart);
-  el('rect', { x: 0, y: 0, width: 30, height: 10, rx: 5, fill: '#2a2a2a' }, deltaG);
-  var deltaText = txt(DELTA[0], { x: 15, y: 6.9, 'font-size': 5.4, 'font-weight': 500, 'text-anchor': 'middle', fill: '#cfcfcd', 'font-family': SANS }, deltaG);
+  el('rect', { x: 0, y: 0, width: 30, height: 10, rx: 5, fill: '#efefed' }, deltaG);
+  var deltaText = txt(DELTA[0], { x: 15, y: 6.9, 'font-size': 5.4, 'font-weight': 500, 'text-anchor': 'middle', fill: INK, 'font-family': SANS }, deltaG);
   head.push(deltaG);
   var tabs = el('g', {}, chart);
-  el('rect', { x: 330, y: 82, width: 48, height: 11, rx: 4, fill: '#222' }, tabs);
-  el('rect', { x: 331.5, y: 83.5, width: 14, height: 8, rx: 3, fill: '#3a3a3a' }, tabs);
-  [['7D', 338.5], ['30D', 354], ['90D', 370]].forEach(function (n, i) { txt(n[0], { x: n[1], y: 89.6, 'font-size': 4.8, 'font-weight': 500, 'text-anchor': 'middle', fill: i ? '#7d7d7b' : PAPER, 'font-family': SANS }, tabs); });
+  el('circle', { cx: 372, cy: 87, r: 1.1, fill: '#a9a9a7' }, tabs); el('circle', { cx: 367, cy: 87, r: 1.1, fill: '#a9a9a7' }, tabs); el('circle', { cx: 377, cy: 87, r: 1.1, fill: '#a9a9a7' }, tabs);
   head.push(tabs);
   var area = el('path', { fill: 'url(#ha-fill)' }, chart);
-  var lineP = el('path', { fill: 'none', stroke: PAPER, 'stroke-width': 1.4, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, chart);
+  var lineP = el('path', { fill: 'none', stroke: '#3a3a3a', 'stroke-width': 1.1, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, chart);
   var rubber = el('path', { fill: 'none', stroke: '#9a9a98', 'stroke-width': 0.8 }, chart);
-  var anchors = [0, 1, 2, 3, 4, 5, 6].map(function () { return el('rect', { width: 3.6, height: 3.6, fill: NIGHT, stroke: PAPER, 'stroke-width': 0.8 }, chart); });
+  var anchors = [0, 1, 2, 3, 4, 5, 6].map(function () { return el('rect', { width: 3.6, height: 3.6, fill: '#fff', stroke: INK, 'stroke-width': 0.8 }, chart); });
   var handleG = el('g', {}, chart);
   var handleL = el('path', { stroke: '#9a9a98', 'stroke-width': 0.7 }, handleG);
-  var handleA = el('circle', { r: 1.6, fill: PAPER }, handleG), handleB = el('circle', { r: 1.6, fill: PAPER }, handleG);
+  var handleA = el('circle', { r: 1.6, fill: INK }, handleG), handleB = el('circle', { r: 1.6, fill: INK }, handleG);
   var tipG = el('g', {}, chart);                           // the hover readout
-  var tipLine = el('path', { stroke: '#3a3a3a', 'stroke-width': 0.8 }, tipG);
-  var tipDot = el('circle', { r: 2.4, fill: PAPER, stroke: NIGHT, 'stroke-width': 1.2 }, tipG);
-  var tipPill = el('rect', { height: 11, rx: 5.5, fill: PAPER }, tipG);
-  var tipTxt = txt('', { 'font-size': 5.6, 'font-weight': 600, 'text-anchor': 'middle', fill: INK, 'font-family': SANS }, tipG);
+  var tipLine = el('path', { stroke: '#d4d4d2', 'stroke-width': 0.8, 'stroke-dasharray': '2 2' }, tipG);
+  var tipDot = el('circle', { r: 2.4, fill: '#fff', stroke: INK, 'stroke-width': 1.2 }, tipG);
+  var tipPill = el('rect', { height: 11, rx: 5.5, fill: INK }, tipG);
+  var tipTxt = txt('', { 'font-size': 5.6, 'font-weight': 600, 'text-anchor': 'middle', fill: PAPER, 'font-family': SANS }, tipG);
 
   /* ---------- the three cards ---------- */
   var UC = [{ x: 30, y: 206, w: 96, h: 50, r: 0 }, { x: 140, y: 214, w: 120, h: 44, r: 0 }, { x: 276, y: 200, w: 100, h: 62, r: 0 }];
@@ -218,7 +214,7 @@
     var g = el('g', {}, browser), c = { g: g };
     c.hard = el('rect', { x: 3, y: 3, fill: '#cfcfcd' }, g);
     c.lift = el('rect', { x: 1, y: 3, rx: 10, fill: 'rgba(20,20,20,.07)' }, g);
-    c.rect = el('rect', { x: 0, y: 0, fill: CARD }, g);
+    c.rect = el('rect', { x: 0, y: 0, fill: '#fff' }, g);
     c.u = el('g', {}, g);
     txt(['UPTIME', 'USERS', 'SPEED'][i], { x: 8, y: 14, 'font-size': 6, 'letter-spacing': 1, fill: '#444', 'font-family': SERIF }, c.u);
     el('rect', { x: 8, y: 22, width: [60, 80, 50][i], height: 8, fill: '#bbb', stroke: '#777', 'stroke-width': 0.7 }, c.u);
@@ -229,25 +225,26 @@
   });
   cards[0].val.textContent = '99.98%';
   var sparkG = el('g', { 'clip-path': 'url(#ha-spark)' }, cards[0].c);
-  var sparks = []; for (var s = 0; s < 16; s++) sparks.push(el('rect', { width: 3.8, rx: 1, fill: INK }, sparkG));
+  var sparks = []; for (var s = 0; s < 16; s++) sparks.push(el('rect', { width: 3.2, rx: 1, fill: '#d6d6d4' }, sparkG));
   var liveRing = el('circle', { cx: 46, cy: 13, r: 2, fill: 'none', stroke: INK, 'stroke-width': 0.7 }, cards[1].c);
   el('circle', { cx: 46, cy: 13, r: 1.6, fill: INK }, cards[1].c);
-  [0, 1, 2, 3].forEach(function (i) { el('circle', { cx: 15 + i * 8, cy: 47, r: 5, fill: ['#bdbdbb', '#9a9a98', '#d4d4d2', '#6a6a6a'][i], stroke: CARD, 'stroke-width': 1.4 }, cards[1].c); });
+  [0, 1, 2, 3].forEach(function (i) { el('circle', { cx: 15 + i * 8, cy: 47, r: 5, fill: ['#bdbdbb', '#9a9a98', '#d4d4d2', '#6a6a6a'][i], stroke: '#fff', 'stroke-width': 1.4 }, cards[1].c); });
   txt('+12', { x: 50, y: 49.2, 'font-size': 5.6, fill: MUTED, 'font-family': SANS }, cards[1].c);
   el('path', { d: 'M70 46a14 14 0 0 1 28 0', fill: 'none', stroke: SOFT, 'stroke-width': 4, 'stroke-linecap': 'round' }, cards[2].c);
-  var gauge = el('path', { fill: 'none', stroke: INK, 'stroke-width': 4, 'stroke-linecap': 'round' }, cards[2].c);
+  var gauge = el('path', { fill: 'none', stroke: '#9a9a98', 'stroke-width': 4, 'stroke-linecap': 'round' }, cards[2].c);
 
   /* ---------- the code editor ---------- */
   var editor = el('g', {});
-  el('rect', { x: 420, y: 20, width: 260, height: 150, rx: 12, fill: '#1c1c1c' }, editor);
-  [434, 444, 454].forEach(function (x) { el('circle', { cx: x, cy: 32, r: 2.5, fill: '#3a3a3a' }, editor); });
-  el('rect', { x: 470, y: 25, width: 52, height: 14, rx: 4, fill: '#262626' }, editor);
-  txt('index.html', { x: 496, y: 34.5, 'font-size': 6.2, fill: '#d2d2d0', 'text-anchor': 'middle', 'font-family': SANS }, editor);
-  txt('chart.js', { x: 546, y: 34.5, 'font-size': 6.2, fill: '#6d6d6b', 'text-anchor': 'middle', 'font-family': SANS }, editor);
-  var saved = el('circle', { cx: 517, cy: 32, r: 1.8, fill: '#8a8a88' }, editor);   // unsaved changes
+  el('rect', { x: 420.5, y: 20.5, width: 259, height: 149, rx: 10, fill: '#fff', stroke: EDGE, 'stroke-width': 1 }, editor);
+  [434, 444, 454].forEach(function (x) { el('circle', { cx: x, cy: 32, r: 2.5, fill: DIM }, editor); });
+  el('path', { d: 'M421 44.5h258', stroke: '#dcdcda', 'stroke-width': 1 }, editor);
+  el('rect', { x: 470, y: 25, width: 52, height: 14, rx: 4, fill: '#f0f0ee' }, editor);
+  txt('index.html', { x: 496, y: 34.5, 'font-size': 6.2, fill: INK, 'text-anchor': 'middle', 'font-family': SANS }, editor);
+  txt('chart.js', { x: 546, y: 34.5, 'font-size': 6.2, fill: '#a9a9a7', 'text-anchor': 'middle', 'font-family': SANS }, editor);
+  var saved = el('circle', { cx: 517, cy: 32, r: 1.8, fill: MUTED }, editor);   // unsaved changes
   var CX = 446;
-  var hl = el('rect', { height: 9.5, rx: 2, fill: '#3d3d3b' }, editor);
-  var C = { w: '#fafafa', g: '#7d7d7b', m: '#a9a9a7', s: '#d2d2d0' };
+  var hl = el('rect', { height: 9.5, rx: 2, fill: '#e8e8e6' }, editor);
+  var C = { w: '#3a3a3a', g: '#c2c2c0', m: '#8a8a88', s: '#5a5a58' };
   var CODE = [
     [['<', 'g'], ['section', 'w'], [' class', 'm'], ['=', 'g'], ['"hero"', 's'], ['>', 'g']],
     [['  <', 'g'], ['span', 'w'], [' class', 'm'], ['=', 'g'], ['"badge"', 's'], ['>', 'g'], ['New', 's'], ['</', 'g'], ['span', 'w'], ['>', 'g']],
@@ -260,7 +257,7 @@
     [['.badge', 'w'], [' { ', 'g'], ['display', 'm'], [': ', 'g'], ['flex', 's'], ['; }', 'g']]
   ];
   var lines = CODE.map(function (parts, i) {
-    txt(String(i + 1), { x: 438, y: 54 + i * 13, 'font-size': 6.3, 'font-family': MONO, fill: '#4a4a48', 'text-anchor': 'end' }, editor);
+    txt(String(i + 1), { x: 438, y: 54 + i * 13, 'font-size': 6.3, 'font-family': MONO, fill: '#c9c9c7', 'text-anchor': 'end' }, editor);
     var t = el('text', { x: CX, y: 54 + i * 13, 'font-size': 7.2, 'font-family': MONO, style: 'white-space:pre' }, editor);
     var len = 0;
     var spans = parts.map(function (p) { var s = el('tspan', { fill: C[p[1]] }, t); len += p[0].length; return { el: s, str: p[0] }; });
@@ -284,11 +281,11 @@
     for (var x = CX; x < CX + 110; x += 4) d += ' q1 -2 2 0 t2 0';
     return el('path', { d: d, fill: 'none', stroke: ERR, 'stroke-width': 0.8 }, editor);
   });
-  var caretC = el('rect', { width: 1.1, height: 9, fill: PAPER }, editor);
+  var caretC = el('rect', { width: 1.1, height: 9, fill: INK }, editor);
 
   /* ---------- the deploy panel ---------- */
   var deploy = el('g', {});
-  el('rect', { x: 420, y: 184, width: 260, height: 96, rx: 12, fill: PAPER, stroke: LINE, 'stroke-width': 1.2 }, deploy);
+  el('rect', { x: 420.5, y: 184.5, width: 259, height: 95, rx: 10, fill: '#fff', stroke: EDGE, 'stroke-width': 1 }, deploy);
   txt('Deploy', { x: 434, y: 202, 'font-size': 7.6, 'font-weight': 600, fill: INK, 'font-family': SANS }, deploy);
   el('rect', { x: 466, y: 194.5, width: 26, height: 11, rx: 5.5, fill: '#ececea' }, deploy);
   el('path', { d: 'M471 197.5v5M471 199.5a2.4 2.4 0 0 0 4.8 0', fill: 'none', stroke: MUTED, 'stroke-width': 0.7 }, deploy);
@@ -301,7 +298,7 @@
   var steps = STEPS.map(function (name, i) {
     var y = 219 + i * 10, g = el('g', {}, deploy);
     var spin = el('path', { d: 'M0 -2.6a2.6 2.6 0 1 1 -2.6 2.6', fill: 'none', stroke: MUTED, 'stroke-width': 0.9, 'stroke-linecap': 'round' }, g);
-    var ok = el('path', { d: 'M-2.2 0.2l1.5 1.5 3-3.2', fill: 'none', stroke: INK, 'stroke-width': 1, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g);
+    var ok = el('path', { d: 'M-2.2 0.2l1.5 1.5 3-3.2', fill: 'none', stroke: '#9a9a98', 'stroke-width': 1, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g);
     var no = el('path', { d: 'M-2 -2l4 4M2 -2l-4 4', fill: 'none', stroke: ERR, 'stroke-width': 1, 'stroke-linecap': 'round' }, g);
     var label = txt(name, { x: 444, y: y + 2.1, 'font-size': 6, 'font-family': MONO }, deploy);
     var time = txt('', { x: 666, y: y + 2.1, 'font-size': 5.8, 'text-anchor': 'end', fill: MUTED, 'font-family': MONO }, deploy);
@@ -350,8 +347,8 @@
   var fillP = el('g', {}, tools);
   el('rect', { x: 0, y: 0, width: 84, height: 30, rx: 8, fill: PAPER, stroke: 'rgba(20,20,20,.16)', 'stroke-width': 1 }, fillP);
   txt('Fill', { x: 8, y: 11, 'font-size': 6.2, 'font-weight': 600, fill: INK, 'font-family': SANS }, fillP);
-  var FILLS = [NIGHT, '#6a6a6a', '#bdbdbb', '#e3e3e1', '#ffffff'];
-  FILLS.forEach(function (f, i) { el('circle', { cx: 12 + i * 15, cy: 20, r: 4.5, fill: f, stroke: i > 2 ? DIM : 'none', 'stroke-width': 0.8 }, fillP); });
+  var FILLS = ['#f4f4f2', '#e3e3e1', '#bdbdbb', '#6a6a6a', '#141414'];
+  FILLS.forEach(function (f, i) { el('circle', { cx: 12 + i * 15, cy: 20, r: 4.5, fill: f, stroke: i < 2 ? DIM : 'none', 'stroke-width': 0.8 }, fillP); });
   var fillRing = el('circle', { cx: 12, cy: 20, r: 6.3, fill: 'none', stroke: INK, 'stroke-width': 0.8 }, fillP);
   var key = el('g', {}, tools);
   var keyRect = el('rect', { x: 0, y: 0, height: 12, rx: 3, fill: PAPER, stroke: 'rgba(20,20,20,.3)', 'stroke-width': 0.8 }, key);
@@ -375,17 +372,19 @@
   var rings = [0, 1, 2, 3, 4, 5].map(function () { return el('circle', { r: 0, fill: 'none', stroke: INK, 'stroke-width': 1 }); });
 
   /* ---------- cursors: their name tags open into chat bubbles ---------- */
-  function cursor(label, fill, color) {
+  function cursor(label, client) {
+    var fill = PAPER, color = INK;
     var g = el('g', {});
     var tag = el('g', { transform: 'translate(10 15)' }, g);
-    var r = el('rect', { x: 0, y: 0, height: 13, rx: 4, fill: fill, stroke: fill === PAPER ? 'rgba(20,20,20,.2)' : 'none', 'stroke-width': 1 }, tag);
+    var r = el('rect', { x: 0, y: 0, height: 13, rx: 4, fill: client ? INK : '#fff', stroke: client ? 'none' : 'rgba(20,20,20,.22)', 'stroke-width': 1 }, tag);
+    if (client) color = PAPER;
     var t = txt(label, { x: 6, y: 9.2, 'font-size': 7.2, 'font-weight': 600, fill: color, 'font-family': SANS }, tag);
     var m = txt('', { x: 7, y: 11.2, 'font-size': 7.4, 'font-weight': 500, fill: color, 'font-family': SANS }, tag);
     var arrow = el('g', {}, g);
-    el('path', { d: 'M0 0V15.5L4.1 11.7 6.9 18.1 9.7 16.9 7 10.6H12z', fill: fill === PAPER ? INK : fill, stroke: PAPER, 'stroke-width': 1.2, 'stroke-linejoin': 'round' }, arrow);
+    el('path', { d: 'M0 0V15.5L4.1 11.7 6.9 18.1 9.7 16.9 7 10.6H12z', fill: INK, stroke: '#fff', 'stroke-width': 1.2, 'stroke-linejoin': 'round' }, arrow);
     return { g: g, arrow: arrow, rect: r, text: t, msg: m, label: label, lw: label.length * 4.4 };
   }
-  var CUR = { you: cursor('You', PAPER, INK), design: cursor('Design', INK, PAPER), code: cursor('Code', '#4a4a48', PAPER), launch: cursor('Launch', '#7a7a78', PAPER) };
+  var CUR = { you: cursor('You', true), design: cursor('Design'), code: cursor('Code'), launch: cursor('Launch') };
   function sizeTags() { Object.keys(CUR).forEach(function (k) { var w = width(CUR[k].text); if (w) CUR[k].lw = w; }); }
   sizeTags();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { sizeTags(); CHW = 0; draw(clock); });
@@ -721,8 +720,8 @@
     tf(chart, S.chartTilt * 6, S.chartTilt * 4, 1, 0);
     chart.setAttribute('transform', 'translate(' + (S.chartTilt * 6).toFixed(2) + ' ' + (S.chartTilt * 4).toFixed(2) + ') rotate(' + (S.chartTilt * 4).toFixed(2) + ' ' + (cb.x + cb.w / 2).toFixed(1) + ' ' + (cb.y + cb.h / 2).toFixed(1) + ')');
     op(chart, S.chartO);
-    set(chartRect, { x: cb.x, y: cb.y, width: Math.max(0, cb.w), height: Math.max(0, cb.h), rx: cb.r, fill: grey(255, 22, kd) });
-    chartRect.setAttribute('stroke', 'rgba(20,20,20,' + (0.4 * (1 - kd)).toFixed(2) + ')');
+    set(chartRect, { x: cb.x, y: cb.y, width: Math.max(0, cb.w), height: Math.max(0, cb.h), rx: cb.r, fill: grey(255, 246, kd) });
+    chartRect.setAttribute('stroke', 'rgba(20,20,20,' + mix(0.4, 0.1, kd).toFixed(2) + ')');
     op(chartU, S.barsO);
     set(chartUTitle, { x: cb.x + 6, y: cb.y + 10 });
     ubars.forEach(function (b, i) { var bw = (cb.w - 24) / 5 - 4, bh = (cb.h - 20) * b.h; set(b.el, { x: cb.x + 12 + i * (bw + 4), y: cb.y + cb.h - 5 - bh, width: Math.max(0, bw), height: Math.max(0, bh) }); });
@@ -758,7 +757,7 @@
     cards.forEach(function (c, i) {
       var k = S.kTidy, g = box(UC[i], CC(i), k), j = [[6, -5, -5], [-4, 9, 4], [9, 3, 6]][i], jm = S.jumble[i], lift = S.lift[i];
       set(c.rect, { width: g.w, height: g.h, rx: g.r });
-      c.rect.setAttribute('stroke', 'rgba(20,20,20,' + mix(0.45, 0.1, k).toFixed(2) + ')');
+      c.rect.setAttribute('stroke', 'rgba(20,20,20,' + mix(0.45, 0.12, k).toFixed(2) + ')');
       c.rect.setAttribute('stroke-width', mix(1.6, 1, k).toFixed(2));
       set(c.hard, { width: g.w, height: g.h }); op(c.hard, 1 - k);
       set(c.lift, { width: g.w, height: g.h }); op(c.lift, lift);
@@ -773,6 +772,7 @@
       var h = SPARK[(base0 + i) % 16];
       set(r, { x: 10 + (i - frac) * 6, y: 56 - h, height: h });
       op(r, i === 15 ? frac : (i === 0 ? 1 - frac : 1));
+      r.setAttribute('fill', i >= 14 ? '#8a8a88' : '#dededc');           // the newest reading is dark
     });
     cards[1].val.textContent = ACTIVE[base0 % 16].toLocaleString('en-US');
     set(liveRing, { r: 2 + (lt * 1.2 % 1) * 4 }); op(liveRing, 0.7 * (1 - (lt * 1.2 % 1)));
@@ -798,17 +798,17 @@
     /* the deploy panel */
     var st = { idle: ['Idle', DIM, MUTED], building: ['Building', MUTED, MUTED], failed: ['Failed', ERR, ERR], ready: ['Ready', INK, INK] }[S.status];
     stTxt.textContent = st[0]; stDot.setAttribute('fill', st[1]); stTxt.setAttribute('fill', st[2]);
-    if (S.status === 'building') op(stDot, Math.floor(liveT * 4) % 2 ? 0.35 : 1); else op(stDot, 1);
+    if (S.status === 'building') op(stDot, 0.6 + 0.4 * Math.cos(liveT * 6)); else op(stDot, 1);
     depBtn.setAttribute('fill', S.pressed ? '#3a3a3a' : INK);
     steps.forEach(function (s, i) {
       var k = S.steps[i];
       op(s.spin, k === 1 ? 1 : 0); op(s.ok, k === 2 ? 1 : 0); op(s.no, k === 3 ? 1 : 0);
       if (k === 1) s.spin.setAttribute('transform', 'rotate(' + ((liveT * 540) % 360).toFixed(1) + ')');
-      s.label.setAttribute('fill', k === 0 ? '#b5b5b3' : k === 3 ? ERR : INK);
+      s.label.setAttribute('fill', k === 0 ? '#c4c4c2' : k === 3 ? ERR : '#6a6a6a');
       s.time.textContent = k === 2 ? STEP_T[i] : k === 3 ? 'error' : '';
       s.time.setAttribute('fill', k === 3 ? ERR : MUTED);
     });
-    set(prog, { width: 232 * S.prog, fill: S.status === 'failed' ? ERR : INK });
+    set(prog, { width: 232 * S.prog, fill: S.status === 'failed' ? ERR : '#bdbdbb' });
     readyL.textContent = S.ready ? '● yourbrand.com' : (S.status === 'failed' ? '2 errors in index.html' : '');
     readyL.setAttribute('fill', S.status === 'failed' ? ERR : INK);
     readyR.textContent = S.ready ? 'Ready in 2.4s' : '';
@@ -864,7 +864,7 @@
     rings.forEach(function (r, i) {
       var c = S.clicks[i];
       if (!c) { op(r, 0); return; }
-      set(r, { cx: c[0], cy: c[1], r: 2.5 + c[2] * 26 }); op(r, 0.45 * (1 - c[2] / 0.45));
+      set(r, { cx: c[0], cy: c[1], r: 2.5 + c[2] * 26 }); op(r, 0.22 * (1 - c[2] / 0.45));
     });
 
     /* cursors */
@@ -886,11 +886,13 @@
   svg.appendChild(react); rings.forEach(function (r) { svg.appendChild(r); });
   ['design', 'code', 'launch', 'you'].forEach(function (k) { svg.appendChild(CUR[k].g); });
 
+  var CALM = 0.62;
   var loopMode = false, clock = 0;
   function draw(t) {
     clock = t;
     loopMode = t >= INTRO_END;
-    render(loopMode ? loopState((t - INTRO_END) % LOOP) : introState(t), t - INTRO_END);
+    var lt = (t - INTRO_END) * CALM;                       // the loop plays slower than the intro: unhurried work
+    render(loopMode ? loopState(lt % LOOP) : introState(t), lt);
   }
   window.__heroArtAt = draw;
 
