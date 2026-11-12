@@ -1,1 +1,6 @@
 backend/
+
+# Project builder: kept locally, not published for now
+build.html
+static/css/build.css
+static/js/build.js

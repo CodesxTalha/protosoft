@@ -272,6 +272,11 @@
           });
           return;
         }
+        if (j && j.error === 'closed') {                          // paused from the admin page
+          err.textContent = 'Bookings are paused right now, so nothing was sent. Please check back soon.'; err.hidden = false;
+          btn.disabled = false; btn.textContent = label;
+          return;
+        }
         throw new Error((j && j.error) || 'failed');
       })
       .catch(function () {
