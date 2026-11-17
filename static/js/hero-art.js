@@ -1,28 +1,18 @@
-/* ---------- Hero art: a small team of cursors building a website, for real ----------
-   One SVG in the hero (.hero__art). Everything in it is a function of time, so any moment can be drawn
-   (window.__heroArtAt(t) draws one, for checking). Nothing appears on its own: every piece is made by a cursor,
-   with the tool a person would use (text tool, rectangle tool, pen, gradient, paste, inspector, code and save).
+/* ---------- Hero art: AI builds a store fast, our team makes it right ----------
+   One SVG (.hero__art) with two things in it: a browser window with an online store, and a small sales card.
+   Everything is a function of time, so any moment can be drawn (window.__heroArtAt(t), used for checking).
+   The numbers on the sales card are an illustration, not results.
 
-   The intro (first visit in a session, or a reload; ~14.5 s; shown larger in the middle of the hero):
-      0.0  an empty page, an empty editor and a deploy panel; one cursor, "You"
-      0.9  You types a centred serif headline, pastes grey square buttons, draws a box and pastes a clip-art chart,
-           pastes cards of every size, writes the code, and presses Deploy
-      5.6  the build fails, messages pile up, the page slips apart; You rushes around, asks "Why is this broken?",
-           slows down and falls over
-      8.8  the team comes in:
-             Launch  clears the messages, later deploys (the log runs step by step) and the site goes live
-             Code    picks You up and sets it down to rest, fixes the two errors, writes the button and badge CSS
-                     and saves: the page reloads with round buttons and a badge
-             Design  sets the headline in the brand font and aligns it left in the inspector, moves and resizes the
-                     chart box on guides, fills it dark, deletes the clip-art, pastes the header, draws the line
-                     with the pen point by point, drags in the gradient, selects the cards and tidies them up
-     13.6  You gives a thumbs up, the headline rises, the scene moves into its place in the hero
+   The intro (first visit in a session, or a reload, about 20 s):
+      0.3  You ask an AI for a store. It builds a generic one in seconds: centred text, a grey square button,
+           broken pictures, uneven cards. Sales are low.
+      9.0  Our team's cursor comes in and fixes it one piece at a time: the picture, the headline, the button, the cards.
+           Each piece is selected first, then reshaped. Sales climb.
+     18.9  The real headline: AI builds it fast. We make it right.
+   Captions sit where the headline will be and rise in word by word.
 
-   Then (and straight away on later visits) a 24 s loop in three rounds. In each one Code selects the data array and
-   types new numbers (each point of the chart moves as its number is typed), saves, Launch deploys, the log runs, the
-   page reloads and the revenue counts to the new total. Design checks spacing, hover states and sizes; the client
-   hovers the chart, reads the values and says what it thinks. The cards show live data the whole time.
-   With reduced motion it is one still frame of the finished page. Skip, Escape or scrolling ends the intro. */
+   Then, and straight away on later visits, a calm loop of 18 s: the team browses its own store, adds things to the cart,
+   orders come in. With reduced motion it is one still frame. Skip, Escape or scrolling ends the intro. */
 (function () {
   var art = document.querySelector('.hero__art');
   if (!art) return;
@@ -32,12 +22,16 @@
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!intro) root.classList.remove('hero-intro');
 
+  var INTRO_END = 20.2, LOOP = 18;
+
   /* ================= helpers ================= */
   var NS = 'http://www.w3.org/2000/svg';
   var svg = document.createElementNS(NS, 'svg');
-  svg.setAttribute('viewBox', '20 20 660 280');          // the page's left edge and the panels' right edge line up with the text column
+  svg.setAttribute('viewBox', '0 0 660 280');
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   art.appendChild(svg);
+  var narrow = window.matchMedia('(max-width: 640px)'), VIEW_W = 430, PAN_TO = 660 - VIEW_W, lastView = '';
+
   function el(tag, attrs, parent) {
     var e = document.createElementNS(NS, tag);
     for (var k in attrs) e.setAttribute(k, attrs[k]);
@@ -51,875 +45,525 @@
   function smooth(x) { return x * x * (3 - 2 * x); }
   function inOut(x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
   function mix(a, b, k) { return a + (b - a) * k; }
-  function pulse(t, a, b) { return Math.sin(seg(t, a, b) * Math.PI); }
-  function box(a, b, k) { return { x: mix(a.x, b.x, k), y: mix(a.y, b.y, k), w: mix(a.w, b.w, k), h: mix(a.h, b.h, k), r: mix(a.r || 0, b.r || 0, k) }; }
-  function grey(a, b, k) { var v = Math.round(mix(a, b, k)); return 'rgb(' + v + ',' + v + ',' + v + ')'; }
-  function width(e) { try { return e.getComputedTextLength(); } catch (err) { return 0; } }
-  function tf(e, x, y, s, r) {
-    e.setAttribute('transform', 'translate(' + x.toFixed(2) + ' ' + y.toFixed(2) + ')' + (r ? ' rotate(' + r.toFixed(2) + ')' : '') + (s != null && s !== 1 ? ' scale(' + s.toFixed(3) + ')' : ''));
-  }
+  function tf(e, x, y, s) { e.setAttribute('transform', 'translate(' + x.toFixed(2) + ' ' + y.toFixed(2) + ')' + (s != null && s !== 1 ? ' scale(' + s.toFixed(3) + ')' : '')); }
   function op(e, v) { e.setAttribute('opacity', (+v).toFixed(3)); }
-  function money(v) { return '$' + Math.round(v).toLocaleString('en-US'); }
+  function hex(c) { return [parseInt(c.substr(1, 2), 16), parseInt(c.substr(3, 2), 16), parseInt(c.substr(5, 2), 16)]; }
+  function blend(a, b, k) { var x = hex(a), y = hex(b); return 'rgb(' + [0, 1, 2].map(function (i) { return Math.round(mix(x[i], y[i], k)); }).join(',') + ')'; }
+  function ramp(t, a, b, c, d) { return smooth(seg(t, a, b)) * (1 - smooth(seg(t, c, d))); }   // fades in a..b, out c..d
 
-  /* A hand's path through [time, x, y] points. Between two points it speeds up and slows down, bends a little
-     (people move along arcs, not rulers), and on long moves runs slightly past the target and settles back.
-     Two equal points in a row mean the hand is still. */
-  function track(keys) {
-    return function (t) {
-      if (t <= keys[0][0]) return [keys[0][1], keys[0][2]];
-      for (var i = 1; i < keys.length; i++) {
-        if (t <= keys[i][0]) {
-          var a = keys[i - 1], b = keys[i], p = (t - a[0]) / (b[0] - a[0]);
-          var dx = b[1] - a[1], dy = b[2] - a[2], dist = Math.sqrt(dx * dx + dy * dy);
-          var k = inOut(p);
-          if (dist > 110) k += Math.sin(Math.PI * clamp((p - 0.55) / 0.45, 0, 1)) * 0.045;
-          var bend = (dist > 24 ? 0.09 : 0) * (i % 2 ? 1 : -1) * Math.sin(Math.PI * clamp(k, 0, 1));
-          return [a[1] + dx * k - dy * bend, a[2] + dy * k + dx * bend];
-        }
-      }
-      var e = keys[keys.length - 1];
-      return [e[1], e[2]];
-    };
-  }
+  var SOFT = '#ececea', INK = '#141414', MUTED = '#6a6a6a', EDGE = '#d9d9d7', FILL = '#efefed', HAIR = '#ececea', ERR = '#b3261e', UP = '#1e7a46';
+  var SANS = 'Inter Tight, system-ui, sans-serif', SERIF = 'Georgia, "Times New Roman", serif';
+  var SPARK = 'M0 -5C.6 -1.6 1.6 -.6 5 0C1.6 .6 .6 1.6 0 5C-.6 1.6 -1.6 .6 -5 0C-1.6 -.6 -.6 -1.6 0 -5Z';
 
-  var INK = '#141414', MUTED = '#6a6a6a', SOFT = '#e3e3e1', DIM = '#d4d4d2', PAPER = '#fafafa', CARD = '#f4f4f2', NIGHT = '#161616';
-  var LINE = 'rgba(20,20,20,.12)', ERR = '#b3261e', EDGE = '#d9d9d7';
-  var SANS = 'Inter Tight, system-ui, sans-serif', SERIF = 'Georgia, "Times New Roman", serif', MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
-
-  /* ================= data ================= */
-  var DATA = [[42, 48, 45, 60, 58, 72, 80], [30, 44, 52, 49, 66, 70, 88], [50, 46, 58, 55, 64, 78, 74]];
-  var VALUE = [48210, 52940, 50375], DELTA = ['+12.4%', '+18.1%', '+9.6%'];
-  var SPARK = [9, 12, 10, 14, 13, 16, 11, 15, 17, 14, 18, 16, 12, 15, 17, 19];   // uptime bars, one every 1.5 s, 24 s around
-  var ACTIVE = [1284, 1291, 1288, 1302, 1297, 1310, 1306, 1299, 1315, 1321, 1318, 1309, 1296, 1290, 1287, 1283];
-  function arr(d) { return '[' + d.join(', ') + ']'; }
-
-  var CH = { x: 224, y: 116, w: 152, h: 62 };              // chart area inside the dark card
-  function px(i) { return CH.x + i * CH.w / 6; }
-  function py(v) { return CH.y + CH.h - (v - 20) / 80 * CH.h; }
-  function smoothPath(pts) {                               // a smooth curve through the points (Catmull-Rom as cubic Béziers)
-    if (pts.length < 2) return '';
-    var d = 'M' + pts[0][0].toFixed(1) + ' ' + pts[0][1].toFixed(1);
-    for (var i = 0; i < pts.length - 1; i++) {
-      var p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
-      d += ' C' + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + ' ' + (p1[1] + (p2[1] - p0[1]) / 6).toFixed(1) + ' ' +
-        (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + ' ' + (p2[1] - (p3[1] - p1[1]) / 6).toFixed(1) + ' ' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1);
-    }
-    return d;
-  }
-
-  /* ================= the scene ================= */
+  /* ================= defs ================= */
   var defs = el('defs', {});
+  var shadow = el('filter', { id: 'ha-sh', x: '-20%', y: '-20%', width: '140%', height: '150%' }, defs);
+  el('feDropShadow', { dx: 0, dy: 8, stdDeviation: 10, 'flood-color': '#000', 'flood-opacity': 0.07 }, shadow);
+  el('feDropShadow', { dx: 0, dy: 1, stdDeviation: 1, 'flood-color': '#000', 'flood-opacity': 0.04 }, shadow);
+  var winClip = el('clipPath', { id: 'ha-win' }, defs); el('rect', { x: 0.5, y: 0.5, width: 429, height: 279, rx: 14 }, winClip);
   var grad = el('linearGradient', { id: 'ha-fill', x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
-  el('stop', { offset: 0, 'stop-color': '#141414', 'stop-opacity': 0.06 }, grad);
-  el('stop', { offset: 1, 'stop-color': '#141414', 'stop-opacity': 0 }, grad);
-  var dots = el('pattern', { id: 'ha-dots', width: 8, height: 8, patternUnits: 'userSpaceOnUse' }, defs);
-  el('circle', { cx: 1, cy: 1, r: 0.55, fill: '#dcdcda' }, dots);
-  var fade = el('linearGradient', { id: 'ha-fade', x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
-  el('stop', { offset: 0, 'stop-color': '#fff', 'stop-opacity': 1 }, fade);
-  el('stop', { offset: 1, 'stop-color': '#fff', 'stop-opacity': 0 }, fade);
-  var mask = el('mask', { id: 'ha-mask' }, defs);
-  el('rect', { x: 20, y: 44, width: 380, height: 150, fill: 'url(#ha-fade)' }, mask);
-  var sparkClip = el('clipPath', { id: 'ha-spark' }, defs);
-  el('rect', { x: 8, y: 30, width: 92, height: 30 }, sparkClip);
-
-  /* ---------- the browser ---------- */
-  var browser = el('g', {});
-  el('rect', { x: 20.5, y: 20.5, width: 379, height: 259, rx: 10, fill: '#fff', stroke: EDGE, 'stroke-width': 1 }, browser);
-  [34, 44, 54].forEach(function (x) { el('circle', { cx: x, cy: 32, r: 2.5, fill: DIM }, browser); });
-  el('rect', { x: 140, y: 26, width: 140, height: 12, rx: 6, fill: '#ececea' }, browser);
-  el('path', { d: 'M187 31.2v-1.3a2 2 0 0 1 4 0v1.3M186.2 31.2h5.6v3.6h-5.6z', fill: 'none', stroke: MUTED, 'stroke-width': 0.8, 'stroke-linejoin': 'round' }, browser);
-  txt('yourbrand.com', { x: 194, y: 34.4, 'font-size': 6.5, fill: MUTED, 'font-family': SANS }, browser);
-  el('path', { d: 'M21 44.5h378', stroke: '#dcdcda', 'stroke-width': 1 }, browser);
-  var loadBar = el('rect', { x: 20, y: 43.2, height: 1.6, fill: INK }, browser);
-
-  // the site's own navigation, part of the template from the start
-  el('rect', { x: 34, y: 54, width: 10, height: 10, rx: 3, fill: INK }, browser);
-  el('path', { d: 'M37 61.5l4-5', stroke: PAPER, 'stroke-width': 1.3, 'stroke-linecap': 'round' }, browser);
-  txt('Lumen', { x: 48.5, y: 62, 'font-size': 8, 'font-weight': 600, 'letter-spacing': -0.2, fill: INK, 'font-family': SANS }, browser);
-  [['Product', 250], ['Pricing', 280], ['Docs', 309]].forEach(function (n) { txt(n[0], { x: n[1], y: 62, 'font-size': 6.3, fill: MUTED, 'font-family': SANS }, browser); });
-  el('rect', { x: 340.5, y: 54, width: 45, height: 12, rx: 6, fill: '#fff', stroke: EDGE, 'stroke-width': 0.8 }, browser);
-  txt('Get started', { x: 363, y: 62, 'font-size': 5.9, 'font-weight': 500, 'text-anchor': 'middle', fill: INK, 'font-family': SANS }, browser);
-
-  /* ---------- hero text ---------- */
-  var H1U = 'Know your numbers in real time';
-  var SUBU = 'Live dashboards your whole team understands, set up in minutes.';
-  var h1u = txt('', { x: 210, y: 100, 'font-size': 13, 'letter-spacing': 0.6, 'text-anchor': 'middle', fill: '#333', 'font-family': SERIF }, browser);
-  var subu = txt('', { x: 210, y: 112, 'font-size': 6.2, 'text-anchor': 'middle', fill: '#555', 'font-family': SERIF }, browser);
-  var caretT = el('rect', { width: 1.1, height: 12, fill: INK }, browser);
-  var h1g = el('g', {}, browser);
-  var h1a = txt('Know your numbers.', { x: 34, y: 108, 'font-size': 18, 'font-weight': 600, 'letter-spacing': -0.65, fill: INK, 'font-family': SANS }, h1g);
-  var h1b = txt('In real time.', { x: 34, y: 128, 'font-size': 18, 'font-weight': 600, 'letter-spacing': -0.65, fill: MUTED, 'font-family': SANS }, h1g);
-  var subg = el('g', {}, browser);
-  var sub1 = txt('Live dashboards your whole team understands,', { x: 34, y: 145, 'font-size': 6.6, fill: MUTED, 'font-family': SANS }, subg);
-  var sub2 = txt('set up in minutes, not weeks.', { x: 34, y: 154, 'font-size': 6.6, fill: MUTED, 'font-family': SANS }, subg);
-
-  var badge = el('g', {}, browser);                        // added by Code's CSS
-  el('rect', { x: 0, y: 0, width: 88, height: 13, rx: 6.5, fill: '#fff', stroke: '#dcdcda', 'stroke-width': 0.8 }, badge);
-  el('rect', { x: 2, y: 2, width: 20, height: 9, rx: 4.5, fill: INK }, badge);
-  txt('New', { x: 12, y: 8.6, 'font-size': 5.4, 'font-weight': 600, 'text-anchor': 'middle', fill: PAPER, 'font-family': SANS }, badge);
-  txt('Live analytics', { x: 26, y: 8.9, 'font-size': 6, 'font-weight': 500, fill: INK, 'font-family': SANS }, badge);
-  el('path', { d: 'M79 4.5l2.2 2-2.2 2', fill: 'none', stroke: MUTED, 'stroke-width': 0.9, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, badge);
-
-  /* ---------- buttons ---------- */
-  var UB = [{ x: 158, y: 121, w: 46, h: 14, r: 0 }, { x: 210, y: 121, w: 54, h: 14, r: 0 }];
-  var CB = [{ x: 34, y: 165, w: 60, h: 18, r: 9 }, { x: 100, y: 165, w: 66, h: 18, r: 9 }];
-  var BTXT = ['Start free', 'Book a demo'];
-  var btns = [0, 1].map(function (i) {
-    var g = el('g', {}, browser), b = { g: g };
-    b.rect = el('rect', { x: 0, y: 0 }, g);
-    b.u = txt(BTXT[i], { 'font-size': 6, 'text-anchor': 'middle', fill: '#222', 'font-family': SERIF }, g);
-    b.c = txt(BTXT[i], { 'font-size': 6.4, 'font-weight': 500, 'text-anchor': 'middle', fill: i ? INK : PAPER, 'font-family': SANS }, g);
-    return b;
+  var gTop = el('stop', { offset: 0, 'stop-color': INK, 'stop-opacity': 0.09 }, grad);
+  el('stop', { offset: 1, 'stop-color': UP, 'stop-opacity': 0 }, grad);
+  var wipes = [0, 1, 2, 3].map(function (i) {                 // wipe-in clips: 0 is the hero picture, 1 to 3 are the product pictures
+    var c = el('clipPath', { id: 'ha-wipe' + i }, defs);
+    return el('rect', { x: 0, y: -2, width: 0, height: 120 }, c);
   });
 
-  /* ---------- the chart card: a clip-art box first, then the team's dark card ---------- */
-  var UBOX = { x: 40, y: 140, w: 130, h: 56, r: 0 }, CBOX = { x: 214, y: 74, w: 172, h: 116, r: 10 };
-  var chart = el('g', {}, browser);
-  var chartRect = el('rect', {}, chart);
-  var chartU = el('g', {}, chart);                         // the clip-art
-  var chartUTitle = txt('Revenue chart', { x: 0, y: 0, 'font-size': 6.5, fill: '#333', 'font-family': SERIF }, chartU);
-  var ubars = [[0.55, '#bbb'], [0.8, '#999'], [0.4, '#ccc'], [0.95, '#777'], [0.7, '#aaa']].map(function (b) {
-    return { h: b[0], el: el('rect', { fill: b[1], stroke: '#555', 'stroke-width': 0.8 }, chartU) };
-  });
-  var grid = el('g', {}, chart);
-  [128, 148, 168].forEach(function (y) { el('path', { d: 'M' + CH.x + ' ' + y + 'H' + (CH.x + CH.w), stroke: '#e4e4e2', 'stroke-width': 0.7, 'stroke-dasharray': '1.5 2.5' }, grid); });
-  var head = [];                                           // header pieces, pasted in by Design
-  head.push(txt('Revenue', { x: 224, y: 89, 'font-size': 6, fill: MUTED, 'font-family': SANS }, chart));
-  var valueText = txt(money(VALUE[0]), { x: 224, y: 103, 'font-size': 11.5, 'font-weight': 600, 'letter-spacing': -0.3, fill: INK, 'font-family': SANS }, chart);
-  head.push(valueText);
-  var deltaG = el('g', {}, chart);
-  el('rect', { x: 0, y: 0, width: 30, height: 10, rx: 5, fill: '#efefed' }, deltaG);
-  var deltaText = txt(DELTA[0], { x: 15, y: 6.9, 'font-size': 5.4, 'font-weight': 500, 'text-anchor': 'middle', fill: INK, 'font-family': SANS }, deltaG);
-  head.push(deltaG);
-  var tabs = el('g', {}, chart);
-  el('circle', { cx: 372, cy: 87, r: 1.1, fill: '#a9a9a7' }, tabs); el('circle', { cx: 367, cy: 87, r: 1.1, fill: '#a9a9a7' }, tabs); el('circle', { cx: 377, cy: 87, r: 1.1, fill: '#a9a9a7' }, tabs);
-  head.push(tabs);
-  var area = el('path', { fill: 'url(#ha-fill)' }, chart);
-  var lineP = el('path', { fill: 'none', stroke: '#3a3a3a', 'stroke-width': 1.1, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, chart);
-  var rubber = el('path', { fill: 'none', stroke: '#9a9a98', 'stroke-width': 0.8 }, chart);
-  var anchors = [0, 1, 2, 3, 4, 5, 6].map(function () { return el('rect', { width: 3.6, height: 3.6, fill: '#fff', stroke: INK, 'stroke-width': 0.8 }, chart); });
-  var handleG = el('g', {}, chart);
-  var handleL = el('path', { stroke: '#9a9a98', 'stroke-width': 0.7 }, handleG);
-  var handleA = el('circle', { r: 1.6, fill: INK }, handleG), handleB = el('circle', { r: 1.6, fill: INK }, handleG);
-  var tipG = el('g', {}, chart);                           // the hover readout
-  var tipLine = el('path', { stroke: '#d4d4d2', 'stroke-width': 0.8, 'stroke-dasharray': '2 2' }, tipG);
-  var tipDot = el('circle', { r: 2.4, fill: '#fff', stroke: INK, 'stroke-width': 1.2 }, tipG);
-  var tipPill = el('rect', { height: 11, rx: 5.5, fill: INK }, tipG);
-  var tipTxt = txt('', { 'font-size': 5.6, 'font-weight': 600, 'text-anchor': 'middle', fill: PAPER, 'font-family': SANS }, tipG);
+  /* ================= the window ================= */
+  var win = el('g', {});
+  el('rect', { x: 0.5, y: 0.5, width: 429, height: 279, rx: 14, fill: '#fff', filter: 'url(#ha-sh)' }, win);
+  var inner = el('g', { 'clip-path': 'url(#ha-win)' }, win);
+  el('rect', { x: 0.5, y: 0.5, width: 429, height: 279, rx: 14, fill: '#fff' }, inner);
+  el('path', { d: 'M0 28.5H430', stroke: HAIR, 'stroke-width': 1 }, inner);
+  [14, 23, 32].forEach(function (x) { el('circle', { cx: x, cy: 14.5, r: 2.7, fill: '#e6e6e4' }, inner); });
+  el('rect', { x: 152.5, y: 7.5, width: 125, height: 14, rx: 7, fill: '#f4f4f2' }, inner);
+  el('path', { d: 'M180.4 13.2v-1a1.6 1.6 0 013.2 0v1M179.2 13.2h5.6v3.6h-5.6z', fill: 'none', stroke: MUTED, 'stroke-width': 0.8, 'stroke-linejoin': 'round' }, inner);
+  txt('haven.shop', { x: 190, y: 17.2, 'font-size': 7, fill: MUTED, 'font-family': SANS }, inner);
+  el('rect', { x: 0.5, y: 0.5, width: 429, height: 279, rx: 14, fill: 'none', stroke: EDGE }, win);
 
-  /* ---------- the three cards ---------- */
-  var UC = [{ x: 30, y: 206, w: 96, h: 50, r: 0 }, { x: 140, y: 214, w: 120, h: 44, r: 0 }, { x: 276, y: 200, w: 100, h: 62, r: 0 }];
-  function CC(i) { var w = (352 - 24) / 3; return { x: 34 + i * (w + 12), y: 204, w: w, h: 64, r: 10 }; }
-  var cards = [0, 1, 2].map(function (i) {
-    var g = el('g', {}, browser), c = { g: g };
-    c.hard = el('rect', { x: 3, y: 3, fill: '#cfcfcd' }, g);
-    c.lift = el('rect', { x: 1, y: 3, rx: 10, fill: 'rgba(20,20,20,.07)' }, g);
-    c.rect = el('rect', { x: 0, y: 0, fill: '#fff' }, g);
-    c.u = el('g', {}, g);
-    txt(['UPTIME', 'USERS', 'SPEED'][i], { x: 8, y: 14, 'font-size': 6, 'letter-spacing': 1, fill: '#444', 'font-family': SERIF }, c.u);
-    el('rect', { x: 8, y: 22, width: [60, 80, 50][i], height: 8, fill: '#bbb', stroke: '#777', 'stroke-width': 0.7 }, c.u);
-    c.c = el('g', {}, g);
-    txt(['Uptime', 'Active now', 'Latency'][i], { x: 10, y: 15, 'font-size': 5.8, fill: MUTED, 'font-family': SANS }, c.c);
-    c.val = txt('', { x: 10, y: 30, 'font-size': 10, 'font-weight': 600, 'letter-spacing': -0.25, fill: INK, 'font-family': SANS }, c.c);
-    return c;
-  });
-  cards[0].val.textContent = '99.98%';
-  var sparkG = el('g', { 'clip-path': 'url(#ha-spark)' }, cards[0].c);
-  var sparks = []; for (var s = 0; s < 16; s++) sparks.push(el('rect', { width: 3.2, rx: 1, fill: '#d6d6d4' }, sparkG));
-  var liveRing = el('circle', { cx: 46, cy: 13, r: 2, fill: 'none', stroke: INK, 'stroke-width': 0.7 }, cards[1].c);
-  el('circle', { cx: 46, cy: 13, r: 1.6, fill: INK }, cards[1].c);
-  [0, 1, 2, 3].forEach(function (i) { el('circle', { cx: 15 + i * 8, cy: 47, r: 5, fill: ['#bdbdbb', '#9a9a98', '#d4d4d2', '#6a6a6a'][i], stroke: '#fff', 'stroke-width': 1.4 }, cards[1].c); });
-  txt('+12', { x: 50, y: 49.2, 'font-size': 5.6, fill: MUTED, 'font-family': SANS }, cards[1].c);
-  el('path', { d: 'M70 46a14 14 0 0 1 28 0', fill: 'none', stroke: SOFT, 'stroke-width': 4, 'stroke-linecap': 'round' }, cards[2].c);
-  var gauge = el('path', { fill: 'none', stroke: '#9a9a98', 'stroke-width': 4, 'stroke-linecap': 'round' }, cards[2].c);
+  var page = el('g', { transform: 'translate(0 28)' }, inner);   // the store, in its own coordinates (430 x 252)
 
-  /* ---------- the code editor ---------- */
-  var editor = el('g', {});
-  el('rect', { x: 420.5, y: 20.5, width: 259, height: 149, rx: 10, fill: '#fff', stroke: EDGE, 'stroke-width': 1 }, editor);
-  [434, 444, 454].forEach(function (x) { el('circle', { cx: x, cy: 32, r: 2.5, fill: DIM }, editor); });
-  el('path', { d: 'M421 44.5h258', stroke: '#dcdcda', 'stroke-width': 1 }, editor);
-  el('rect', { x: 470, y: 25, width: 52, height: 14, rx: 4, fill: '#f0f0ee' }, editor);
-  txt('index.html', { x: 496, y: 34.5, 'font-size': 6.2, fill: INK, 'text-anchor': 'middle', 'font-family': SANS }, editor);
-  txt('chart.js', { x: 546, y: 34.5, 'font-size': 6.2, fill: '#a9a9a7', 'text-anchor': 'middle', 'font-family': SANS }, editor);
-  var saved = el('circle', { cx: 517, cy: 32, r: 1.8, fill: MUTED }, editor);   // unsaved changes
-  var CX = 446;
-  var hl = el('rect', { height: 9.5, rx: 2, fill: '#e8e8e6' }, editor);
-  var C = { w: '#3a3a3a', g: '#c2c2c0', m: '#8a8a88', s: '#5a5a58' };
-  var CODE = [
-    [['<', 'g'], ['section', 'w'], [' class', 'm'], ['=', 'g'], ['"hero"', 's'], ['>', 'g']],
-    [['  <', 'g'], ['span', 'w'], [' class', 'm'], ['=', 'g'], ['"badge"', 's'], ['>', 'g'], ['New', 's'], ['</', 'g'], ['span', 'w'], ['>', 'g']],
-    [['  <', 'g'], ['h1', 'w'], ['>', 'g'], ['Know your numbers.', 's'], ['</', 'g'], ['h1', 'w'], ['>', 'g']],
-    [['  <', 'g'], ['a', 'w'], [' class', 'm'], ['=', 'g'], ['"btn"', 's'], ['>', 'g'], ['Start free', 's'], ['</', 'g'], ['a', 'w'], ['>', 'g']],
-    [['</', 'g'], ['section', 'w'], ['>', 'g']],
-    [['const', 'm'], [' data', 'w'], [' = ', 'g'], [arr(DATA[0]), 's'], [';', 'g']],
-    [['.hero', 'w'], [' { ', 'g'], ['display', 'm'], [': ', 'g'], ['grid', 's'], ['; }', 'g']],
-    [['.btn', 'w'], [' { ', 'g'], ['border-radius', 'm'], [': ', 'g'], ['99px', 's'], ['; }', 'g']],
-    [['.badge', 'w'], [' { ', 'g'], ['display', 'm'], [': ', 'g'], ['flex', 's'], ['; }', 'g']]
-  ];
-  var lines = CODE.map(function (parts, i) {
-    txt(String(i + 1), { x: 438, y: 54 + i * 13, 'font-size': 6.3, 'font-family': MONO, fill: '#c9c9c7', 'text-anchor': 'end' }, editor);
-    var t = el('text', { x: CX, y: 54 + i * 13, 'font-size': 7.2, 'font-family': MONO, style: 'white-space:pre' }, editor);
-    var len = 0;
-    var spans = parts.map(function (p) { var s = el('tspan', { fill: C[p[1]] }, t); len += p[0].length; return { el: s, str: p[0] }; });
-    return { el: t, spans: spans, len: len };
-  });
-  function setChars(line, n) {
-    var left = Math.round(n);
-    line.spans.forEach(function (s) { var k = clamp(left, 0, s.str.length); s.el.textContent = s.str.slice(0, k); left -= k; });
-  }
-  function setToken(line, i, str) { var s = lines[line].spans[i]; lines[line].len += str.length - s.str.length; s.str = str; }
-  var CHW = 0;
-  function chw() {
-    if (CHW) return CHW;
-    var w = width(lines[0].el);
-    if (w > 0 && lines[0].el.textContent.length === lines[0].len) CHW = w / lines[0].len;
-    return CHW || 4.32;
-  }
-  var YOU_CODE = lines.slice(0, 7).reduce(function (a, l) { return a + l.len; }, 0);
-  var squig = [3, 6].map(function (i) {
-    var y = 57 + i * 13, d = 'M' + CX + ' ' + y;
-    for (var x = CX; x < CX + 110; x += 4) d += ' q1 -2 2 0 t2 0';
-    return el('path', { d: d, fill: 'none', stroke: ERR, 'stroke-width': 0.8 }, editor);
-  });
-  var caretC = el('rect', { width: 1.1, height: 9, fill: INK }, editor);
+  /* nav: the same in both versions */
+  var navG = el('g', {}, page);
+  txt('haven', { x: 28, y: 23, 'font-size': 10.5, 'font-weight': 700, 'letter-spacing': -0.3, fill: INK, 'font-family': SANS }, navG);
+  txt('Shop', { x: 318, y: 22.4, 'font-size': 7.3, fill: MUTED, 'font-family': SANS }, navG);
+  txt('About', { x: 349, y: 22.4, 'font-size': 7.3, fill: MUTED, 'font-family': SANS }, navG);
+  el('path', { d: 'M384.5 14.5h11v9.5a2 2 0 01-2 2h-7a2 2 0 01-2-2zM387 14.5v-1.4a3 3 0 016 0v1.4', fill: 'none', stroke: INK, 'stroke-width': 1, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, navG);
+  var badge = el('g', {}, navG);
+  var badgeC = el('circle', { cx: 396, cy: 14, r: 4.4, fill: INK, stroke: '#fff', 'stroke-width': 1.2 }, badge);
+  var badgeT = txt('1', { x: 396, y: 16, 'font-size': 5.4, 'font-weight': 600, 'text-anchor': 'middle', fill: '#fff', 'font-family': SANS }, badge);
 
-  /* ---------- the deploy panel ---------- */
-  var deploy = el('g', {});
-  el('rect', { x: 420.5, y: 184.5, width: 259, height: 95, rx: 10, fill: '#fff', stroke: EDGE, 'stroke-width': 1 }, deploy);
-  txt('Deploy', { x: 434, y: 202, 'font-size': 7.6, 'font-weight': 600, fill: INK, 'font-family': SANS }, deploy);
-  el('rect', { x: 466, y: 194.5, width: 26, height: 11, rx: 5.5, fill: '#ececea' }, deploy);
-  el('path', { d: 'M471 197.5v5M471 199.5a2.4 2.4 0 0 0 4.8 0', fill: 'none', stroke: MUTED, 'stroke-width': 0.7 }, deploy);
-  txt('main', { x: 478.5, y: 202.1, 'font-size': 5.4, fill: MUTED, 'font-family': MONO }, deploy);
-  var stDot = el('circle', { cx: 503, cy: 200, r: 2.4 }, deploy);
-  var stTxt = txt('', { x: 508, y: 202.2, 'font-size': 6.2, 'font-family': SANS }, deploy);
-  var depBtn = el('rect', { x: 624, y: 192, width: 44, height: 15, rx: 7.5, fill: INK }, deploy);
-  txt('Deploy', { x: 646, y: 201.8, 'font-size': 6.2, 'font-weight': 500, 'text-anchor': 'middle', fill: PAPER, 'font-family': SANS }, deploy);
-  var STEPS = ['Installing dependencies', 'Building pages', 'Optimizing images', 'Deploying to the edge'], STEP_T = ['0.6s', '1.1s', '0.4s', '0.3s'];
-  var steps = STEPS.map(function (name, i) {
-    var y = 219 + i * 10, g = el('g', {}, deploy);
-    var spin = el('path', { d: 'M0 -2.6a2.6 2.6 0 1 1 -2.6 2.6', fill: 'none', stroke: MUTED, 'stroke-width': 0.9, 'stroke-linecap': 'round' }, g);
-    var ok = el('path', { d: 'M-2.2 0.2l1.5 1.5 3-3.2', fill: 'none', stroke: '#9a9a98', 'stroke-width': 1, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g);
-    var no = el('path', { d: 'M-2 -2l4 4M2 -2l-4 4', fill: 'none', stroke: ERR, 'stroke-width': 1, 'stroke-linecap': 'round' }, g);
-    var label = txt(name, { x: 444, y: y + 2.1, 'font-size': 6, 'font-family': MONO }, deploy);
-    var time = txt('', { x: 666, y: y + 2.1, 'font-size': 5.8, 'text-anchor': 'end', fill: MUTED, 'font-family': MONO }, deploy);
-    tf(g, 437, y);
-    return { g: g, spin: spin, ok: ok, no: no, label: label, time: time };
-  });
-  el('rect', { x: 434, y: 258, width: 232, height: 2, rx: 1, fill: '#e6e6e4' }, deploy);
-  var prog = el('rect', { x: 434, y: 258, height: 2, rx: 1 }, deploy);
-  var readyL = txt('', { x: 434, y: 271, 'font-size': 6, 'font-family': MONO, fill: INK }, deploy);
-  var readyR = txt('', { x: 666, y: 271, 'font-size': 6, 'text-anchor': 'end', 'font-family': MONO, fill: MUTED }, deploy);
+  /* hero picture: a broken strip that becomes a framed picture */
+  var IMG_BAD = { x: 28, y: 42, w: 374, h: 48, r: 6 }, IMG_GOOD = { x: 270, y: 44, w: 132, h: 104, r: 10 };
+  var imgRect = el('rect', {}, page);
+  var imgX = el('path', { fill: 'none', stroke: '#d4d3d0', 'stroke-width': 1 }, page);
+  var imgArt = el('g', { 'clip-path': 'url(#ha-wipe0)' }, page);
+  var heroClip = el('clipPath', { id: 'ha-herobox' }, defs); el('rect', { x: 0, y: 0, width: IMG_GOOD.w, height: IMG_GOOD.h, rx: IMG_GOOD.r }, heroClip);
+  var imgDraw = el('g', { transform: 'translate(' + IMG_GOOD.x + ' ' + IMG_GOOD.y + ')' }, imgArt);
+  var imgIn = el('g', { 'clip-path': 'url(#ha-herobox)' }, imgDraw);
+  el('circle', { cx: 112, cy: 28, r: 9.5, fill: '#fff' }, imgIn);
+  el('path', { d: 'M0 104V74C16 60 30 60 44 68C56 75 68 76 80 68C94 58 112 60 132 72V104Z', fill: '#dcdcda' }, imgIn);
+  el('path', { d: 'M0 104V86C20 78 38 81 56 86C74 91 98 82 132 80V104Z', fill: '#cbcbc9' }, imgIn);
+  el('ellipse', { cx: 70, cy: 92, rx: 40, ry: 3, fill: '#000', opacity: 0.07 }, imgIn);
+  el('path', { d: 'M34 68H72C72 82 64 92 53 92S34 82 34 68Z', fill: '#a9a9a7' }, imgIn);
+  el('ellipse', { cx: 53, cy: 68, rx: 19, ry: 3.4, fill: '#c4c4c2' }, imgIn);
+  el('path', { d: 'M82 36H94V47C94 53 104 57 104 71C104 83 99 92 95 92H81C77 92 72 83 72 71C72 57 82 53 82 47Z', fill: INK }, imgIn);
+  el('ellipse', { cx: 88, cy: 36, rx: 6, ry: 1.7, fill: '#3a3a3a' }, imgIn);
+  el('rect', { x: 77, y: 62, width: 3, height: 17, rx: 1.5, fill: '#fff', opacity: 0.16 }, imgIn);
+  el('path', { d: 'M88 36V19', fill: 'none', stroke: INK, 'stroke-width': 1.4, 'stroke-linecap': 'round' }, imgIn);
+  el('path', { d: 'M88 27C94 26 98 22 99 17C93 18 88 22 88 27Z', fill: INK }, imgIn);
 
-  /* ---------- the tools: selection, size label, guides, measurements, marquee, toolbar, inspector, key presses ---------- */
-  var tools = el('g', {});
-  var sel = el('g', {}, tools);
-  var selRect = el('rect', { fill: 'none', stroke: INK, 'stroke-width': 0.9 }, sel);
-  var handles = [0, 1, 2, 3].map(function () { return el('rect', { width: 4.4, height: 4.4, fill: PAPER, stroke: INK, 'stroke-width': 0.9 }, sel); });
-  var size = el('g', {}, tools);
-  var sizeRect = el('rect', { height: 11, rx: 3.5, fill: INK }, size);
-  var sizeTxt = txt('', { y: 7.7, 'font-size': 5.8, 'font-weight': 500, 'text-anchor': 'middle', fill: PAPER, 'font-family': SANS }, size);
-  var guides = [0, 1, 2].map(function () { return el('path', { stroke: INK, 'stroke-width': 0.7, 'stroke-dasharray': '2.5 2.5' }, tools); });
-  var reds = [0, 1, 2, 3].map(function () {
-    var g = el('g', {}, tools);
-    return { g: g, line: el('path', { stroke: INK, 'stroke-width': 0.8 }, g), pill: el('rect', { height: 9, rx: 3, fill: INK }, g), t: txt('', { 'font-size': 5.4, 'font-weight': 600, 'text-anchor': 'middle', fill: PAPER, 'font-family': SANS }, g) };
-  });
-  var marquee = el('rect', { fill: 'rgba(20,20,20,.04)', stroke: INK, 'stroke-width': 0.7 }, tools);
-  var toolbar = el('g', {}, tools);
-  var tbRect = el('rect', { x: 0, y: 0, width: 58, height: 14, rx: 7, fill: INK }, toolbar);
-  el('path', { d: 'M8 4.5h2.4v2.4H8zM11.6 4.5H14v2.4h-2.4zM8 8.1h2.4v2.4H8zM11.6 8.1H14v2.4h-2.4z', fill: PAPER }, toolbar);
-  txt('Tidy up', { x: 18, y: 9.3, 'font-size': 6, 'font-weight': 500, fill: PAPER, 'font-family': SANS }, toolbar);
+  /* headline and sub line: generic (centred serif) and ours (left, sans) */
+  var hBad = el('g', {}, page);
+  txt('Welcome to Haven', { x: 215, y: 114, 'font-size': 14, 'font-weight': 500, 'text-anchor': 'middle', fill: '#333', 'font-family': SERIF }, hBad);
+  txt('Handmade ceramics.', { x: 215, y: 129, 'font-size': 7.4, 'text-anchor': 'middle', fill: '#8a8a88', 'font-family': SERIF }, hBad);
+  var hGood = el('g', {}, page);
+  txt('Made by hand,', { x: 28, y: 76, 'font-size': 19, 'font-weight': 600, 'letter-spacing': -0.6, fill: INK, 'font-family': SANS }, hGood);
+  txt('made to be used.', { x: 28, y: 98, 'font-size': 19, 'font-weight': 600, 'letter-spacing': -0.6, fill: INK, 'font-family': SANS }, hGood);
+  txt('Small-batch ceramics for everyday life.', { x: 28, y: 115, 'font-size': 7.6, fill: MUTED, 'font-family': SANS }, hGood);
 
-  var insp = el('g', {}, tools);                           // the inspector: text settings, or fill
-  el('rect', { x: 0, y: 0, width: 92, height: 60, rx: 8, fill: PAPER, stroke: 'rgba(20,20,20,.16)', 'stroke-width': 1 }, insp);
-  txt('Text', { x: 8, y: 12, 'font-size': 6.2, 'font-weight': 600, fill: INK, 'font-family': SANS }, insp);
-  txt('Font', { x: 8, y: 27, 'font-size': 5.6, fill: MUTED, 'font-family': SANS }, insp);
-  el('rect', { x: 28, y: 19.5, width: 58, height: 11, rx: 3, fill: '#efefed' }, insp);
-  var fontName = txt('', { x: 32, y: 27, 'font-size': 5.6, fill: INK, 'font-family': SANS }, insp);
-  el('path', { d: 'M80 24l2 2 2-2', fill: 'none', stroke: MUTED, 'stroke-width': 0.8, 'stroke-linecap': 'round' }, insp);
-  txt('Align', { x: 8, y: 47, 'font-size': 5.6, fill: MUTED, 'font-family': SANS }, insp);
-  var alignBg = el('rect', { y: 40, width: 12, height: 10, rx: 2.5, fill: '#e3e3e1' }, insp);
-  [[30, 'M3 3h6M3 5h4M3 7h6'], [44, 'M3 3h6M4 5h4M3 7h6'], [58, 'M3 3h6M5 5h4M3 7h6']].forEach(function (a) { el('path', { d: a[1], transform: 'translate(' + a[0] + ' 40)', stroke: INK, 'stroke-width': 0.8, 'stroke-linecap': 'round' }, insp); });
-  var drop = el('g', {}, insp);                            // the font list
-  el('rect', { x: 28, y: 31.5, width: 58, height: 24, rx: 3, fill: PAPER, stroke: 'rgba(20,20,20,.16)', 'stroke-width': 0.8 }, drop);
-  var dropHi = el('rect', { x: 30, y: 44.5, width: 54, height: 9, rx: 2, fill: '#ececea' }, drop);
-  txt('Times New Roman', { x: 32, y: 40.6, 'font-size': 5.4, fill: INK, 'font-family': SERIF }, drop);
-  txt('Inter Tight', { x: 32, y: 51, 'font-size': 5.4, fill: INK, 'font-family': SANS }, drop);
-  var fillP = el('g', {}, tools);
-  el('rect', { x: 0, y: 0, width: 84, height: 30, rx: 8, fill: PAPER, stroke: 'rgba(20,20,20,.16)', 'stroke-width': 1 }, fillP);
-  txt('Fill', { x: 8, y: 11, 'font-size': 6.2, 'font-weight': 600, fill: INK, 'font-family': SANS }, fillP);
-  var FILLS = ['#f4f4f2', '#e3e3e1', '#bdbdbb', '#6a6a6a', '#141414'];
-  FILLS.forEach(function (f, i) { el('circle', { cx: 12 + i * 15, cy: 20, r: 4.5, fill: f, stroke: i < 2 ? DIM : 'none', 'stroke-width': 0.8 }, fillP); });
-  var fillRing = el('circle', { cx: 12, cy: 20, r: 6.3, fill: 'none', stroke: INK, 'stroke-width': 0.8 }, fillP);
-  var key = el('g', {}, tools);
-  var keyRect = el('rect', { x: 0, y: 0, height: 12, rx: 3, fill: PAPER, stroke: 'rgba(20,20,20,.3)', 'stroke-width': 0.8 }, key);
-  var keyTxt = txt('', { y: 8.2, 'font-size': 6, 'font-weight': 600, 'text-anchor': 'middle', fill: INK, 'font-family': SANS }, key);
+  /* button: grey square, then a black pill */
+  var BTN_BAD = { x: 175, y: 138, w: 80, h: 16, r: 0 }, BTN_GOOD = { x: 28, y: 128, w: 68, h: 21, r: 10.5 };
+  var btnRect = el('rect', {}, page);
+  var btnBad = txt('Shop Now', { x: 215, y: 148.6, 'font-size': 7.2, 'text-anchor': 'middle', fill: '#6a6a68', 'font-family': SERIF }, page);
+  var btnGood = txt('Shop now', { x: 62, y: 141.4, 'font-size': 7.7, 'font-weight': 600, 'text-anchor': 'middle', fill: '#fff', 'font-family': SANS }, page);
 
-  /* ---------- messages, reactions, click rings ---------- */
-  var TOASTS = ['Build failed: 2 errors', 'Client: can the logo be bigger?', 'Mobile layout is broken', 'Deadline is today'];
-  var toasts = TOASTS.map(function (m) {
-    var g = el('g', {});
-    el('rect', { x: 0, y: 0, width: 150, height: 20, rx: 6, fill: PAPER, stroke: 'rgba(20,20,20,.16)', 'stroke-width': 1 }, g);
-    el('circle', { cx: 10, cy: 10, r: 2.6, fill: ERR }, g);
-    txt(m, { x: 18, y: 12.6, 'font-size': 6.8, fill: INK, 'font-family': SANS }, g);
-    el('path', { d: 'M139 7l6 6M145 7l-6 6', stroke: MUTED, 'stroke-width': 1, 'stroke-linecap': 'round' }, g);
-    return g;
-  });
-  var THUMB = 'M1.5 5.5h2v5.5h-2zM3.5 10.5h4.9c.55 0 1-.38 1.1-.92l.6-3.1c.12-.62-.35-1.18-.98-1.18H6.6l.35-1.9c.1-.55-.32-1.06-.88-1.06L3.5 5.6';
-  var react = el('g', {});
-  el('circle', { cx: 0, cy: 0, r: 10, fill: PAPER, stroke: 'rgba(20,20,20,.16)', 'stroke-width': 1 }, react);
-  var reactThumb = el('path', { d: THUMB, transform: 'translate(-6.6 -6.4) scale(1.1)', fill: 'none', stroke: INK, 'stroke-width': 1.1, 'stroke-linejoin': 'round' }, react);
-  var reactCheck = el('path', { d: 'M-4.5 0.3l3 3 6-6.5', fill: 'none', stroke: INK, 'stroke-width': 1.4, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, react);
-  var rings = [0, 1, 2, 3, 4, 5].map(function () { return el('circle', { r: 0, fill: 'none', stroke: INK, 'stroke-width': 1 }); });
-
-  /* ---------- cursors: their name tags open into chat bubbles ---------- */
-  function cursor(label, client) {
-    var fill = PAPER, color = INK;
-    var g = el('g', {});
-    var tag = el('g', { transform: 'translate(10 15)' }, g);
-    var r = el('rect', { x: 0, y: 0, height: 13, rx: 4, fill: client ? INK : '#fff', stroke: client ? 'none' : 'rgba(20,20,20,.22)', 'stroke-width': 1 }, tag);
-    if (client) color = PAPER;
-    var t = txt(label, { x: 6, y: 9.2, 'font-size': 7.2, 'font-weight': 600, fill: color, 'font-family': SANS }, tag);
-    var m = txt('', { x: 7, y: 11.2, 'font-size': 7.4, 'font-weight': 500, fill: color, 'font-family': SANS }, tag);
-    var arrow = el('g', {}, g);
-    el('path', { d: 'M0 0V15.5L4.1 11.7 6.9 18.1 9.7 16.9 7 10.6H12z', fill: INK, stroke: '#fff', 'stroke-width': 1.2, 'stroke-linejoin': 'round' }, arrow);
-    return { g: g, arrow: arrow, rect: r, text: t, msg: m, label: label, lw: label.length * 4.4 };
-  }
-  var CUR = { you: cursor('You', true), design: cursor('Design'), code: cursor('Code'), launch: cursor('Launch') };
-  function sizeTags() { Object.keys(CUR).forEach(function (k) { var w = width(CUR[k].text); if (w) CUR[k].lw = w; }); }
-  sizeTags();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { sizeTags(); CHW = 0; draw(clock); });
-
-  /* ================= the state of one moment ================= */
-  var REST = { you: [648, 292], design: [192, 140], code: [620, 140], launch: [598, 212] };
-  function base() {                                        // the finished site, everyone at rest
-    return {
-      h1u: 0, subu: 0, caretT: null, kFont: 1, kAlign: 1, slip: 0, kBadge: 1,
-      btnU: 1, kBtn: 1, btnSlip: 0, btnHover: [0, 0],
-      chartBox: CBOX, chartO: 1, chartTilt: 0, barsO: 0, kDark: 1, headO: [1, 1, 1, 1], gridO: 1,
-      data: DATA[0].slice(), pen: 7, rubber: null, handle: null, anchorsO: 0, gradK: 1, value: VALUE[0], delta: DELTA[0], tip: null,
-      cardsO: [1, 1, 1], kTidy: 1, jumble: [0, 0, 0], lift: [0, 0, 0], live: 0,
-      code: 1e4, line7: 1e4, line8: 1e4, dataText: arr(DATA[0]), hl: null, caret: null, squig: [0, 0], unsaved: 0,
-      status: 'ready', steps: [2, 2, 2, 2], prog: 1, ready: 1, pressed: false, load: 0,
-      sel: null, size: null, guides: [], reds: [], marquee: null, toolbar: null, insp: null, fillP: null, key: null,
-      toasts: [], clicks: [], react: null, chat: {},
-      cur: { you: { p: REST.you, r: -12, o: 1 }, design: { p: REST.design, o: 1 }, code: { p: REST.code, o: 1 }, launch: { p: REST.launch, o: 1 } },
-      pageO: 1
-    };
-  }
-  function chat(text, t, a, b) {
-    if (t <= a || t >= b) return null;
-    return { text: text, n: Math.round(text.length * seg(t, a + 0.1, a + 0.1 + text.length * 0.035)), k: smooth(seg(t, a, a + 0.2)) * (1 - smooth(seg(t, b - 0.25, b))) };
-  }
-  function keyAt(S, label, t, at, p) { if (t > at && t < at + 0.55) S.key = { text: label, x: p[0] + 14, y: p[1] - 14, o: pulse(t, at, at + 0.55) }; }
-  function clicksOf(S, list, t) { list.forEach(function (c) { if (t > c[0] && t < c[0] + 0.45) { var p = c[1](c[0]); S.clicks.push([p[0], p[1], t - c[0]]); } }); }
-  function pressOf(list, t) { return list.some(function (c) { return t > c[0] && t < c[0] + 0.12; }); }
-  // a deploy that starts at a: the four steps in turn, the bar, and done
-  var DEP = [0.6, 1.1, 0.4, 0.3];
-  function runDeploy(S, t, a, fail) {
-    if (t < a) return;
-    var at = a;
-    S.status = 'building'; S.ready = 0;
-    for (var i = 0; i < 4; i++) {
-      var d = fail && i === 1 ? 0.35 : DEP[i] * (fail ? 0.6 : 1);
-      if (t < at) S.steps[i] = 0; else if (t < at + d) S.steps[i] = 1; else S.steps[i] = 2;
-      if (fail && i === 1 && t >= at + d) { S.steps[i] = 3; S.steps[2] = 0; S.steps[3] = 0; S.status = 'failed'; S.prog = 0.45; return; }
-      at += d;
+  /* three products: uneven broken cards, then an even grid with real pictures */
+  var CARD_BAD = [{ x: 28, y: 168, w: 100, h: 46 }, { x: 140, y: 162, w: 128, h: 58 }, { x: 282, y: 172, w: 104, h: 42 }];
+  var CARD_GOOD = [{ x: 28, y: 160, w: 114, h: 58 }, { x: 158, y: 160, w: 114, h: 58 }, { x: 288, y: 160, w: 114, h: 58 }];
+  var PRODUCTS = [['Mug', '$24'], ['Bowl', '$38'], ['Vase', '$46']];
+  function drawProduct(i, g) {
+    el('ellipse', { cx: 57, cy: 51, rx: 22, ry: 2.4, fill: '#000', opacity: 0.07 }, g);
+    if (i === 0) {
+      el('path', { d: 'M68 22H71.5A5 5 0 0 1 71.5 34H68', fill: 'none', stroke: '#b4b4b2', 'stroke-width': 3.4 }, g);
+      el('path', { d: 'M42 17H68V43A6 6 0 0 1 62 49H48A6 6 0 0 1 42 43Z', fill: '#b4b4b2' }, g);
+      el('ellipse', { cx: 55, cy: 17, rx: 13, ry: 2.6, fill: '#c9c9c7' }, g);
+      el('rect', { x: 46, y: 23, width: 3, height: 19, rx: 1.5, fill: '#fff', opacity: 0.5 }, g);
+    } else if (i === 1) {
+      el('path', { d: 'M30 24H84C84 38 73 48 57 48S30 38 30 24Z', fill: '#a9a9a7' }, g);
+      el('ellipse', { cx: 57, cy: 24, rx: 27, ry: 4, fill: '#c4c4c2' }, g);
+      el('path', { d: 'M38 31C40 36 44 39 48 40', fill: 'none', stroke: '#fff', 'stroke-width': 1.6, 'stroke-linecap': 'round', opacity: 0.45 }, g);
+    } else {
+      el('path', { d: 'M51 9H63V18C63 24 72 27 72 38C72 46 68 49 65 49H49C46 49 42 46 42 38C42 27 51 24 51 18Z', fill: INK }, g);
+      el('ellipse', { cx: 57, cy: 9, rx: 6, ry: 1.6, fill: '#3a3a3a' }, g);
+      el('rect', { x: 46, y: 28, width: 3, height: 14, rx: 1.5, fill: '#fff', opacity: 0.16 }, g);
     }
-    S.prog = seg(t, a, at);
-    if (t >= at) { S.status = 'ready'; S.ready = smooth(seg(t, at, at + 0.2)); }
-    return at;
   }
+  var cards = PRODUCTS.map(function (p, i) {
+    var g = el('g', {}, page);
+    var box = el('rect', {}, g);
+    var x = el('path', { fill: 'none', stroke: '#d4d3d0', 'stroke-width': 1 }, g);
+    var artG = el('g', { 'clip-path': 'url(#ha-wipe' + (i + 1) + ')' }, g);
+    drawProduct(i, artG);
+    var oldPrice = txt(p[1] + '.00', { 'font-size': 6, 'text-anchor': 'middle', fill: '#8a8a88', 'font-family': SERIF }, g);
+    var name = txt(p[0], { 'font-size': 7.8, 'font-weight': 600, fill: INK, 'font-family': SANS }, g);
+    var price = txt(p[1], { 'font-size': 7.8, 'font-weight': 600, 'text-anchor': 'end', fill: INK, 'font-family': SANS }, g);
+    var plus = el('g', {}, g);
+    var plusC = el('circle', { r: 8, fill: '#fff', stroke: EDGE }, plus);
+    var plusG = el('path', { d: 'M-2.8 0H2.8M0 -2.8V2.8', fill: 'none', stroke: INK, 'stroke-width': 1.2, 'stroke-linecap': 'round' }, plus);
+    return { g: g, box: box, x: x, art: artG, oldPrice: oldPrice, name: name, price: price, plus: plus, plusC: plusC, plusG: plusG };
+  });
 
-  /* ---------------- the intro ---------------- */
-  var INTRO_END = 14.5;
-  var PEN = DATA[0].map(function (v, i) { return [px(i), py(v)]; });
-  var YOU = track([
-    [0, 730, 330], [0.5, 730, 330], [0.85, 210, 93], [0.9, 210, 93], [1.8, 250, 104], [1.9, 210, 110], [2.45, 236, 118],
-    [2.6, 210, 128], [2.75, 210, 128], [2.85, 40, 140], [3.3, 170, 196], [3.45, 105, 168], [3.6, 210, 232], [3.75, 210, 232],
-    [3.95, 446, 56], [4.2, 520, 80], [4.5, 560, 100], [4.8, 520, 120], [5.1, 590, 132], [5.35, 560, 138],
-    [5.55, 646, 199], [5.65, 646, 199], [6.25, 378, 62], [6.45, 100, 232], [6.65, 560, 110], [6.85, 646, 199], [7.0, 378, 86],
-    [7.15, 96, 168], [7.3, 470, 95], [8.0, 300, 215], [8.2, 300, 215]
-  ]);
-  var YOU_CLK = [[0.88, YOU], [1.88, YOU], [2.85, YOU], [3.3, YOU], [3.95, YOU], [5.6, YOU], [6.25, YOU], [6.45, YOU], [6.65, YOU], [6.85, YOU], [7.0, YOU], [7.15, YOU], [7.3, YOU]];
-  var LAUNCH_I = track([[8.8, 760, 330], [9.25, 378, 62], [9.3, 378, 62], [9.5, 380, 61], [9.7, 378, 62], [9.9, 379, 63], [10.4, 598, 212], [12.1, 598, 212], [12.35, 646, 199], [12.42, 646, 199], [12.9, 598, 212]]);
-  var CODE_I = track([[8.8, 760, 90], [9.2, 306, 283], [9.27, 306, 283], [9.85, 644, 290], [10.05, 486, 96], [10.4, 486, 96], [10.5, 500, 135], [10.8, 500, 135],
-    [10.88, 446, 148], [11.55, 560, 152], [11.6, 560, 152], [11.92, 446, 161], [12.45, 540, 164], [12.5, 540, 164], [12.95, 620, 140]]);
-  var DESIGN_I = track([
-    [8.8, 330, -40], [9.05, 210, 96], [9.12, 210, 96], [9.3, 322, 96], [9.35, 322, 96], [9.5, 322, 117], [9.58, 322, 117],
-    [9.8, 312, 115], [9.85, 312, 115], [10.3, 46, 146], [10.35, 46, 146], [10.7, 220, 80], [10.78, 344, 130], [10.82, 344, 130], [11.1, 386, 190],
-    [11.2, 128, 152], [11.27, 128, 152], [11.42, 300, 160], [11.5, 228, 88], [11.62, PEN[0][0], PEN[0][1]],
-    [11.72, PEN[1][0], PEN[1][1]], [11.82, PEN[2][0], PEN[2][1]], [11.92, PEN[3][0], PEN[3][1]], [12.02, PEN[4][0], PEN[4][1]],
-    [12.12, PEN[5][0], PEN[5][1]], [12.22, PEN[6][0], PEN[6][1]], [12.3, 300, 117], [12.33, 300, 117], [12.48, 300, 178],
-    [12.55, 26, 199], [12.58, 26, 199], [12.78, 394, 274], [12.88, 214, 192], [12.93, 214, 192], [13.4, 192, 140]
-  ]);
-  var PEN_T = [11.62, 11.72, 11.82, 11.92, 12.02, 12.12, 12.22];
-  var TEAM_CLK = [[9.3, LAUNCH_I], [9.5, LAUNCH_I], [9.7, LAUNCH_I], [9.9, LAUNCH_I], [12.4, LAUNCH_I],
-    [9.27, CODE_I], [10.1, CODE_I], [10.16, CODE_I], [10.55, CODE_I], [10.61, CODE_I], [10.9, CODE_I], [11.94, CODE_I],
-    [9.12, DESIGN_I], [9.35, DESIGN_I], [9.58, DESIGN_I], [9.85, DESIGN_I], [10.35, DESIGN_I], [10.82, DESIGN_I], [11.27, DESIGN_I], [12.33, DESIGN_I], [12.58, DESIGN_I], [12.93, DESIGN_I]]
-    .concat(PEN_T.map(function (t) { return [t, DESIGN_I]; }));
-  var T_IN = [6.15, 6.4, 6.65, 6.9], T_OUT = [9.3, 9.5, 9.7, 9.9];
+  /* selection: an outline with corner handles and a small label, the way design tools show what is being edited */
+  var selG = el('g', {}, page);
+  var selR = el('rect', { fill: 'none', stroke: INK, 'stroke-width': 1 }, selG);
+  var handles = [0, 1, 2, 3].map(function () { return el('rect', { width: 4.4, height: 4.4, rx: 1.2, fill: '#fff', stroke: INK, 'stroke-width': 0.9 }, selG); });
+  var selLabBg = el('rect', { height: 12, rx: 4, fill: INK }, selG);
+  var selLab = txt('', { 'font-size': 6.6, 'font-weight': 500, fill: '#fff', 'font-family': SANS }, selG);
+
+  /* the AI prompt, before there is a page */
+  var pill = el('g', {}, inner);
+  el('rect', { x: 105.5, y: 120.5, width: 219, height: 30, rx: 15, fill: '#fff', stroke: EDGE, filter: 'url(#ha-sh)' }, pill);
+  el('path', { d: SPARK, transform: 'translate(124 135.5)', fill: INK }, pill);
+  var pillClipR = el('clipPath', { id: 'ha-pillclip' }, defs); el('rect', { x: 136, y: 124, width: 150, height: 22 }, pillClipR);
+  var pillTxt = txt('', { x: 138, y: 138.4, 'font-size': 7.9, fill: INK, 'font-family': SANS }, el('g', { 'clip-path': 'url(#ha-pillclip)' }, pill));
+  var pillCaret = el('rect', { y: 130.5, width: 0.9, height: 10, fill: INK }, pill);
+  var sendG = el('g', {}, pill);
+  var sendC = el('circle', { cx: 307, cy: 135.5, r: 10, fill: INK }, sendG);
+  el('path', { d: 'M303.2 135.5H310M307 132L310.2 135.5L307 139', fill: 'none', stroke: '#fff', 'stroke-width': 1.3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, sendG);
+  var thinkDots = [0, 1, 2].map(function (i) { return el('circle', { cx: 301 + i * 6, cy: 135.5, r: 1.7, fill: INK }, pill); });
+
+  /* ================= the sales card: revenue today against yesterday, and the orders coming in ================= */
+  var CX = 458.5, CY = 0.5, CW = 201, CH = 279, LX = CX + 18, RX = CX + CW - 18;
+  var card = el('g', {});
+  el('rect', { x: CX, y: CY, width: CW, height: CH, rx: 14, fill: '#fff', filter: 'url(#ha-sh)' }, card);
+  var cardIn = el('g', {}, card);
+  el('rect', { x: CX, y: CY, width: CW, height: CH, rx: 14, fill: 'none', stroke: EDGE }, card);
+  txt('Revenue', { x: LX, y: 27, 'font-size': 7.8, 'font-weight': 500, fill: MUTED, 'font-family': SANS }, cardIn);
+  el('circle', { cx: RX - 62, cy: 24.6, r: 2.3, fill: INK }, cardIn);
+  txt('Today', { x: RX - 56, y: 27, 'font-size': 6.6, fill: MUTED, 'font-family': SANS }, cardIn);
+  el('path', { d: 'M' + (RX - 31) + ' 24.6H' + (RX - 23), stroke: '#a9a9a7', 'stroke-width': 1.2, 'stroke-dasharray': '2 1.6', 'stroke-linecap': 'round' }, cardIn);
+  txt('Yesterday', { x: RX - 19, y: 27, 'font-size': 6.6, fill: MUTED, 'font-family': SANS, 'text-anchor': 'start' }, cardIn);
+  var bigTxt = txt('', { x: LX - 1, y: 62, 'font-size': 30, 'font-weight': 600, 'letter-spacing': -1.2, fill: INK, 'font-family': SANS }, cardIn);
+  var chip = el('g', {}, cardIn);
+  var chipBg = el('rect', { y: 44, height: 16, width: 44, rx: 8, fill: FILL }, chip);
+  var chipTri = el('path', { fill: UP }, chip);
+  var chipTxt = txt('', { y: 55.2, 'font-size': 7.6, 'font-weight': 600, fill: UP, 'font-family': SANS }, chip);
+  var PL = { x: LX + 28, y: 84, w: RX - LX - 28, h: 86 }, YMAX = 900;
+  [0, 300, 600, 900].forEach(function (v) {
+    var y = PL.y + PL.h - v / YMAX * PL.h;
+    el('path', { d: 'M' + PL.x + ' ' + y.toFixed(1) + 'H' + RX, stroke: v ? '#e8e8e6' : '#dcdcda', 'stroke-width': v ? 0.8 : 1, 'stroke-dasharray': v ? '1.5 3' : 'none' }, cardIn);
+    txt(v ? '$' + v : '$0', { x: PL.x - 7, y: y + 2.2, 'font-size': 6.2, 'text-anchor': 'end', fill: '#9a9a98', 'font-family': SANS }, cardIn);
+  });
+  [['9am', 0, 'start'], ['12pm', 0.25, 'middle'], ['3pm', 0.5, 'middle'], ['6pm', 0.75, 'middle'], ['9pm', 1, 'end']].forEach(function (a) {
+    txt(a[0], { x: PL.x + PL.w * a[1], y: PL.y + PL.h + 13, 'font-size': 6.2, 'text-anchor': a[2], fill: '#9a9a98', 'font-family': SANS }, cardIn);
+  });
+  var plotClip = el('clipPath', { id: 'ha-plot' }, defs); el('rect', { x: PL.x - 4, y: PL.y - 14, width: PL.w + 12, height: PL.h + 18 }, plotClip);
+  var plotG = el('g', { 'clip-path': 'url(#ha-plot)' }, cardIn);
+  var yestP = el('path', { fill: 'none', stroke: '#a9a9a7', 'stroke-width': 1.2, 'stroke-dasharray': '2.4 2.4', 'stroke-linecap': 'round' }, plotG);
+  var areaP = el('path', { fill: 'url(#ha-fill)' }, plotG);
+  var lineP = el('path', { fill: 'none', stroke: INK, 'stroke-width': 1.6, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, plotG);
+  var ringP = el('circle', { fill: 'none', stroke: INK, 'stroke-width': 0.8 }, cardIn);
+  var dotP = el('circle', { r: 2.8, fill: INK, stroke: '#fff', 'stroke-width': 1.3 }, cardIn);
+  var bub = el('g', {}, cardIn);
+  var bubBg = el('rect', { height: 14, rx: 5, fill: INK }, bub);
+  var bubTxt = txt('', { 'font-size': 6.9, 'font-weight': 600, 'text-anchor': 'middle', fill: '#fff', 'font-family': SANS }, bub);
+
+  el('path', { d: 'M' + LX + ' 197.5H' + RX, stroke: HAIR }, cardIn);
+  txt('Orders', { x: LX, y: 213, 'font-size': 7.8, 'font-weight': 500, fill: MUTED, 'font-family': SANS }, cardIn);
+  var liveRing = el('circle', { cx: RX - 2, cy: 210.2, r: 3, fill: 'none', 'stroke-width': 0.8, stroke: UP }, cardIn);
+  el('circle', { cx: RX - 2, cy: 210.2, r: 2.5, fill: UP }, cardIn);
+  var ROWY = 221, ROWH = 17;
+  var rowClip = el('clipPath', { id: 'ha-rows' }, defs); el('rect', { x: CX + 4, y: ROWY - 2, width: CW - 8, height: ROWH * 3 + 4 }, rowClip);
+  var rowsG = el('g', { 'clip-path': 'url(#ha-rows)' }, cardIn);
+  var emptyT = txt('No orders yet', { x: LX, y: ROWY + 12, 'font-size': 7.4, fill: '#9a9a98', 'font-family': SANS }, rowsG);
+  var ORD = [['Sara K.', 'Bowl', '$38'], ['Omar R.', 'Mug', '$24'], ['Lina M.', 'Vase', '$46']];
+  var rowEls = [0, 1, 2, 3].map(function () {
+    var g = el('g', {}, rowsG);
+    var bg = el('rect', { x: LX - 6, y: 0, width: RX - LX + 12, height: 16, rx: 6, fill: '#f2f2f0' }, g);
+    el('circle', { cx: LX + 6, cy: 8, r: 6, fill: SOFT }, g);
+    var ini = txt('', { x: LX + 6, y: 10.2, 'font-size': 5.8, 'font-weight': 600, 'text-anchor': 'middle', fill: INK, 'font-family': SANS }, g);
+    var nm = txt('', { x: LX + 17, y: 10.6, 'font-size': 7.2, 'font-weight': 500, fill: INK, 'font-family': SANS }, g);
+    var pr = txt('', { x: LX + 61, y: 10.6, 'font-size': 6.8, fill: MUTED, 'font-family': SANS }, g);
+    var am = txt('', { x: RX - 2, y: 10.6, 'font-size': 7.4, 'font-weight': 600, 'text-anchor': 'end', fill: INK, 'font-family': SANS }, g);
+    return { g: g, bg: bg, ini: ini, nm: nm, pr: pr, am: am };
+  });
+
+  /* clicks and the team's cursor */
+  var rings = [0, 1].map(function () { return el('circle', { fill: 'none', stroke: INK, 'stroke-width': 0.9 }, svg); });
+  var cur = el('g', {});
+  var curTag = el('g', {}, cur);
+  el('rect', { x: 11, y: 13, width: 52, height: 14, rx: 7, fill: INK }, curTag);
+  txt('Protosofts', { x: 37, y: 22.6, 'font-size': 6.9, 'font-weight': 500, 'text-anchor': 'middle', fill: '#fff', 'font-family': SANS }, curTag);
+  var curArrow = el('path', { d: 'M0 0V14L3.9 10.7L6.6 16.6L9 15.5L6.3 9.7H11.3Z', fill: INK, stroke: '#fff', 'stroke-width': 1.1, 'stroke-linejoin': 'round' }, cur);
+
+  /* ================= time to state ================= */
+  function pathAt(keys, t) {                                   // keys [[time, x, y], ...]; eased, with a slight arc so it moves like a hand
+    if (t <= keys[0][0]) return [keys[0][1], keys[0][2]];
+    for (var i = 0; i < keys.length - 1; i++) {
+      var a = keys[i], b = keys[i + 1];
+      if (t <= b[0]) {
+        var k = smooth(seg(t, a[0], b[0])), dx = b[1] - a[1], dy = b[2] - a[2], d = Math.sqrt(dx * dx + dy * dy) || 1, arc = Math.sin(Math.PI * k) * d * 0.07;
+        return [mix(a[1], b[1], k) - dy / d * arc, mix(a[2], b[2], k) + dx / d * arc];
+      }
+    }
+    var l = keys[keys.length - 1]; return [l[1], l[2]];
+  }
+  var REST = [190, 172];
+  var CUR_INTRO = [[8.8, 480, 296], [9.9, 332, 96], [11.45, 332, 96], [12.1, 222, 140], [13.55, 222, 140], [14.1, 222, 176], [15.2, 222, 176], [15.9, 204, 222], [18.3, 204, 222], [19.3, REST[0], REST[1]]];
+  var CUR_LOOP = [[0, REST[0], REST[1]], [0.8, REST[0], REST[1]], [2.0, 205, 214], [2.85, 242, 232], [4.4, 242, 232], [5.7, 112, 102], [8.7, 112, 102], [9.5, 62, 168], [10.5, 62, 168], [11.6, 313, 214], [12.3, 356, 232], [13.9, 356, 232], [15.6, 250, 252], [17.2, REST[0], REST[1]], [18, REST[0], REST[1]]];
+  var CLICKS_INTRO = [10.05, 12.25, 14.25, 16.05], CLICKS_LOOP = [2.95, 12.4];
+  var SELS = [   // what the team selects in the intro: name, click time, morph start and end
+    { k: 'img', lab: 'Picture', c: 10.05, a: 10.4, b: 11.7 }, { k: 'head', lab: 'Headline', c: 12.25, a: 12.6, b: 13.8 },
+    { k: 'btn', lab: 'Button', c: 14.25, a: 14.6, b: 15.4 }, { k: 'cards', lab: 'Products', c: 16.05, a: 16.4, b: 18.3 }];
+
+  var CAPS = [[0.3, 5.2, 'AI builds a website in seconds.'], [5.6, 8.7, "But fast isn't the same as selling."], [8.9, 12.0, 'So our team steps in.'],
+              [12.1, 15.7, 'We shape every detail by hand.'], [15.8, 18.7, 'And the site starts to sell.']];
+
+  function prog(t, s) { return inOut(seg(t, s.a, s.b)); }
+  function cardProg(t, j) { return inOut(seg(t, 16.4 + j * 0.28, 17.7 + j * 0.28)); }
 
   function introState(t) {
-    var S = base();
-    var y = YOU(t), dz = DESIGN_I(t), cz = CODE_I(t), lz = LAUNCH_I(t);
-
-    /* --- You builds it --- */
-    S.h1u = Math.round(H1U.length * seg(t, 0.95, 1.75));
-    S.subu = Math.round(SUBU.length * seg(t, 1.95, 2.45));
-    if (t > 0.88 && t < 1.85) S.caretT = { line: 'h1', o: Math.floor(t * 5) % 2 ? 0.25 : 1 };
-    else if (t > 1.88 && t < 2.55) S.caretT = { line: 'sub', o: Math.floor(t * 5) % 2 ? 0.25 : 1 };
-    keyAt(S, '⌘V', t, 2.62, [210, 128]);
-    S.btnU = t > 2.7 ? smooth(seg(t, 2.7, 2.82)) : 0;
-    // the box: drawn with the rectangle tool, then the clip-art pasted into it
-    if (t < 2.85) S.chartO = 0;
-    else if (t < 3.3) { S.chartBox = { x: 40, y: 140, w: Math.max(1, y[0] - 40), h: Math.max(1, y[1] - 140), r: 0 }; S.size = { x: y[0], y: y[1] + 20, text: Math.round(y[0] - 40) + ' × ' + Math.round(y[1] - 140) }; }
-    else S.chartBox = UBOX;
-    if (t > 2.85 && t < 3.45) S.sel = { b: S.chartBox, o: 1 - seg(t, 3.3, 3.45) };
-    keyAt(S, '⌘V', t, 3.42, [105, 168]);
-    S.barsO = t > 3.48 ? smooth(seg(t, 3.48, 3.6)) : 0;
-    keyAt(S, '⌘V', t, 3.7, [210, 232]);
-    S.cardsO = [0, 1, 2].map(function (i) { return smooth(seg(t, 3.76 + i * 0.05, 3.88 + i * 0.05)); });
-    S.code = Math.round(YOU_CODE * seg(t, 4.0, 5.4));
-    S.line7 = 0; S.line8 = 0;
-    if (t > 3.98 && t < 5.45) S.caret = { auto: true, o: Math.floor(t * 5) % 2 ? 0.3 : 1 };
-    S.unsaved = t > 4.0 && t < 5.6 ? 1 : 0;
-    S.kFont = 0; S.kAlign = 0; S.kBadge = 0; S.kBtn = 0; S.kDark = 0; S.headO = [0, 0, 0, 0]; S.gridO = 0; S.pen = 0; S.gradK = 0; S.kTidy = 0; S.live = 0;
-    S.status = 'idle'; S.steps = [0, 0, 0, 0]; S.prog = 0; S.ready = 0;
-
-    /* --- it fails and slips apart --- */
-    runDeploy(S, t, 5.6, true);
-    S.squig = [t > 6.15 && t < 10.18 ? 1 : 0, t > 6.15 && t < 10.63 ? 1 : 0];
-    var slip = smooth(seg(t, 6.3, 6.6));
-    S.slip = slip * (1 - seg(t, 9.12, 9.3));
-    S.chartTilt = slip * (1 - seg(t, 10.35, 10.5));
-    S.btnSlip = slip * (1 - smooth(seg(t, 11.62, 11.9)));
-    S.toasts = T_IN.map(function (a, i) {
-      var shake = (i === 0 && t > 6.25 && t < 6.55) || (i === 1 && t > 7.0 && t < 7.3) ? Math.sin(t * 60) * 2 : 0;
-      return { o: smooth(seg(t, a, a + 0.2)), out: smooth(seg(t, T_OUT[i], T_OUT[i] + 0.25)), shake: shake };
-    });
-
-    /* --- Design: headline in the inspector --- */
-    if (t > 9.12 && t < 10.3) S.sel = { b: { x: 110, y: 88, w: 200, h: 16 }, o: seg(t, 9.12, 9.2) * (1 - seg(t, 10.1, 10.3)) };
-    if (t > 9.15 && t < 10.3) S.insp = { x: 318, y: 74, o: seg(t, 9.15, 9.28) * (1 - seg(t, 10.12, 10.3)), open: t > 9.37 && t < 9.62, hi: t > 9.45, font: t > 9.58 ? 'Inter Tight' : 'Times New Roman', align: t > 9.85 ? 0 : 1 };
-    S.kFont = smooth(seg(t, 9.6, 9.85));
-    S.kAlign = inOut(seg(t, 9.88, 10.2));
-    /* --- the chart box: moved, resized, filled, cleared, header pasted, line drawn with the pen, gradient --- */
-    if (t > 10.35 && t < 10.7) S.chartBox = { x: dz[0] - 6, y: dz[1] - 6, w: 130, h: 56, r: 0 };
-    else if (t >= 10.7 && t < 10.82) S.chartBox = { x: 214, y: 74, w: 130, h: 56, r: 0 };
-    else if (t >= 10.82 && t < 11.1) S.chartBox = { x: 214, y: 74, w: dz[0] - 214, h: dz[1] - 74, r: mix(0, 10, seg(t, 10.82, 11.1)) };
-    else if (t >= 11.1) S.chartBox = CBOX;
-    if (t > 10.35 && t < 11.3) S.sel = { b: S.chartBox, o: 1 - seg(t, 11.15, 11.3) };
-    if (t > 10.82 && t < 11.15) S.size = { x: dz[0], y: dz[1] + 20, text: Math.round(S.chartBox.w) + ' × ' + Math.round(S.chartBox.h) };
-    if (t > 10.55 && t < 11.0) S.guides = [['M214 50V276', pulse(t, 10.55, 11.0)], ['M24 74H396', pulse(t, 10.55, 11.0)]];
-    if (t > 11.12 && t < 11.45) S.fillP = { x: 116, y: 136, o: seg(t, 11.12, 11.2) * (1 - seg(t, 11.36, 11.45)), picked: t > 11.27 };
-    S.kDark = smooth(seg(t, 11.27, 11.4));
-    keyAt(S, 'Del', t, 11.38, [300, 160]);
-    S.barsO *= 1 - seg(t, 11.42, 11.48);
-    keyAt(S, '⌘V', t, 11.46, [228, 88]);
-    S.headO = [0, 1, 2, 3].map(function (i) { return smooth(seg(t, 11.5 + i * 0.04, 11.6 + i * 0.04)); });
-    S.gridO = S.kDark;
-    keyAt(S, 'P', t, 11.55, [228, 100]);
-    S.pen = PEN_T.filter(function (p) { return t >= p; }).length;
-    if (t > 11.62 && t < 12.26 && S.pen < 7) S.rubber = [PEN[S.pen - 1], dz];
-    if (t > 11.62 && t < 12.3) S.anchorsO = 1 - seg(t, 12.24, 12.3);
-    [2, 4].forEach(function (i) { if (t > PEN_T[i] && t < PEN_T[i] + 0.1) S.handle = { p: PEN[i], k: smooth(seg(t, PEN_T[i], PEN_T[i] + 0.07)) }; });
-    S.gradK = t > 12.33 ? clamp((dz[1] - 117) / 61, 0, 1) : 0;
-    if (t > 12.33 && t < 12.55) S.guides = [['M300 117V' + dz[1].toFixed(1), 1]];
-    /* --- the cards: marquee, Tidy up --- */
-    if (t > 12.58 && t < 12.95) S.marquee = { x: 26, y: 199, w: dz[0] - 26, h: dz[1] - 199, o: 1 - seg(t, 12.88, 12.95) };
-    if (t > 12.8 && t < 13.15) S.toolbar = { x: 185, y: 186, o: seg(t, 12.8, 12.86) * (1 - seg(t, 13.05, 13.15)), pressed: t > 12.93 && t < 13.03 };
-    S.kTidy = inOut(seg(t, 12.95, 13.2));
-    S.jumble = [0, 1, 2].map(function (i) { return smooth(seg(t, 6.35 + i * 0.05, 6.5 + i * 0.05)) * (1 - S.kTidy); });
-    S.live = S.kTidy;
-    if (t > 13.0 && t < 13.55) S.reds = [0, 1].map(function (i) { var a = CC(i), b = CC(i + 1), m = pulse(t, 13.0, 13.55); return { x1: a.x + a.w, y1: 236, x2: b.x, y2: 236, label: '12', o: m }; });
-
-    /* --- Code: fixes, CSS, save --- */
-    if (t > 10.1 && t < 10.36) S.hl = { line: 3, from: 9, to: 14 };
-    if (t > 10.55 && t < 10.8) S.hl = { line: 6, from: 2, to: 9 };
-    S.line7 = Math.round(lines[7].len * seg(t, 10.95, 11.5));
-    S.line8 = Math.round(lines[8].len * seg(t, 11.98, 12.4));
-    if (t > 10.9 && t < 11.56) S.caret = { line: 7, o: Math.floor(t * 5) % 2 ? 0.3 : 1 };
-    if (t > 11.94 && t < 12.46) S.caret = { line: 8, o: Math.floor(t * 5) % 2 ? 0.3 : 1 };
-    S.unsaved = (t > 10.1 && t < 11.58) || (t > 11.95 && t < 12.48) ? 1 : S.unsaved;
-    keyAt(S, '⌘S', t, 11.56, cz);
-    keyAt(S, '⌘S', t, 12.47, cz);
-    S.kBtn = smooth(seg(t, 11.62, 11.9));
-    S.kBadge = smooth(seg(t, 12.52, 12.75));
-    S.load = Math.max(t > 11.56 && t < 11.95 ? seg(t, 11.56, 11.9) : 0, t > 12.47 && t < 12.85 ? seg(t, 12.47, 12.8) : 0);
-
-    /* --- Launch: deploy for real --- */
-    var end = t > 12.4 ? runDeploy(S, t, 12.4, false) : 0;
-    if (t > 9.9 && t < 12.4) { S.status = 'failed'; S.steps = [2, 3, 0, 0]; S.prog = 0.45; }
-    if (end && t > end) { S.load = Math.max(S.load, seg(t, end, end + 0.4) * (t < end + 0.45 ? 1 : 0)); S.value = mix(0, VALUE[0], inOut(seg(t, end + 0.05, end + 0.7))); }
-    else S.value = 0;
-    S.pressed = pressOf([[5.6], [6.85], [12.4]], t);
-
-    /* --- "You": tired, falls, picked up by Code, rests, thumbs up --- */
-    var yx = y[0], yy = y[1], yr = 0;
-    var tired = seg(t, 7.35, 8.2);
-    if (tired > 0 && t < 8.2) { yx += Math.sin(t * 9) * 2.5 * tired; yy += Math.sin(t * 6.3) * 1.8 * tired; }
-    var sag = smooth(seg(t, 7.95, 8.2)); yr = 14 * sag; yy += 4 * sag;
-    if (t > 8.2) {
-      var f = seg(t, 8.2, 8.6);
-      yy += f * f * 66; yx += f * 10; yr = 14 + 76 * smooth(f);
-      if (t > 8.6) yy -= Math.sin(seg(t, 8.6, 8.8) * Math.PI) * 6;
+    var S = { loop: false, t: t };
+    S.build = []; for (var i = 0; i < 6; i++) S.build.push(smooth(seg(t, 4.1 + i * 0.2, 4.7 + i * 0.2)));
+    S.p = { img: prog(t, SELS[0]), head: prog(t, SELS[1]), btn: prog(t, SELS[2]) };
+    S.cp = [0, 1, 2].map(function (j) { return cardProg(t, j); });
+    S.cardsP = (S.cp[0] + S.cp[1] + S.cp[2]) / 3;
+    S.q = 0.2 * S.p.img + 0.25 * S.p.head + 0.15 * S.p.btn + 0.4 * S.cardsP;
+    S.f = smooth(seg(t, 4.9, 5.7));
+    S.card = smooth(seg(t, 4.6, 5.4));
+    // the prompt
+    var typedN = Math.round(29 * seg(t, 0.9, 2.5));
+    S.pill = { o: ramp(t, 0.2, 0.7, 3.9, 4.3), text: 'A store for handmade ceramics'.slice(0, typedN), typing: t < 2.7, press: t > 2.75 && t < 2.9, think: t >= 2.95, y: 8 * smooth(seg(t, 3.9, 4.3)) };
+    S.cur = { o: smooth(seg(t, 8.8, 9.3)), p: pathAt(CUR_INTRO, t), press: pressOf(CLICKS_INTRO, t) };
+    S.clicks = CLICKS_INTRO.map(function (c) { return [c, t - c]; });
+    S.sel = selFor(t);
+    S.hover = [0, 0, 0]; S.plusPress = [0, 0, 0]; S.badge = { v: 1, o: S.build[0] };
+    S.pan = clamp(ramp(t, 5.4, 6.2, 8.2, 9.0) + ramp(t, 16.4, 17.2, 18.6, 19.4), 0, 1);
+    return S;
+  }
+  function pressOf(list, t) { for (var i = 0; i < list.length; i++) { var d = t - list[i]; if (d > 0 && d < 0.22) return Math.sin(Math.PI * d / 0.22); } return 0; }
+  function selFor(t) {
+    for (var i = 0; i < SELS.length; i++) {
+      var s = SELS[i];
+      if (t >= s.c + 0.04 && t < s.b + 0.45) return { k: s.k, lab: s.lab, o: smooth(seg(t, s.c + 0.04, s.c + 0.2)) * (1 - smooth(seg(t, s.b + 0.05, s.b + 0.45))), p: prog(t, s) };
     }
-    if (t > 9.27) {
-      var cc = CODE_I(Math.min(t, 9.85)), lift = smooth(seg(t, 9.27, 9.6));
-      yx = mix(yx, cc[0] + 4, lift); yy = mix(yy, cc[1] + 2, lift); yr = mix(90, -12, lift);
-    }
-    S.cur.you = { p: [yx, yy], r: yr, o: smooth(seg(t, 0.45, 0.6)) };
-    S.chat.you = chat('Why is this broken?', t, 7.15, 8.05);
-    var teamO = smooth(seg(t, 8.8, 9.05));
-    S.cur.design = { p: dz, o: teamO };
-    S.cur.code = { p: cz, o: teamO };
-    S.cur.launch = { p: lz, o: teamO };
-    S.chat.design = chat('We’ve got it', t, 8.85, 9.65);
-    if (t > 13.6) S.react = { x: 666, y: 280 - 16 * seg(t, 13.6, 14.4), o: pulse(t, 13.6, 14.4), kind: 'thumb', s: 0.7 + 0.3 * smooth(seg(t, 13.6, 13.85)) };
+    return null;
+  }
 
-    clicksOf(S, YOU_CLK, t); clicksOf(S, TEAM_CLK, t);
-    S.press = { you: pressOf(YOU_CLK, t), design: pressOf(TEAM_CLK.filter(function (c) { return c[1] === DESIGN_I; }), t), code: pressOf(TEAM_CLK.filter(function (c) { return c[1] === CODE_I; }), t), launch: pressOf(TEAM_CLK.filter(function (c) { return c[1] === LAUNCH_I; }), t) };
-    S.pageO = smooth(seg(t, 0, 0.5));
+  function loopState(u, t) {
+    var S = { loop: true, t: t, u: u };
+    S.build = [1, 1, 1, 1, 1, 1]; S.p = { img: 1, head: 1, btn: 1 }; S.cp = [1, 1, 1]; S.q = 1; S.f = 1; S.card = 1;
+    S.pill = { o: 0, text: '', typing: false, press: false, think: false, y: 0 };
+    S.cur = { o: 1, p: pathAt(CUR_LOOP, u), press: pressOf(CLICKS_LOOP, u) };
+    S.clicks = CLICKS_LOOP.map(function (c) { return [c, u - c]; });
+    S.hover = [0, ramp(u, 1.6, 2.2, 4.2, 4.8), ramp(u, 11.4, 12.0, 13.8, 14.4)];
+    S.plusPress = [0, pressOf([2.95], u), pressOf([12.4], u)];
+    var bo = 1 - smooth(seg(u, 16.8, 17.2)) + smooth(seg(u, 17.4, 17.8)) * (u > 17.3 ? 1 : 0);
+    S.badge = { v: u < 3.0 ? 1 : u < 12.4 ? 2 : u < 17.3 ? 3 : 1, o: u < 16.8 ? 1 : (u < 17.3 ? 1 - smooth(seg(u, 16.8, 17.2)) : smooth(seg(u, 17.4, 17.8))) };
+    S.sel = null;
+    if (u > 5.9 && u < 8.9) S.sel = { k: 'head', lab: 'Headline', o: ramp(u, 5.9, 6.2, 8.4, 8.8), p: 1, plain: true };
+    if (u > 9.6 && u < 10.6) S.btnHover = ramp(u, 9.6, 9.9, 10.2, 10.5);
+    S.pan = clamp(ramp(u, 2.8, 3.6, 5.6, 6.4) + ramp(u, 12.6, 13.4, 15.2, 16.0), 0, 1);
     return S;
   }
 
-  /* ---------------- the loop: three rounds of real changes ---------------- */
-  var ROUND = 8, LOOP = 3 * ROUND;
-  var ARR_COL = 13;                                        // where "[" starts on the data line
-  function loopKeys(fn) {                                  // a track for all three rounds from per-round points
-    var keys = [];
-    for (var c = 0; c < 3; c++) fn(c).forEach(function (k) { keys.push([k[0] + c * ROUND, k[1], k[2]]); });
-    return track(keys);
-  }
-  var DESIGN_L = loopKeys(function (c) {
-    var r = REST.design;
-    if (c === 0) return [[0, r[0], r[1]], [0.7, 118, 117], [2.2, 118, 117], [2.6, 200, 236], [3.4, 200, 236], [3.9, r[0], r[1]], [8, r[0], r[1]]];
-    if (c === 1) return [[0, r[0], r[1]], [0.7, 66, 174], [1.5, 66, 174], [1.9, 300, 140], [3.3, 300, 140], [3.7, r[0], r[1]], [8, r[0], r[1]]];
-    return [[0, r[0], r[1]], [0.7, 90, 238], [1.3, 90, 238], [1.6, 210, 238], [1.95, 210, 238], [2.1, 330, 238], [2.4, 330, 238], [2.9, r[0], r[1]], [8, r[0], r[1]]];
-  });
-  var CODE_L = loopKeys(function () {
-    var r = REST.code, a = [CX + (ARR_COL + 1) * 4.32, 119];
-    return [[0, r[0], r[1]], [1.6, r[0], r[1]], [1.9, a[0], a[1]], [3.75, a[0] + 110, a[1]], [3.8, a[0] + 110, a[1]], [4.3, r[0], r[1]], [8, r[0], r[1]]];
-  });
-  var LAUNCH_L = loopKeys(function () {
-    var r = REST.launch;
-    return [[0, r[0], r[1]], [3.6, r[0], r[1]], [3.95, 646, 199], [4.0, 646, 199], [4.5, r[0], r[1]], [8, r[0], r[1]]];
-  });
-  var YOU_L = loopKeys(function (c) {
-    var r = REST.you;
-    if (c === 0) return [[0, r[0], r[1]], [0.9, 262, 150], [1.5, 300, 138], [2.1, 351, 128], [2.6, 351, 128], [3.3, r[0], r[1]], [8, r[0], r[1]]];
-    if (c === 1) return [[0, r[0], r[1]], [1.0, 76, 90], [2.9, 76, 90], [3.6, r[0], r[1]], [8, r[0], r[1]]];
-    return [[0, r[0], r[1]], [8, r[0], r[1]]];
-  });
-  var LOOP_CLK = [];
-  for (var lc = 0; lc < 3; lc++) {
-    LOOP_CLK.push([lc * ROUND + 1.95, CODE_L], [lc * ROUND + 2.02, CODE_L], [lc * ROUND + 4.0, LAUNCH_L]);
-    if (lc === 1) LOOP_CLK.push([lc * ROUND + 2.0, DESIGN_L]);
-  }
-
-  function loopState(u) {
-    var S = base(), c = Math.floor(u / ROUND) % 3, v = u - c * ROUND;
-    var from = DATA[c], to = DATA[(c + 1) % 3];
-    S.cur.design = { p: DESIGN_L(u), o: 1 }; S.cur.code = { p: CODE_L(u), o: 1 }; S.cur.launch = { p: LAUNCH_L(u), o: 1 };
-    var y = YOU_L(u), rest = clamp(1 - Math.hypot(y[0] - REST.you[0], y[1] - REST.you[1]) / 40, 0, 1);
-    S.cur.you = { p: y, r: -12 * rest, o: 1 };
-
-    // Code: select the array, type the new numbers (each point follows its number), save
-    var typed = arr(to), a = 2.2, b = 3.6, start = 1.95;
-    var n = Math.round(typed.length * seg(v, a, b));
-    S.dataText = v < a ? arr(from) : typed.slice(0, n);
-    if (v > start && v < a) S.hl = { line: 5, from: ARR_COL, to: ARR_COL + arr(from).length };
-    if (v >= a && v < 3.85) S.caret = { line: 5, o: Math.floor(v * 5) % 2 ? 0.3 : 1 };
-    S.unsaved = v > a && v < 3.82 ? 1 : 0;
-    keyAt(S, '⌘S', v, 3.8, S.cur.code.p);
-    S.data = from.map(function (fv, i) {
-      var pos = 1;                                         // where this number ends in the typed text for (var k = 0; k < i; k++) pos += String(to[k]).length + 2;
-      var tc = a + (pos + String(to[i]).length) / typed.length * (b - a);
-      return mix(fv, to[i], smooth(seg(v, tc, tc + 0.3)));
-    });
-
-    // Launch: deploy; the page reloads and the total counts to the new number
-    var end = runDeploy(S, v, 4.0, false) || 0;
-    if (v < 4.0) { S.status = 'ready'; S.steps = [2, 2, 2, 2]; S.prog = 1; S.ready = 1; }
-    S.pressed = v > 4.0 && v < 4.12;
-    if (end && v > end) S.load = v < end + 0.45 ? seg(v, end, end + 0.4) : 0;
-    S.value = end && v > end ? mix(VALUE[c], VALUE[(c + 1) % 3], inOut(seg(v, end + 0.05, end + 0.8))) : VALUE[c];
-    S.delta = end && v > end + 0.05 ? DELTA[(c + 1) % 3] : DELTA[c];
-
-    // Design: spacing, hover states, sizes
-    var d = S.cur.design.p;
-    if (c === 0) {
-      keyAt(S, 'Alt', v, 0.75, d);
-      var m1 = seg(v, 0.8, 0.95) * (1 - seg(v, 2.05, 2.2));
-      if (m1 > 0) S.reds = [{ x1: 60, y1: 89, x2: 60, y2: 95, label: '6', o: m1 }, { x1: 60, y1: 130, x2: 60, y2: 139, label: '9', o: m1 }, { x1: 60, y1: 156, x2: 60, y2: 165, label: '9', o: m1 }];
-      var m2 = seg(v, 2.6, 2.75) * (1 - seg(v, 3.25, 3.4));
-      if (m2 > 0) S.reds = [0, 1].map(function (i) { var A = CC(i), B = CC(i + 1); return { x1: A.x + A.w, y1: 236, x2: B.x, y2: 236, label: '12', o: m2 }; });
-      if (v > 0.7 && v < 2.2) S.sel = { b: { x: 34, y: 94, w: 150, h: 38 }, o: seg(v, 0.7, 0.8) * (1 - seg(v, 2.05, 2.2)), thin: true };
-    } else if (c === 1) {
-      S.btnHover[0] = smooth(seg(v, 0.7, 0.85)) * (1 - smooth(seg(v, 1.5, 1.7)));
-      if (v > 2.0 && v < 3.3) {
-        S.sel = { b: CBOX, o: seg(v, 2.0, 2.1) * (1 - seg(v, 3.15, 3.3)) };
-        S.size = { x: CBOX.x + CBOX.w / 2, y: CBOX.y + CBOX.h + 9, text: '172 × 116', o: seg(v, 2.0, 2.1) * (1 - seg(v, 3.15, 3.3)) };
-        var m3 = seg(v, 2.2, 2.35) * (1 - seg(v, 3.1, 3.25));
-        S.reds = [{ x1: 214, y1: 96, x2: 224, y2: 96, label: '10', o: m3 }, { x1: 376, y1: 150, x2: 386, y2: 150, label: '10', o: m3 }];
-      }
-    } else {
-      S.lift = [smooth(seg(v, 0.7, 0.85)) * (1 - smooth(seg(v, 1.3, 1.45))), smooth(seg(v, 1.6, 1.75)) * (1 - smooth(seg(v, 1.95, 2.1))), smooth(seg(v, 2.05, 2.2)) * (1 - smooth(seg(v, 2.35, 2.55)))];
-    }
-
-    // the client
-    if (c === 0) {
-      if (v > 0.9 && v < 2.7) S.tip = { x: y[0], o: seg(v, 0.9, 1.0) * (1 - seg(v, 2.6, 2.7)) };
-      S.chat.you = chat('Can we see this week?', v, 1.5, 3.2);
-      if (v > 6.9 && v < 8.0) S.react = { x: REST.you[0] + 18, y: REST.you[1] - 12 - 14 * seg(v, 6.9, 8.0), o: pulse(v, 6.9, 8.0), kind: 'thumb', s: 0.7 + 0.3 * smooth(seg(v, 6.9, 7.15)) };
-    } else if (c === 1) {
-      S.chat.you = chat('The badge is a nice touch', v, 1.2, 3.0);
-      S.chat.design = chat('Thanks!', v, 2.3, 3.2);
-    } else {
-      if (v > 6.9 && v < 8.0) S.react = { x: REST.you[0] + 18, y: REST.you[1] - 12 - 14 * seg(v, 6.9, 8.0), o: pulse(v, 6.9, 8.0), kind: 'check', s: 0.7 + 0.3 * smooth(seg(v, 6.9, 7.15)) };
-    }
-
-    S.live = 1;
-    clicksOf(S, LOOP_CLK, u);
-    S.press = { code: pressOf(LOOP_CLK.filter(function (k) { return k[1] === CODE_L; }), u), launch: pressOf(LOOP_CLK.filter(function (k) { return k[1] === LAUNCH_L; }), u), design: pressOf(LOOP_CLK.filter(function (k) { return k[1] === DESIGN_L; }), u) };
-    return S;
+  /* ================= selection geometry ================= */
+  function imgBox(p) { var a = inOut(seg(p, 0, 0.5)), b = inOut(seg(p, 0.45, 1)); return { x: mix(IMG_BAD.x, IMG_GOOD.x, a), w: mix(IMG_BAD.w, IMG_GOOD.w, a), y: mix(IMG_BAD.y, IMG_GOOD.y, b), h: mix(IMG_BAD.h, IMG_GOOD.h, b) }; }
+  function lerpBox(a, b, k) { return { x: mix(a.x, b.x, k), y: mix(a.y, b.y, k), w: mix(a.w, b.w, k), h: mix(a.h, b.h, k) }; }
+  var HEAD_BAD = { x: 150, y: 100, w: 130, h: 33 }, HEAD_GOOD = { x: 24, y: 59, w: 176, h: 62 };
+  function selBox(k, p) {
+    if (k === 'img') return imgBox(p);
+    if (k === 'head') return lerpBox(HEAD_BAD, HEAD_GOOD, p);
+    if (k === 'btn') return lerpBox(BTN_BAD, BTN_GOOD, p);
+    return lerpBox({ x: 28, y: 158, w: 374, h: 66 }, { x: 28, y: 160, w: 374, h: 58 }, p);
   }
 
   /* ================= drawing one state ================= */
-  function render(S, liveT) {
-    op(browser, S.pageO); op(editor, S.pageO); op(deploy, S.pageO);
-
-    /* hero text: serif centred while You types it; the brand font, then aligned left once Design sets it */
-    h1u.textContent = H1U.slice(0, S.h1u); subu.textContent = SUBU.slice(0, S.subu);
-    var fu = 1 - S.kFont;
-    tf(h1u, 0, S.slip * 9, 1, S.slip * 2.5); op(h1u, fu);
-    tf(subu, 0, S.slip * 11, 1, S.slip * 2); op(subu, fu);
-    var wa = width(h1a), wb = width(h1b), ws1 = width(sub1), ws2 = width(sub2), ca = 1 - S.kAlign;
-    tf(h1a, ca * (210 - 34 - wa / 2), -6 * ca); tf(h1b, ca * (210 - 34 - wb / 2), -6 * ca);
-    tf(sub1, ca * (210 - 34 - ws1 / 2), -8 * ca); tf(sub2, ca * (210 - 34 - ws2 / 2), -8 * ca);
-    op(h1g, S.kFont); op(subg, S.kFont);
-    if (S.caretT) {
-      var ct = S.caretT.line === 'h1' ? h1u : subu;
-      set(caretT, { x: 210 + width(ct) / 2 + 1.5, y: S.caretT.line === 'h1' ? 90 : 106.5, height: S.caretT.line === 'h1' ? 12 : 7 }); op(caretT, S.caretT.o);
-    } else op(caretT, 0);
-    tf(badge, 34 + (1 - S.kBadge) * -6, 77); op(badge, S.kBadge);
-
-    /* buttons */
-    btns.forEach(function (b, i) {
-      var k = inOut(S.kBtn), g = box(UB[i], CB[i], k), hov = S.btnHover[i];
-      tf(b.g, g.x, g.y + S.btnSlip * 12 - hov * 1, 1, S.btnSlip * (i ? 3 : -3));
-      op(b.g, S.btnU);
-      set(b.rect, { width: g.w, height: g.h, rx: g.r, fill: i ? grey(184, 250, k) : (hov ? '#2e2e2e' : grey(184, 20, k)) });
-      b.rect.setAttribute('stroke', i ? 'rgba(20,20,20,' + mix(0.45, 0.16, k).toFixed(2) + ')' : 'rgba(20,20,20,' + (0.45 * (1 - k)).toFixed(2) + ')');
-      set(b.u, { x: g.w / 2, y: g.h / 2 + 2.2 }); op(b.u, 1 - k);
-      set(b.c, { x: g.w / 2, y: g.h / 2 + 2.3 }); op(b.c, k);
+  function drawStore(S, t) {
+    var B = S.build;
+    // picture
+    var pi = S.p.img, ib = imgBox(pi), ir = mix(IMG_BAD.r, IMG_GOOD.r, pi);
+    set(imgRect, { x: ib.x, y: ib.y, width: ib.w, height: ib.h, rx: ir, fill: blend('#efefed', '#ececea', pi), stroke: pi > 0.5 ? 'none' : EDGE });
+    imgRect.setAttribute('stroke-width', 1);
+    imgX.setAttribute('d', 'M' + ib.x + ' ' + ib.y + 'L' + (ib.x + ib.w) + ' ' + (ib.y + ib.h) + 'M' + (ib.x + ib.w) + ' ' + ib.y + 'L' + ib.x + ' ' + (ib.y + ib.h));
+    var heroO = B[1];
+    op(imgRect, heroO); op(imgX, heroO * (1 - smooth(seg(pi, 0, 0.3))));
+    wipes[0].setAttribute('width', (170 * smooth(seg(pi, 0.6, 1))).toFixed(1)); set(wipes[0], { x: IMG_GOOD.x - 4, y: 0, height: 260 });
+    op(imgArt, pi > 0.6 ? 1 : 0);
+    // headline
+    var ph = S.p.head;
+    op(hBad, B[2] * (1 - smooth(seg(ph, 0, 0.45))));
+    tf(hBad, -18 * smooth(seg(ph, 0, 0.45)), 0);
+    op(hGood, smooth(seg(ph, 0.4, 1)));
+    tf(hGood, 14 * (1 - smooth(seg(ph, 0.4, 1))), 0);
+    // button
+    var pb = S.p.btn, bb = lerpBox(BTN_BAD, BTN_GOOD, pb), hov = S.btnHover || 0;
+    set(btnRect, { x: bb.x, y: bb.y, width: bb.w, height: bb.h, rx: mix(BTN_BAD.r, BTN_GOOD.r, pb), fill: blend('#d8d8d6', INK, pb) });
+    if (hov > 0) btnRect.setAttribute('fill', blend(INK, '#3a3a3a', hov));
+    op(btnRect, B[3]); op(btnBad, B[3] * (1 - smooth(seg(pb, 0, 0.4)))); op(btnGood, smooth(seg(pb, 0.5, 1)));
+    // cards
+    cards.forEach(function (c, j) {
+      var cp = S.cp[j], k = cp, bx = lerpBox(CARD_BAD[j], CARD_GOOD[j], k), lift = (S.hover[j] || 0) * 3;
+      var o = B[4 + (j === 2 ? 1 : 0)] * (j === 0 ? 1 : 1);
+      tf(c.g, 0, -lift); op(c.g, o);
+      set(c.box, { x: bx.x, y: bx.y, width: bx.w, height: bx.h, rx: mix(5, 9, k), fill: blend('#efefed', '#ececea', k), stroke: cp > 0.5 ? 'none' : EDGE });
+      c.x.setAttribute('d', 'M' + bx.x + ' ' + bx.y + 'L' + (bx.x + bx.w) + ' ' + (bx.y + bx.h) + 'M' + (bx.x + bx.w) + ' ' + bx.y + 'L' + bx.x + ' ' + (bx.y + bx.h));
+      op(c.x, 1 - smooth(seg(cp, 0, 0.3)));
+      c.art.setAttribute('transform', 'translate(' + CARD_GOOD[j].x + ' ' + CARD_GOOD[j].y + ')');
+      wipes[j + 1].setAttribute('width', (118 * smooth(seg(cp, 0.35, 1))).toFixed(1));
+      op(c.art, cp > 0.35 ? 1 : 0);
+      set(c.oldPrice, { x: bx.x + bx.w / 2, y: bx.y + bx.h + 11 }); op(c.oldPrice, 1 - smooth(seg(cp, 0, 0.3)));
+      var gt = smooth(seg(cp, 0.6, 1));
+      set(c.name, { x: CARD_GOOD[j].x, y: CARD_GOOD[j].y + 74 }); op(c.name, gt);
+      set(c.price, { x: CARD_GOOD[j].x + CARD_GOOD[j].w, y: CARD_GOOD[j].y + 74 }); op(c.price, gt);
+      var pp = S.plusPress[j] || 0;
+      tf(c.plus, CARD_GOOD[j].x + CARD_GOOD[j].w - 14, CARD_GOOD[j].y + CARD_GOOD[j].h - 14, 1 + 0.12 * (S.hover[j] || 0) - 0.14 * pp);
+      c.plusC.setAttribute('fill', blend('#ffffff', INK, pp)); c.plusG.setAttribute('stroke', pp > 0.4 ? '#fff' : INK);
+      op(c.plus, gt * (j === 0 ? 0 : 1));
     });
+    op(navG, B[0]);
+    badgeT.textContent = String(S.badge.v); op(badge, S.badge.o);
+    // selection
+    if (S.sel && S.sel.o > 0.01) {
+      var bx2 = selBox(S.sel.k, S.sel.p), pad = 4;
+      var x0 = bx2.x - pad, y0 = bx2.y - pad, w0 = bx2.w + pad * 2, h0 = bx2.h + pad * 2;
+      set(selR, { x: x0 + 0.5, y: y0 + 0.5, width: w0, height: h0, rx: 2 });
+      var cs = [[x0, y0], [x0 + w0, y0], [x0, y0 + h0], [x0 + w0, y0 + h0]];
+      handles.forEach(function (h, i) { set(h, { x: cs[i][0] - 1.7, y: cs[i][1] - 1.7 }); op(h, S.sel.plain ? 0 : 1); });
+      var lw = S.sel.lab.length * 3.9 + 12;
+      var ly = S.sel.k === 'cards' || S.sel.k === 'img' ? y0 + h0 + 4 : y0 - 16;
+      set(selLabBg, { x: x0 - 0.5, y: ly, width: lw }); set(selLab, { x: x0 + 5.5, y: ly + 8.4 }); selLab.textContent = S.sel.lab;
+      op(selG, S.sel.o);
+    } else op(selG, 0);
+  }
 
-    /* the chart card */
-    var cb = S.chartBox, kd = S.kDark;
-    tf(chart, S.chartTilt * 6, S.chartTilt * 4, 1, 0);
-    chart.setAttribute('transform', 'translate(' + (S.chartTilt * 6).toFixed(2) + ' ' + (S.chartTilt * 4).toFixed(2) + ') rotate(' + (S.chartTilt * 4).toFixed(2) + ' ' + (cb.x + cb.w / 2).toFixed(1) + ' ' + (cb.y + cb.h / 2).toFixed(1) + ')');
-    op(chart, S.chartO);
-    set(chartRect, { x: cb.x, y: cb.y, width: Math.max(0, cb.w), height: Math.max(0, cb.h), rx: cb.r, fill: grey(255, 246, kd) });
-    chartRect.setAttribute('stroke', 'rgba(20,20,20,' + mix(0.4, 0.1, kd).toFixed(2) + ')');
-    op(chartU, S.barsO);
-    set(chartUTitle, { x: cb.x + 6, y: cb.y + 10 });
-    ubars.forEach(function (b, i) { var bw = (cb.w - 24) / 5 - 4, bh = (cb.h - 20) * b.h; set(b.el, { x: cb.x + 12 + i * (bw + 4), y: cb.y + cb.h - 5 - bh, width: Math.max(0, bw), height: Math.max(0, bh) }); });
-    op(grid, S.gridO);
-    head.forEach(function (h, i) { op(h, S.headO[i]); });
-    tf(deltaG, 268 + 0, 95.5);
-    valueText.textContent = money(S.value);
-    deltaText.textContent = S.delta;
-    var pts = S.data.map(function (v, i) { return [px(i), py(v)]; });
-    var shown = S.pen >= 7 ? pts : PEN.slice(0, S.pen);
-    var dLine = smoothPath(shown);
-    lineP.setAttribute('d', dLine || 'M0 0');
-    op(lineP, shown.length > 1 ? 1 : 0);
-    area.setAttribute('d', S.pen >= 7 ? dLine + ' L' + px(6) + ' ' + (CH.y + CH.h) + ' L' + px(0) + ' ' + (CH.y + CH.h) + 'Z' : 'M0 0');
-    op(area, S.gradK);
-    if (S.rubber) { rubber.setAttribute('d', 'M' + S.rubber[0][0].toFixed(1) + ' ' + S.rubber[0][1].toFixed(1) + 'L' + S.rubber[1][0].toFixed(1) + ' ' + S.rubber[1][1].toFixed(1)); op(rubber, 1); } else op(rubber, 0);
-    anchors.forEach(function (a, i) { set(a, { x: PEN[i][0] - 1.8, y: PEN[i][1] - 1.8 }); op(a, i < S.pen ? S.anchorsO : 0); });
-    if (S.handle) {
-      var hp = S.handle.p, hk = S.handle.k * 9;
-      handleL.setAttribute('d', 'M' + (hp[0] - hk).toFixed(1) + ' ' + (hp[1] + hk * 0.35).toFixed(1) + 'L' + (hp[0] + hk).toFixed(1) + ' ' + (hp[1] - hk * 0.35).toFixed(1));
-      set(handleA, { cx: hp[0] - hk, cy: hp[1] + hk * 0.35 }); set(handleB, { cx: hp[0] + hk, cy: hp[1] - hk * 0.35 }); op(handleG, 1);
-    } else op(handleG, 0);
-    if (S.tip && S.tip.o > 0) {                            // the client's hover: the nearest point, read out
-      var ti = clamp(Math.round((S.tip.x - CH.x) / (CH.w / 6)), 0, 6), tp = pts[ti], label = '$' + (S.data[ti] * 0.6).toFixed(1) + 'k';
-      tipLine.setAttribute('d', 'M' + tp[0].toFixed(1) + ' ' + CH.y + 'V' + (CH.y + CH.h));
-      set(tipDot, { cx: tp[0], cy: tp[1] });
-      var tw = label.length * 3.4 + 8;
-      set(tipPill, { x: tp[0] - tw / 2, y: tp[1] - 17, width: tw }); set(tipTxt, { x: tp[0], y: tp[1] - 9.8 }); tipTxt.textContent = label;
-      op(tipG, S.tip.o);
-    } else op(tipG, 0);
-
-    /* the cards */
-    cards.forEach(function (c, i) {
-      var k = S.kTidy, g = box(UC[i], CC(i), k), j = [[6, -5, -5], [-4, 9, 4], [9, 3, 6]][i], jm = S.jumble[i], lift = S.lift[i];
-      set(c.rect, { width: g.w, height: g.h, rx: g.r });
-      c.rect.setAttribute('stroke', 'rgba(20,20,20,' + mix(0.45, 0.12, k).toFixed(2) + ')');
-      c.rect.setAttribute('stroke-width', mix(1.6, 1, k).toFixed(2));
-      set(c.hard, { width: g.w, height: g.h }); op(c.hard, 1 - k);
-      set(c.lift, { width: g.w, height: g.h }); op(c.lift, lift);
-      op(c.u, 1 - k); op(c.c, k);
-      var sc = 0.94 + 0.06 * S.cardsO[i];
-      c.g.setAttribute('transform', 'translate(' + (g.x + j[0] * jm + g.w / 2 * (1 - sc)).toFixed(2) + ' ' + (g.y + j[1] * jm + g.h / 2 * (1 - sc) - 2.5 * lift).toFixed(2) + ') rotate(' + (j[2] * jm).toFixed(2) + ' ' + (g.w / 2).toFixed(1) + ' ' + (g.h / 2).toFixed(1) + ') scale(' + sc.toFixed(3) + ')');
-      op(c.g, S.cardsO[i]);
+  /* the day: 9am to 9pm. Today's revenue is a running total built from a rate that depends on how good the store is. */
+  var DAY = 12, H_INTRO = 8.4, RATE_BAD = 10, RATE_GOOD = 135, TA = 4.8, TABLE = [];
+  function qOf(t) { return 0.2 * prog(t, SELS[0]) + 0.25 * prog(t, SELS[1]) + 0.15 * prog(t, SELS[2]) + 0.4 * (cardProg(t, 0) + cardProg(t, 1) + cardProg(t, 2)) / 3; }
+  function hoursIntro(t) { return H_INTRO * Math.pow(seg(t, TA, INTRO_END), 0.8); }
+  function yest(h) { return 41 * h + 20 * Math.sin(h * 0.85) + 12 * Math.sin(h * 2.3 + 1) * h / DAY; }
+  function bump(h) { return 1 + 0.32 * Math.sin(h * 3.3 + 0.6) + 0.18 * Math.sin(h * 7.1); }
+  (function () {
+    var T = 0, hp = 0, dt = 0.1;
+    for (var t = 0; t <= INTRO_END + 0.001; t += dt) {
+      var h = hoursIntro(t), q = qOf(t);
+      T += (RATE_BAD + (RATE_GOOD - RATE_BAD) * q) * bump(h) * (h - hp); hp = h;
+      TABLE.push([h, T]);
+    }
+  })();
+  function todayPts(clock, loop, u) {                          // [hours, total] points up to now
+    var pts = [], n = clamp(Math.floor(Math.min(clock, INTRO_END) / 0.1), 0, TABLE.length - 1), i;
+    for (i = 0; i <= n; i += 2) pts.push(TABLE[i]);
+    var last = TABLE[n];
+    if (loop) {
+      var T = TABLE[TABLE.length - 1][1], hp = TABLE[TABLE.length - 1][0];
+      for (var a = 0.3; a <= u + 0.001; a += 0.3) { var h = H_INTRO + 0.2 * a; T += RATE_GOOD * bump(h) * (h - hp); hp = h; pts.push([h, T]); }
+      var hn = H_INTRO + 0.2 * u; if (u > 0) { T += RATE_GOOD * bump(hn) * (hn - hp); pts.push([hn, T]); last = [hn, T]; } else last = TABLE[TABLE.length - 1];
+    } else pts.push(last);
+    return { pts: pts, now: last };
+  }
+  function smoothPath(P) {                                      // Catmull-Rom to Bezier
+    var d = 'M' + P[0][0].toFixed(1) + ' ' + P[0][1].toFixed(1);
+    for (var i = 0; i < P.length - 1; i++) {
+      var a = P[i - 1] || P[i], b = P[i], c = P[i + 1], e = P[i + 2] || c, k = 6;
+      d += 'C' + (b[0] + (c[0] - a[0]) / k).toFixed(1) + ' ' + (b[1] + (c[1] - a[1]) / k).toFixed(1) + ' ' + (c[0] - (e[0] - b[0]) / k).toFixed(1) + ' ' + (c[1] - (e[1] - b[1]) / k).toFixed(1) + ' ' + c[0].toFixed(1) + ' ' + c[1].toFixed(1);
+    }
+    return d;
+  }
+  var ORD_INTRO = [16.6, 17.9, 19.1], ORD_LOOP = [3.4, 9.4, 13.0];
+  function drawSales(S, t, clock) {
+    tf(card, 0, 6 * (1 - S.card)); op(card, S.card);
+    var loop = S.loop, u = S.u || 0, loopIdx = loop ? Math.floor((clock - INTRO_END) / LOOP) : 0;
+    var fade = S.f * (loop ? (1 - smooth(seg(u, 17.3, 17.9))) * (loopIdx > 0 ? smooth(seg(u, 0.05, 0.6)) : 1) : 1);
+    op(cardIn, S.card > 0 ? 1 : 0);
+    var td = todayPts(clock, loop, u), now = td.now;
+    var X = function (h) { return PL.x + PL.w * h / DAY; }, Y = function (v) { return PL.y + PL.h - Math.min(v, YMAX) / YMAX * PL.h; };
+    var hnow = now[0], T = now[1];
+    // yesterday: the whole day, dashed
+    var yp = [], h;
+    for (h = 0; h <= DAY + 0.001; h += 1) yp.push([X(h), Y(yest(h))]);
+    yestP.setAttribute('d', smoothPath(yp)); op(yestP, S.f);
+    // today
+    var P = td.pts.map(function (p) { return [X(p[0]), Y(p[1])]; });
+    if (P.length < 2) P = [[X(0), Y(0)], [X(0.01), Y(0)]];
+    var d = smoothPath(P), lp = P[P.length - 1];
+    lineP.setAttribute('d', d); op(lineP, S.f);
+    areaP.setAttribute('d', d + 'L' + lp[0].toFixed(1) + ' ' + (PL.y + PL.h) + 'L' + P[0][0].toFixed(1) + ' ' + (PL.y + PL.h) + 'Z'); op(areaP, S.f);
+    var rk = (clock * 0.38) % 1;
+    set(dotP, { cx: lp[0], cy: lp[1] }); op(dotP, S.f);
+    set(ringP, { cx: lp[0], cy: lp[1], r: 3 + rk * 6 }); op(ringP, 0.4 * (1 - rk) * S.f);
+    // the value bubble over the last point
+    var money = '$' + Math.round(T), bw = money.length * 4.2 + 11, bx = clamp(lp[0] - bw / 2, PL.x - 4, RX - bw + 4), by = Math.max(PL.y - 16, lp[1] - 22);
+    set(bubBg, { x: bx, y: by, width: bw }); set(bubTxt, { x: bx + bw / 2, y: by + 9.8 }); bubTxt.textContent = money; op(bub, S.f * smooth(seg(hnow, 0.6, 1.2)));
+    // headline number and the comparison with yesterday at the same hour
+    bigTxt.textContent = money;
+    var ref = yest(hnow), pct = ref > 20 ? (T / ref - 1) * 100 : 0, up = pct >= 0, col = up ? UP : ERR;
+    var nw = 0; try { nw = bigTxt.getComputedTextLength(); } catch (e) { nw = 0; } nw = nw || money.length * 17;
+    var cx0 = LX + nw + 6;
+    chipTxt.textContent = Math.round(Math.abs(pct)) + '%'; chipTxt.setAttribute('fill', col); chipTri.setAttribute('fill', col);
+    set(chipBg, { x: cx0, width: 18 + chipTxt.textContent.length * 4.6 }); set(chipTxt, { x: cx0 + 14 });
+    chipTri.setAttribute('d', up ? 'M' + (cx0 + 5) + ' 53.4l3.1-5 3.1 5z' : 'M' + (cx0 + 5) + ' 48.6l3.1 5 3.1-5z');
+    op(chip, smooth(seg(hnow, 0.9, 1.5)) * S.f);
+    // orders
+    var evs = loop ? ORD_LOOP : ORD_INTRO, base = loop ? 2 : -1, tt = loop ? u : clock, j = base, enter = 1, since = 99, i;
+    for (i = 0; i < evs.length; i++) if (tt >= evs[i]) { j = base + i + 1; enter = smooth(seg(tt - evs[i], 0, 0.9)); since = tt - evs[i]; }
+    op(emptyT, j < 0 ? S.f : 0);
+    rowEls.forEach(function (r, s) {
+      var k = j - s;
+      if (k < 0) { op(r.g, 0); return; }
+      var o = ORD[k % 3], pos = s - (1 - enter), y = ROWY + pos * ROWH;
+      tf(r.g, 0, y);
+      r.ini.textContent = o[0].charAt(0); r.nm.textContent = o[0]; r.pr.textContent = o[1]; r.am.textContent = o[2];
+      op(r.g, (s === 0 ? enter : s === 3 ? 1 - smooth(seg(enter, 0.3, 1)) : 1));
+      op(r.bg, s === 0 ? 1 - smooth(seg(since, 0.9, 2.8)) : 0);
     });
-    // live data: a new uptime bar every 1.5 s, the active count ticking, latency moving a little
-    var lt = ((liveT % LOOP) + LOOP) % LOOP, off = lt / 1.5, base0 = Math.floor(off), frac = off - base0;
-    sparks.forEach(function (r, i) {
-      var h = SPARK[(base0 + i) % 16];
-      set(r, { x: 10 + (i - frac) * 6, y: 56 - h, height: h });
-      op(r, i === 15 ? frac : (i === 0 ? 1 - frac : 1));
-      r.setAttribute('fill', i >= 14 ? '#8a8a88' : '#dededc');           // the newest reading is dark
-    });
-    cards[1].val.textContent = ACTIVE[base0 % 16].toLocaleString('en-US');
-    set(liveRing, { r: 2 + (lt * 1.2 % 1) * 4 }); op(liveRing, 0.7 * (1 - (lt * 1.2 % 1)));
-    var lat = Math.round(84 + 6 * Math.sin(lt / LOOP * Math.PI * 4)), ang = Math.PI * (1 - clamp(lat / 140, 0, 1));
-    cards[2].val.textContent = lat + ' ms';
-    gauge.setAttribute('d', 'M70 46A14 14 0 0 1 ' + (84 + 14 * Math.cos(ang)).toFixed(2) + ' ' + (46 - 14 * Math.sin(ang)).toFixed(2));
+    var lk = (clock * 0.45) % 1; set(liveRing, { r: 3 + lk * 5 }); op(liveRing, 0.55 * (1 - lk));
+    op(cardIn, fade);
+  }
 
-    /* the code */
-    setToken(5, 3, S.dataText);
-    var left = S.code;
-    for (var i = 0; i < 7; i++) { var n = clamp(left, 0, lines[i].len); setChars(lines[i], n); left -= n; }
-    setChars(lines[7], S.line7); setChars(lines[8], S.line8);
-    var w1 = chw();
-    if (S.hl) { set(hl, { x: CX + S.hl.from * w1 - 0.8, y: 47 + S.hl.line * 13, width: (S.hl.to - S.hl.from) * w1 + 1.6 }); op(hl, 1); } else op(hl, 0);
-    op(squig[0], S.squig[0]); op(squig[1], S.squig[1]);
-    if (S.caret) {
-      var li = S.caret.line;
-      if (S.caret.auto) { var acc = 0; for (li = 0; li < 6; li++) { acc += lines[li].len; if (S.code < acc) break; } }
-      set(caretC, { x: CX + width(lines[li].el) + 0.8, y: 47 + li * 13 }); op(caretC, S.caret.o);
-    } else op(caretC, 0);
-    op(saved, S.unsaved);
+  function drawPrompt(S, t) {
+    var P = S.pill;
+    op(pill, P.o); tf(pill, 0, P.y);
+    if (P.o <= 0) return;
+    var think = P.think;
+    pillTxt.textContent = think ? 'Building your store' : (P.text || 'Describe your store');
+    pillTxt.setAttribute('fill', think || P.text ? INK : '#9a9a98');
+    var tw = 0; try { tw = pillTxt.getComputedTextLength(); } catch (e) { tw = 0; }
+    set(pillCaret, { x: 138 + tw + 1.4 }); op(pillCaret, P.typing && !think ? (Math.floor(t * 2.6) % 2 ? 0.2 : 1) : 0);
+    op(sendG, think ? 0 : 1); set(sendC, { r: P.press ? 8.6 : 10 });
+    thinkDots.forEach(function (c, i) { op(c, think ? 0.25 + 0.75 * Math.max(0, Math.sin(t * 7 - i * 0.9)) : 0); });
+  }
 
-    /* the deploy panel */
-    var st = { idle: ['Idle', DIM, MUTED], building: ['Building', MUTED, MUTED], failed: ['Failed', ERR, ERR], ready: ['Ready', INK, INK] }[S.status];
-    stTxt.textContent = st[0]; stDot.setAttribute('fill', st[1]); stTxt.setAttribute('fill', st[2]);
-    if (S.status === 'building') op(stDot, 0.6 + 0.4 * Math.cos(liveT * 6)); else op(stDot, 1);
-    depBtn.setAttribute('fill', S.pressed ? '#3a3a3a' : INK);
-    steps.forEach(function (s, i) {
-      var k = S.steps[i];
-      op(s.spin, k === 1 ? 1 : 0); op(s.ok, k === 2 ? 1 : 0); op(s.no, k === 3 ? 1 : 0);
-      if (k === 1) s.spin.setAttribute('transform', 'rotate(' + ((liveT * 540) % 360).toFixed(1) + ')');
-      s.label.setAttribute('fill', k === 0 ? '#c4c4c2' : k === 3 ? ERR : '#6a6a6a');
-      s.time.textContent = k === 2 ? STEP_T[i] : k === 3 ? 'error' : '';
-      s.time.setAttribute('fill', k === 3 ? ERR : MUTED);
-    });
-    set(prog, { width: 232 * S.prog, fill: S.status === 'failed' ? ERR : '#bdbdbb' });
-    readyL.textContent = S.ready ? '● yourbrand.com' : (S.status === 'failed' ? '2 errors in index.html' : '');
-    readyL.setAttribute('fill', S.status === 'failed' ? ERR : INK);
-    readyR.textContent = S.ready ? 'Ready in 2.4s' : '';
-    op(readyL, S.ready || (S.status === 'failed' ? 1 : 0)); op(readyR, S.ready);
-    set(loadBar, { width: 380 * S.load }); op(loadBar, S.load > 0 && S.load < 1 ? 1 : 0);
-
-    /* tools */
-    if (S.sel && S.sel.o > 0) {
-      var b = S.sel.b; op(sel, S.sel.o);
-      set(selRect, { x: b.x, y: b.y, width: Math.max(0, b.w), height: Math.max(0, b.h) });
-      [[0, 0], [1, 0], [0, 1], [1, 1]].forEach(function (q, i) { set(handles[i], { x: b.x + q[0] * b.w - 2.2, y: b.y + q[1] * b.h - 2.2 }); op(handles[i], S.sel.thin ? 0 : 1); });
-    } else op(sel, 0);
-    if (S.size) {
-      sizeTxt.textContent = S.size.text; var sw = S.size.text.length * 3.3 + 8;
-      set(sizeRect, { x: -sw / 2, width: sw }); tf(size, S.size.x, S.size.y); op(size, S.size.o == null ? 1 : S.size.o);
-    } else op(size, 0);
-    guides.forEach(function (g, i) { var q = S.guides[i]; if (q) { g.setAttribute('d', q[0]); op(g, q[1] * 0.7); } else op(g, 0); });
-    reds.forEach(function (r, i) {
-      var q = S.reds[i];
-      if (!q) { op(r.g, 0); return; }
-      var vert = q.x1 === q.x2;
-      r.line.setAttribute('d', vert ? 'M' + (q.x1 - 2) + ' ' + q.y1 + 'h4M' + q.x1 + ' ' + q.y1 + 'V' + q.y2 + 'M' + (q.x1 - 2) + ' ' + q.y2 + 'h4'
-        : 'M' + q.x1 + ' ' + (q.y1 - 2) + 'v4M' + q.x1 + ' ' + q.y1 + 'H' + q.x2 + 'M' + q.x2 + ' ' + (q.y1 - 2) + 'v4');
-      var mx = vert ? q.x1 + 9 : (q.x1 + q.x2) / 2, my = vert ? (q.y1 + q.y2) / 2 : q.y1 - 8;
-      r.t.textContent = q.label; var pw = q.label.length * 3.4 + 6;
-      set(r.pill, { x: mx - pw / 2, y: my - 4.5, width: pw }); set(r.t, { x: mx, y: my + 2 });
-      op(r.g, q.o);
-    });
-    if (S.marquee) { set(marquee, { x: S.marquee.x, y: S.marquee.y, width: Math.max(0, S.marquee.w), height: Math.max(0, S.marquee.h) }); op(marquee, S.marquee.o); } else op(marquee, 0);
-    if (S.toolbar) { tf(toolbar, S.toolbar.x, S.toolbar.y); op(toolbar, S.toolbar.o); tbRect.setAttribute('fill', S.toolbar.pressed ? '#3a3a3a' : INK); } else op(toolbar, 0);
-    if (S.insp) {
-      tf(insp, S.insp.x, S.insp.y); op(insp, S.insp.o);
-      fontName.textContent = S.insp.font; fontName.setAttribute('font-family', S.insp.font === 'Inter Tight' ? SANS : SERIF);
-      op(drop, S.insp.open ? 1 : 0); op(dropHi, S.insp.hi ? 1 : 0);
-      alignBg.setAttribute('x', S.insp.align ? 42 : 28);
-    } else op(insp, 0);
-    if (S.fillP) { tf(fillP, S.fillP.x, S.fillP.y); op(fillP, S.fillP.o); op(fillRing, S.fillP.picked ? 1 : 0); } else op(fillP, 0);
-    if (S.key) {
-      keyTxt.textContent = S.key.text; var kw = Math.max(12, S.key.text.length * 4.4 + 6);
-      set(keyRect, { width: kw }); set(keyTxt, { x: kw / 2 }); tf(key, S.key.x, S.key.y - 3 * (1 - S.key.o)); op(key, S.key.o);
-    } else op(key, 0);
-
-    /* messages */
-    var stack = 0;
-    toasts.forEach(function (g, i) {
-      var m = S.toasts[i];
-      if (!m || m.o === 0) { op(g, 0); return; }
-      tf(g, 236 + m.out * 40 + (m.shake || 0), 52 + stack * 24 - 6 * (1 - m.o));
-      op(g, m.o * (1 - m.out)); stack += 1 - m.out;
-    });
-    if (S.react) { tf(react, S.react.x, S.react.y, S.react.s); op(react, S.react.o); op(reactThumb, S.react.kind === 'thumb' ? 1 : 0); op(reactCheck, S.react.kind === 'check' ? 1 : 0); }
-    else op(react, 0);
-    rings.forEach(function (r, i) {
-      var c = S.clicks[i];
-      if (!c) { op(r, 0); return; }
-      set(r, { cx: c[0], cy: c[1], r: 2.5 + c[2] * 26 }); op(r, 0.22 * (1 - c[2] / 0.45));
-    });
-
-    /* cursors */
-    ['you', 'design', 'code', 'launch'].forEach(function (k) {
-      var c = CUR[k], s = S.cur[k], m = S.chat[k], pr = S.press && S.press[k];
-      tf(c.g, s.p[0], s.p[1], 1, s.r || 0); op(c.g, s.o);
-      c.arrow.setAttribute('transform', pr ? 'scale(.86)' : '');
-      var kk = m ? m.k : 0;
-      c.msg.textContent = m ? m.text.slice(0, m.n) : '';
-      var mw = m ? width(c.msg) : 0;
-      set(c.rect, { width: mix(c.lw + 12, Math.max(mw, 10) + 14, kk), height: mix(13, 16, kk), rx: mix(4, 8, kk) });
-      op(c.text, 1 - kk); op(c.msg, kk);
+  function drawCursor(S) {
+    var c = S.cur;
+    op(cur, c.o); tf(cur, c.p[0], c.p[1]);
+    curArrow.setAttribute('transform', c.press ? 'scale(.86)' : '');
+    var shown = 0;
+    rings.forEach(function (r) { op(r, 0); });
+    S.clicks.forEach(function (k) {
+      var d = k[1]; if (d < 0 || d > 0.55 || shown > 1) return;
+      var r = rings[shown++], pos = S.loop ? CUR_LOOP : CUR_INTRO;
+      var at = pathAt(pos, S.loop ? S.u - d : S.t - d);
+      set(r, { cx: at[0], cy: at[1], r: 2.5 + (d / 0.55) * 16 }); op(r, 0.28 * (1 - d / 0.55));
     });
   }
 
-  // drawing order: the browser and panels, tools over them, messages, then cursors on top
-  [browser, editor, deploy, tools].forEach(function (g) { svg.appendChild(g); });
-  toasts.forEach(function (g) { svg.appendChild(g); });
-  svg.appendChild(react); rings.forEach(function (r) { svg.appendChild(r); });
-  ['design', 'code', 'launch', 'you'].forEach(function (k) { svg.appendChild(CUR[k].g); });
+  function render(S, clock) {
+    drawStore(S, clock);
+    drawPrompt(S, clock);
+    drawSales(S, clock, clock);
+    drawCursor(S);
+  }
 
-  var CALM = 0.62;
-  var loopMode = false, clock = 0;
+  /* ================= captions (the page's headline area, intro only) ================= */
+  var capBox = null, capEls = [];
+  function buildCaps() {
+    capBox = document.createElement('div'); capBox.className = 'hi-caps'; capBox.setAttribute('aria-hidden', 'true');
+    CAPS.forEach(function (c) {
+      var d = document.createElement('div'); d.className = 'hero__title hi-cap';
+      var words = c[2].split(' ').map(function (w, i) {
+        var s = document.createElement('span'); s.className = 'cw'; s.textContent = w; d.appendChild(s);
+        if (i < c[2].split(' ').length - 1) d.appendChild(document.createTextNode(' '));
+        return s;
+      });
+      capBox.appendChild(d); capEls.push({ a: c[0], b: c[1], words: words });
+    });
+    col.insertBefore(capBox, title);
+    placeCaps();
+  }
+  function placeCaps() {
+    if (!capBox) return;
+    capBox.style.cssText = 'position:absolute;left:' + title.offsetLeft + 'px;top:' + title.offsetTop + 'px;width:' + title.offsetWidth + 'px;pointer-events:none';
+  }
+  function setCaps(t) {
+    capEls.forEach(function (c) {
+      var out = 1 - smooth(seg(t, c.b - 0.35, c.b));
+      c.words.forEach(function (w, i) {
+        var k = smooth(seg(t, c.a + i * 0.09, c.a + i * 0.09 + 0.45)) * out;
+        w.style.opacity = k.toFixed(3); w.style.transform = 'translateY(' + (0.4 * (1 - smooth(seg(t, c.a + i * 0.09, c.a + i * 0.09 + 0.55)))).toFixed(3) + 'em)';
+      });
+    });
+  }
+  window.addEventListener('resize', placeCaps);
+
+  var clock = 0;
+  function setView(p) {
+    var v = narrow.matches ? (PAN_TO * p).toFixed(1) + ' 0 ' + VIEW_W + ' 280' : '0 0 660 280';
+    if (v !== lastView) { svg.setAttribute('viewBox', v); lastView = v; }
+  }
   function draw(t) {
     clock = t;
-    loopMode = t >= INTRO_END;
-    var lt = (t - INTRO_END) * CALM;                       // the loop plays slower than the intro: unhurried work
-    render(loopMode ? loopState(lt % LOOP) : introState(t), lt);
+    var loopMode = t >= INTRO_END, u = loopMode ? (((t - INTRO_END) % LOOP) + LOOP) % LOOP : t;
+    var S = loopMode ? loopState(u, t) : introState(t);
+    render(S, t);
+    setView(S.pan);
+    if (capBox) setCaps(t);
   }
   window.__heroArtAt = draw;
+  if (narrow.addEventListener) narrow.addEventListener('change', function () { draw(clock); });
 
-  /* ================= the intro: shown large in the middle of the hero, then moved into place ================= */
-  var REVEAL = [[13.65, 'hi-title'], [14.1, 'hi-lead'], [14.3, 'hi-actions'], [14.5, 'hi-rest']];
-  var skip = null, revealed = false;
-  function bigTransform() {
-    var w = art.offsetWidth, h = art.offsetHeight, cw = col.offsetWidth;
-    var top = title.offsetTop, bottom = actions.offsetTop + actions.offsetHeight;
-    var s = Math.max(1, Math.min((window.innerWidth - 32) / w, (bottom - top) / h, 1.45));
-    var tx = cw / 2 - (art.offsetLeft + w * s / 2), ty = (top + bottom) / 2 - (art.offsetTop + h * s / 2);
-    return 'translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px) scale(' + s.toFixed(3) + ')';
-  }
-  function reveal(quick) {
-    if (revealed) return; revealed = true;
-    art.style.transition = 'transform ' + (quick ? '.5s' : '.9s') + ' cubic-bezier(.2,.7,.2,1)';
-    art.style.transform = '';
-    window.removeEventListener('resize', fit);
-  }
-  function fit() { if (!revealed) art.style.transform = bigTransform(); }
+  /* ================= the intro: plays in place, then the real headline arrives ================= */
+  var REVEAL = [[18.9, 'hi-title'], [19.4, 'hi-lead'], [19.6, 'hi-actions'], [19.8, 'hi-rest']];
+  var skip = null;
   function endIntro() {
     if (endIntro.done) return; endIntro.done = true;
     REVEAL.forEach(function (s) { root.classList.add(s[1]); });
     if (skip) skip.classList.add('is-gone');
     setTimeout(function () {
       root.classList.remove('hero-intro', 'hi-ready', 'hi-title', 'hi-lead', 'hi-actions', 'hi-rest');
-      art.style.transition = ''; art.style.transform = '';
+      if (capBox && capBox.parentNode) capBox.parentNode.removeChild(capBox);
+      capBox = null;
       if (skip && skip.parentNode) skip.parentNode.removeChild(skip);
     }, 1300);
     ['wheel', 'touchmove', 'keydown'].forEach(function (ev) { window.removeEventListener(ev, onInput); });
@@ -928,7 +572,7 @@
     if (!intro || clock >= INTRO_END) return;
     elapsedBase = INTRO_END; start = performance.now();
     draw(INTRO_END);
-    reveal(true); endIntro();
+    endIntro();
   }
   function onInput(e) {
     if (e.type === 'keydown' && !/^(Escape|Enter| |ArrowDown|PageDown|End|Spacebar)$/.test(e.key)) return;
@@ -951,8 +595,7 @@
       });
     })(title);
     root.classList.add('hi-ready');
-    fit();
-    window.addEventListener('resize', fit);
+    buildCaps();
     skip = document.createElement('button');
     skip.type = 'button'; skip.className = 'hi-skip';
     skip.innerHTML = 'Skip intro <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3.5 8.5 8 4 12.5M9 3.5 13.5 8 9 12.5"/></svg>';
@@ -968,11 +611,8 @@
   function frame(now) {
     var t = elapsedBase + (now - start) / 1000;
     draw(t);
-    if (intro && !revealed) {
-      REVEAL.forEach(function (s) { if (t >= s[0]) root.classList.add(s[1]); });
-      if (t >= 13.75) reveal(false);
-    }
-    if (intro && t >= 14.6) endIntro();
+    if (intro && !endIntro.done) REVEAL.forEach(function (s) { if (t >= s[0]) root.classList.add(s[1]); });
+    if (intro && t >= INTRO_END + 0.1) endIntro();
     raf = requestAnimationFrame(frame);
   }
   function run() { if (raf || !visible || document.hidden) return; start = performance.now(); raf = requestAnimationFrame(frame); }

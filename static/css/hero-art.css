@@ -1,13 +1,14 @@
-/* ---------- Hero art: a small team of cursors building a website (static/js/hero-art.js) ----------
-   On the first visit in a session (or a reload) it opens with the intro: one cursor tries to do everything, gives up and falls,
-   then the team comes in, picks it up, and finishes the job. The intro is switched on by a line in the page's <head>
-   (html.hero-intro), never with reduced motion. While it plays, the headline, intro text, buttons and the rest of the page
-   are hidden; they come back in order at the end. The text is real HTML the whole time. */
+/* ---------- Hero art: AI builds a store fast, the team makes it right (static/js/hero-art.js) ----------
+   On the first visit in a session (or a reload) it opens with the intro. It is switched on by a line in the page's <head>
+   (html.hero-intro), never with reduced motion. While it plays, the real headline, intro text, buttons and the rest of the
+   page are hidden and short captions take the headline's place; the page comes back in order at the end. */
 
 .hero .column { position: relative; }
 
-.hero__art { position: relative; z-index: 1; width: 100%; aspect-ratio: 33 / 14; transform-origin: 0 0; }
+.hero__art { position: relative; z-index: 1; width: 100%; aspect-ratio: 66 / 28; }
 .hero__art svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; overflow: visible; }
+
+@media (max-width: 640px) { .hero__art { aspect-ratio: 43 / 28; } }
 
 /* hidden while the intro plays */
 html.hero-intro:not(.hi-ready) .hero__title { opacity: 0; }
@@ -16,6 +17,27 @@ html.hero-intro .hero__title .hw {
   transition: opacity .5s ease, transform .7s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--i) * 70ms);
 }
 html.hero-intro.hi-title .hero__title .hw { opacity: 1; transform: none; }
+
+/* The intro lines sit where the headline will be, above the picture (never over it). Each word rises out of its own line,
+   one after another; when a line is done the words carry on up and out, and the next line rises in. The last one is
+   the real headline. */
+.hero__cap {
+  position: absolute; left: 0; right: 0; top: 0; z-index: 2; margin: 0; pointer-events: none;
+  font-weight: 500; font-size: clamp(26px, 3.2vw, 38px); line-height: 1.05; letter-spacing: -0.04em;
+}
+.hero__cap .cl { position: absolute; left: 0; top: 0; width: 100%; }
+.hero__cap .ln { color: var(--ink); }
+.hero__cap .ln.muted { color: var(--ink-muted); }
+.hero__cap .w { display: inline-block; overflow: hidden; vertical-align: top; padding: .02em .06em .16em 0; margin: -.02em -.06em -.16em 0; }
+.hero__cap .w > span {
+  display: inline-block; opacity: 0; transform: translateY(112%);
+  transition: transform .8s cubic-bezier(.2, .7, .2, 1) calc(var(--i) * 55ms), opacity .45s ease calc(var(--i) * 55ms);
+}
+.hero__cap .cl.is-in .w > span { opacity: 1; transform: none; }
+.hero__cap .cl.is-past .w > span {
+  opacity: 0; transform: translateY(-112%);
+  transition: transform .55s cubic-bezier(.5, 0, .75, 0) calc(var(--i) * 35ms), opacity .35s ease calc(var(--i) * 35ms);
+}
 
 html.hero-intro .lead,
 html.hero-intro .hero__actions { opacity: 0; transform: translateY(18px); transition: opacity .5s ease, transform .6s cubic-bezier(.2, .7, .2, 1); }
@@ -32,6 +54,11 @@ html.hero-intro.hi-rest .secnav,
 html.hero-intro.hi-rest .rail,
 html.hero-intro.hi-rest .page ~ section,
 html.hero-intro.hi-rest .page ~ footer { opacity: 1; }
+
+/* captions: same type as the headline, stacked in its place */
+.hi-caps { z-index: 2; }
+.hi-cap { position: absolute; inset: 0 auto auto 0; width: 100%; margin: 0; }
+.hi-cap .cw { display: inline-block; opacity: 0; will-change: opacity, transform; }
 
 /* Skip */
 .hi-skip {
