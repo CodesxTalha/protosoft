@@ -73,3 +73,6 @@ html.hero-intro.hi-rest .page ~ footer { opacity: 1; }
 .hi-skip svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .hi-skip.is-gone { opacity: 0; pointer-events: none; }
 @media (max-width: 560px) { .hi-skip { right: 16px; bottom: 16px; } }
+
+/* no single-word last line in the intro text */
+.hero .lead { text-wrap: pretty; }
