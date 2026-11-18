@@ -16,13 +16,15 @@
         sessionStorage.setItem('intro-seen', '1');
         var root = document.documentElement;
         root.className += ' hero-intro';
-        setTimeout(function () { root.classList.remove('hero-intro'); }, 32000);   // if the script never runs, the page still shows
+        // If the script never runs, the page still shows. hero-art.js cancels this once it takes over, because the intro
+        // waits while the tab is in the background and must not be cut open half way.
+        window.__introFallback = setTimeout(function () { root.classList.remove('hero-intro'); }, 32000);
       } catch (e) {}
     })();
   </script>
   <title>Protosofts | Websites, apps and automation</title>
   <link rel="icon" type="image/svg+xml" href="static/img/favicon.svg">
-  <meta name="description" content="Protosofts designs and builds websites, apps and automation, and manages social media. We use AI to build faster, and our team reviews every project before it goes live.">
+  <meta name="description" content="Protosofts is a design and development studio. We design brands, build websites, apps and automation, and manage social media for businesses.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -78,9 +80,9 @@
         <div class="hero__art" aria-hidden="true"></div>
 
         <p class="lead">
-          Protosofts designs and builds <span class="hl">websites</span>, <span class="hl">apps</span>
-          and <span class="hl">automation</span>, and manages social media. We use AI to build faster,
-          and our team reviews every project before it goes live.
+          Protosofts is a design and development studio. We design <span class="hl">brands</span>,
+          build <span class="hl">websites</span>, <span class="hl">apps</span> and <span class="hl">automation</span>,
+          and manage <span class="hl">social media</span> for businesses.
         </p>
 
         <div class="hero__actions">

@@ -4,11 +4,13 @@
    The numbers on the sales card are an illustration, not results.
 
    Two Protosofts cursors work in it, and each only does things that make sense for its job:
-     UI team (black) edits the store: it drags the picture and the button into place, clicks the headline to change it,
+     UI team (dark) edits the store: it drags the picture and the button into place, clicks the headline to change it,
        and checks its work with alignment guides and spacing labels.
-     Sales team (green) reads: it scrubs the chart (a tooltip compares today with yesterday), looks at each new order,
+     Sales team (light) reads: it scrubs the chart (a tooltip compares today with yesterday), looks at each new order,
        and watches the order count. It never clicks.
-   They talk in Figma-style cursor chat: the name tag grows into a message.
+   Everything is in the site's own ink and greys. They talk in Figma-style cursor chat: the name tag grows into a message.
+   They move like hands: a smooth start, a small overshoot and settle, a lean into fast moves, a trailing tag, and a slow
+   wander while they wait.
 
    The intro (first visit in a session, or a reload, about 20 s):
       0.3  You ask an AI for a store. It builds a generic one in seconds: centred serif text, a grey square button,
@@ -30,6 +32,7 @@
   var intro = root.classList.contains('hero-intro') && !!title && !!actions;
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!intro) root.classList.remove('hero-intro');
+  clearTimeout(window.__introFallback);                         // this script runs the intro now (see the page's <head>)
 
   var INTRO_END = 20.2, LOOP = 18;
 
@@ -64,8 +67,7 @@
   function textW(e, fallback) { var w = 0; try { w = e.getComputedTextLength(); } catch (err) { w = 0; } return w || fallback; }
   function windows(list, t) { var v = 0; for (var i = 0; i < list.length; i++) v = Math.max(v, ramp(t, list[i][0], list[i][0] + 0.25, list[i][1] - 0.25, list[i][1])); return v; }
 
-  var SOFT = '#ececea', INK = '#141414', MUTED = '#6a6a6a', FAINT = '#9a9a98', EDGE = '#d9d9d7', FILL = '#efefed', HAIR = '#ececea',
-      ERR = '#b3261e', UP = '#1e7a46', DASH = '#a9a9a7';
+  var SOFT = '#ececea', INK = '#141414', MUTED = '#6a6a6a', FAINT = '#9a9a98', EDGE = '#d9d9d7', FILL = '#efefed', HAIR = '#ececea', DASH = '#a9a9a7';
   var SANS = 'Inter Tight, system-ui, sans-serif', SERIF = 'Georgia, "Times New Roman", serif';
   var SPARK = 'M0 -5C.6 -1.6 1.6 -.6 5 0C1.6 .6 .6 1.6 0 5C-.6 1.6 -1.6 .6 -5 0C-1.6 -.6 -.6 -1.6 0 -5Z';
 
@@ -264,8 +266,8 @@
     C.big = txt('', { x: L.LX - 1, y: L.numY, 'font-size': 30, 'font-weight': 600, 'letter-spacing': -1.2, fill: INK, 'font-family': SANS }, inn);
     C.chip = el('g', {}, inn);
     C.chipBg = el('rect', { y: L.numY - 18, height: 16, rx: 8, fill: FILL }, C.chip);
-    C.chipTri = el('path', { fill: UP }, C.chip);
-    C.chipTxt = txt('', { y: L.numY - 6.8, 'font-size': 7.6, 'font-weight': 600, fill: UP, 'font-family': SANS }, C.chip);
+    C.chipTri = el('path', { fill: INK }, C.chip);                // up or down is told by the arrow, in the site's ink
+    C.chipTxt = txt('', { y: L.numY - 6.8, 'font-size': 7.6, 'font-weight': 600, fill: INK, 'font-family': SANS }, C.chip);
     C.chipTip = el('g', {}, inn);                               // "vs yesterday", when Sales points at the chip
     C.chipTipBg = el('rect', { height: 12, width: 50, rx: 6, fill: INK }, C.chipTip);
     C.chipTipTxt = txt('vs yesterday', { x: 25, y: 8.3, 'font-size': 6, 'font-weight': 500, 'text-anchor': 'middle', fill: '#fff', 'font-family': SANS }, C.chipTip);
@@ -309,8 +311,8 @@
     C.cntA = txt('', { y: L.ordY - 0.6, 'font-size': 6.4, 'font-weight': 600, 'text-anchor': 'middle', fill: INK, 'font-family': SANS }, cg);
     C.cntB = txt('', { y: L.ordY - 0.6, 'font-size': 6.4, 'font-weight': 600, 'text-anchor': 'middle', fill: INK, 'font-family': SANS }, cg);
     C.liveTxt = txt('Live', { x: L.oRX, y: L.ordY - 0.4, 'text-anchor': 'end', 'font-size': 6.6, fill: MUTED, 'font-family': SANS }, g);
-    C.liveRing = el('circle', { cy: L.ordY - 2.8, r: 3, fill: 'none', 'stroke-width': 0.8, stroke: UP }, g);
-    C.liveDot = el('circle', { cy: L.ordY - 2.8, r: 2.3, fill: UP }, g);
+    C.liveRing = el('circle', { cy: L.ordY - 2.8, r: 3, fill: 'none', 'stroke-width': 0.8, stroke: INK }, g);
+    C.liveDot = el('circle', { cy: L.ordY - 2.8, r: 2.3, fill: INK }, g);
     var rc = clipRect({ x: L.oLX - 10, y: L.ROWY - 2, width: L.oRX - L.oLX + 20, height: (L.N - 1) * L.ROWH + 19 });
     var rowsG = el('g', { 'clip-path': rc.url }, inn);
     C.empty = txt('No orders yet', { x: L.oLX, y: L.ROWY + 10.4, 'font-size': 7.4, fill: FAINT, 'font-family': SANS }, rowsG);
@@ -343,18 +345,19 @@
 
   /* ================= the team's cursors ================= */
   var rings = [0, 1].map(function () { return el('circle', { fill: 'none', 'stroke-width': 0.9, 'clip-path': 'url(#ha-win)' }, svg); });   // UI's clicks, kept inside the window
-  function makeCursor(name, color) {
-    var g = el('g', {});
+  /* The two cursors are the site's two buttons: UI team dark (like "Services"), Sales team light (like "Book a call"). */
+  function makeCursor(name, dark) {
+    var fg = dark ? '#fff' : INK, g = el('g', {});
     var tag = el('g', {}, g);
-    var bg = el('rect', { height: 14, rx: 7, fill: color }, tag);
+    var bg = el('rect', dark ? { height: 14, rx: 7, fill: INK } : { height: 14, rx: 7, fill: '#fff', stroke: EDGE, 'stroke-width': 0.8, filter: 'url(#ha-sm)' }, tag);
     var cl = clipRect({ x: 0, y: 0, height: 14 });
     var tin = el('g', { 'clip-path': cl.url }, tag);
-    var nm = txt(name, { x: 7, y: 9.7, 'font-size': 7, 'font-weight': 500, fill: '#fff', 'font-family': SANS }, tin);
-    var msg = txt('', { x: 7, y: 21.3, 'font-size': 7.4, 'font-weight': 500, fill: '#fff', 'font-family': SANS }, tin);
-    var arrow = el('path', { d: 'M0 0V14L3.9 10.7L6.6 16.6L9 15.5L6.3 9.7H11.3Z', fill: color, stroke: '#fff', 'stroke-width': 1.1, 'stroke-linejoin': 'round', filter: 'url(#ha-cur)' }, g);
+    var nm = txt(name, { x: 7, y: 9.7, 'font-size': 7, 'font-weight': 500, fill: fg, 'font-family': SANS }, tin);
+    var msg = txt('', { x: 7, y: 21.3, 'font-size': 7.4, 'font-weight': 500, fill: fg, 'font-family': SANS }, tin);
+    var arrow = el('path', { d: 'M0 0V14L3.9 10.7L6.6 16.6L9 15.5L6.3 9.7H11.3Z', fill: dark ? INK : '#fff', stroke: dark ? '#fff' : INK, 'stroke-width': dark ? 1.1 : 1, 'stroke-linejoin': 'round', filter: 'url(#ha-cur)' }, g);
     return { g: g, tag: tag, bg: bg, clip: cl.r, nm: nm, msg: msg, arrow: arrow, name: name, last: '', mw: 0 };
   }
-  var SALESC = makeCursor('Sales team', UP), UIC = makeCursor('UI team', INK);
+  var SALESC = makeCursor('Sales team', false), UIC = makeCursor('UI team', true);
 
   /* Where a cursor's name tag sits, relative to the tip. sx: 1 right, -1 left, 0 whichever side has room.
      up: the tag grows upward when it becomes a message (its bottom stays put). Each move in the timelines names one. */
@@ -394,14 +397,15 @@
                      [17.3, ['h', 4.0, 0.8], 0, ['bl', 'lu']], [19.0, ['h', 'now', 0.8], 'glide', ['bl', 'lu']], [19.3, ['h', 'now', 0.8], 0, ['bl', 'lu']], [20.0, 'cnt', 0, 'ru']];
   var SALES_LOOP = [[0, 'cnt', 0, 'ru'], [2.15, 'cnt', 0, 'ru'], [2.75, 'row', 0, 'bl'], [3.5, 'row', 0, 'bl'],
                     [4.2, ['h', 6.8, 0.85], 0, 'b'], [6.0, ['h', 'now', 0.85], 'glide', 'b'], [6.5, ['h', 'now', 0.85], 0, 'b'],
-                    [7.2, 'chip', 0, ['bl', 'br']], [11.65, 'chip', 0, ['bl', 'br']], [12.25, 'row', 0, 'bl'], [12.7, 'row', 0, 'bl'],
-                    [13.2, ['h', -2.4, 0.85], 0, ['bl', 'lu']], [14.2, ['h', 'now', 0.85], 'glide', ['bl', 'lu']], [14.8, 'cnt', 0, 'ru'],
+                    [7.2, 'chip', 0, ['bl', 'br']], [9.5, 'chip', 0, ['bl', 'br']],
+                    [10.1, ['h', -1.4, 0.55], 0, ['b', 'lu']], [11.2, ['h', 'now', 0.55], 'glide', ['b', 'lu']], [11.75, ['h', 'now', 0.55], 0, ['b', 'lu']],
+                    [12.3, 'row', 0, 'bl'], [12.8, 'row', 0, 'bl'], [13.4, 'chip', 0, ['bl', 'br']], [14.6, 'chip', 0, ['bl', 'br']], [15.2, 'cnt', 0, 'ru'],
                     [16.0, 'cnt', 0, 'ru'], [16.55, 'row', 0, 'bl'], [17.0, 'row', 0, 'bl'], [17.6, 'cnt', 0, 'ru'], [18, 'cnt', 0, 'ru']];
-  var XHAIR = { intro: [[8.95, 11.75], [17.25, 19.35]], loop: [[4.1, 6.6], [13.1, 14.45]] };   // when Sales' chart hover shows
+  var XHAIR = { intro: [[8.95, 11.75], [17.25, 19.35]], loop: [[4.1, 6.6], [9.95, 11.85]] };   // when Sales' chart hover shows
   var BUBBLES = {
     intro: { ui: [[10.0, 11.5, 'Fixing the page']], sales: [[9.3, 10.9, 'Below yesterday'], [15.2, 16.75, 'Orders picking up'], [18.0, 19.6, 'Above yesterday']] },
     loop: { ui: [[6.4, 7.95, 'Trying a new headline'], [13.4, 14.9, 'Switching back']],
-            sales: [[7.75, 9.3, 'Watching the numbers'], [12.7, 14.25, 'Orders slowed down'], [16.85, 17.95, 'Picking up again']] }
+            sales: [[7.75, 9.3, 'Watching the numbers'], [12.75, 14.3, 'Orders slowed down'], [16.85, 17.95, 'Picking up again']] }
   };
   var MORPH = { img: [10.6, 12.0], head: 12.75, btn: [14.6, 15.4], cards: 16.2 };
   /* orders: [time, amount, who, what]. Intro times are scene seconds; loop times are seconds into the loop. The last
@@ -419,7 +423,14 @@
     return [mix(a[0], b[0], k) - dy / d * bow, mix(a[1], b[1], k) + dx / d * bow];
   }
   function placeOf(key) { var p = key[3]; return PLACE[typeof p === 'string' ? p : p[M ? 1 : 0]]; }
-  /* where a cursor is at time t: {x, y, press, pa, pb, pk} (pa/pb are the tag placements it is moving between) */
+  /* A move leaves smoothly, travels fast, overshoots a little and settles, like a hand on a mouse. Longer moves
+     overshoot more (up to about 2%); short ones barely. */
+  function arrive(k, d) {
+    var s = 0.75 * clamp(d / 260, 0.12, 1), x = smooth(k) - 1;
+    return 1 + (s + 1) * x * x * x + s * x * x;
+  }
+  /* where a cursor is at time t: {x, y, press, rest, pa, pb, pk}. pa/pb are the tag placements it is moving between;
+     rest (0..1) is how settled it is, so it can idle while it waits. */
   function track(keys, t, resolve) {
     var a = keys[0], b = keys[0], k = 0, how = 0, i;
     if (t > keys[0][0]) {
@@ -427,11 +438,19 @@
       if (t > b[0]) a = b;
       k = a === b ? 0 : seg(t, a[0], b[0]); how = b[2];
     }
-    var pa = resolve(a[1]), pb = resolve(b[1]), pos;
+    var pa = resolve(a[1]), pb = resolve(b[1]), pos, d = Math.hypot(pb[0] - pa[0], pb[1] - pa[1]), rest = 0;
     if (how === 'follow') pos = pb;
     else if (how === 'glide' || how === 'drag') { var e = sine(k); pos = [mix(pa[0], pb[0], e), mix(pa[1], pb[1], e)]; }
-    else pos = arc(pa, pb, mj(k));
-    return { x: pos[0], y: pos[1], press: how === 'follow' || how === 'drag' ? 1 : 0, pa: placeOf(a), pb: placeOf(b), pk: smooth(k) };
+    else {
+      pos = arc(pa, pb, arrive(k, d));
+      if (d < 0.5) rest = smooth(seg(t - a[0], 0.15, 0.8)) * (a === b ? 1 : smooth(seg(b[0] - t, 0.1, 0.6)));
+    }
+    return { x: pos[0], y: pos[1], press: how === 'follow' || how === 'drag' ? 1 : 0, rest: rest, pa: placeOf(a), pb: placeOf(b), pk: smooth(k) };
+  }
+  function motion(keys, t, resolve, resolvePrev) {             // the position plus its velocity (units a second)
+    var p = track(keys, t, resolve), q = track(keys, t - 0.04, resolvePrev || resolve);
+    p.vx = (p.x - q.x) / 0.04; p.vy = (p.y - q.y) / 0.04;
+    return p;
   }
   function pressOf(list, t) { for (var i = 0; i < list.length; i++) { var d = t - list[i]; if (d > 0 && d < 0.24) return Math.sin(Math.PI * d / 0.24); } return 0; }
   function prog(t, a, b) { return inOut(seg(t, a, b)); }
@@ -484,10 +503,11 @@
   /* ================= drawing one moment ================= */
   function lerpBox(a, b, k) { return { x: mix(a.x, b.x, k), y: mix(a.y, b.y, k), w: mix(a.w, b.w, k), h: mix(a.h, b.h, k) }; }
   function imgBox(p) { var a = inOut(seg(p, 0, 0.5)), b = inOut(seg(p, 0.45, 1)); return { x: mix(IMG_BAD.x, IMG_GOOD.x, a), w: mix(IMG_BAD.w, IMG_GOOD.w, a), y: mix(IMG_BAD.y, IMG_GOOD.y, b), h: mix(IMG_BAD.h, IMG_GOOD.h, b) }; }
-  function uiAnchor(S) {
+  function uiAnchor(S, tt) {                                    // tt: the moment to read the dragged picture or button at
+    var pImg = S.loop ? 1 : prog(tt, MORPH.img[0], MORPH.img[1]), pBtn = S.loop ? 1 : prog(tt, MORPH.btn[0], MORPH.btn[1]);
     return function (w) {
-      if (w === 'strip' || w === 'img') { var b = imgBox(w === 'strip' ? 0 : S.p.img); return [b.x + b.w / 2, b.y + b.h / 2 + PAGE_Y]; }
-      if (w === 'btn') { var c = lerpBox(BTN_BAD, BTN_GOOD, S.p.btn); return [c.x + c.w / 2, c.y + c.h / 2 + PAGE_Y]; }
+      if (w === 'strip' || w === 'img') { var b = imgBox(w === 'strip' ? 0 : pImg); return [b.x + b.w / 2, b.y + b.h / 2 + PAGE_Y]; }
+      if (w === 'btn') { var c = lerpBox(BTN_BAD, BTN_GOOD, pBtn); return [c.x + c.w / 2, c.y + c.h / 2 + PAGE_Y]; }
       return w;
     };
   }
@@ -610,8 +630,8 @@
     // the total counts to the new number; the change against yesterday counts with it
     var money = '$' + Math.round(D.R);
     put(C.big, money);
-    var up = D.pct >= 0, colr = up ? UP : ERR, nw = textW(C.big, money.length * 17), cx0 = L.LX + nw + 6, ptxt = Math.round(Math.abs(D.pct)) + '%';
-    put(C.chipTxt, ptxt); C.chipTxt.setAttribute('fill', colr); C.chipTri.setAttribute('fill', colr);
+    var up = D.pct >= 0, nw = textW(C.big, money.length * 17), cx0 = L.LX + nw + 6, ptxt = Math.round(Math.abs(D.pct)) + '%';
+    put(C.chipTxt, ptxt);
     var cw = 20 + ptxt.length * 4.6;
     set(C.chipBg, { x: cx0, width: cw }); set(C.chipTxt, { x: cx0 + 14 });
     C.chipTri.setAttribute('d', up ? 'M' + (cx0 + 5).toFixed(1) + ' ' + (L.numY - 8.6) + 'l3.1-5 3.1 5z' : 'M' + (cx0 + 5).toFixed(1) + ' ' + (L.numY - 13.4) + 'l3.1 5 3.1-5z');
@@ -702,10 +722,14 @@
     return [mix(left, right, (side + 1) / 2), p.up ? p.oy - h : p.oy];
   }
   function drawCursor(C, st, list, now, box, clock, seed) {
-    var drift = st.press ? 0 : 0.45;
-    var x = st.x + drift * Math.sin(clock * 1.3 + seed), y = st.y + drift * Math.sin(clock * 1.7 + seed * 2);
+    // While it waits it is never frozen: a slow wander, as if reading what it points at, plus a hand's slight tremor.
+    var r = st.rest, c = clock;
+    var x = st.x + r * (2.4 * Math.sin(c * 1.3 + seed) + 1.0 * Math.sin(c * 3.1 + seed * 1.7)) + 0.3 * Math.sin(c * 5.3 + seed);
+    var y = st.y + r * (1.6 * Math.sin(c * 1.7 + seed * 2.3) + 0.7 * Math.sin(c * 3.7 + seed)) + 0.3 * Math.sin(c * 4.7 + seed * 3);
     op(C.g, st.o); tf(C.g, x, y, CS);
-    C.arrow.setAttribute('transform', st.p > 0.01 ? 'scale(' + (1 - 0.12 * st.p).toFixed(3) + ')' : '');
+    // it leans into fast moves, and squeezes a little when it presses
+    var lean = 9 * Math.tanh(st.vx / 650);                    // soft limit, so the lean eases in and out
+    C.arrow.setAttribute('transform', 'rotate(' + lean.toFixed(2) + ')' + (st.p > 0.01 ? ' scale(' + (1 - 0.12 * st.p).toFixed(3) + ')' : ''));
     var b = null, k = 0, i;
     for (i = 0; i < list.length; i++) { var kk = ramp(now, list[i][0], list[i][0] + 0.32, list[i][1] - 0.3, list[i][1]); if (kk > k) { k = kk; b = list[i]; } }
     if (!C.nw) C.nw = textW(C.nm, C.name.length * 3.6);
@@ -714,6 +738,8 @@
     var w = mix(tagW, bubW, kk2), h = mix(14, 27.5, kk2), wFull = b ? bubW : tagW;
     var ra = tagRect(st.pa, x, w, h, box, wFull), rb = tagRect(st.pb, x, w, h, box, wFull);
     var left = mix(ra[0], rb[0], st.pk), top = mix(ra[1], rb[1], st.pk);
+    // the tag trails behind a fast move and swings back as the cursor settles
+    left -= 9 * Math.tanh(st.vx / 320) / CS; top -= 6 * Math.tanh(st.vy / 300) / CS;
     // a tag changing sides swings under the arrow, never through it
     var vOv = Math.min(top + h, 17) - Math.max(top, 0), hOv = Math.min(left + w, 12) - Math.max(left, -1);
     if (vOv > 0 && hOv > 0) top = mix(top, 17, smooth(clamp(Math.min(vOv, hOv) / 5, 0, 1)));
@@ -729,14 +755,14 @@
   var M = false, CA = CARD.d, clock = 0;
   function render(S, t) {
     var now = S.now;
-    var ui = track(S.uiKeys, now, uiAnchor(S));
+    var ui = motion(S.uiKeys, now, uiAnchor(S, now), uiAnchor(S, now - 0.04));
     ui.o = S.uiO; ui.p = Math.max(ui.press, pressOf(S.uiClicks, now));
     drawStore(S, ui);
     drawPrompt(S, t);
     tf(CA.g, 0, 6 * (1 - S.card)); op(CA.g, S.card);
     var D = salesData(S, t);
     drawCard(CA, D, t);
-    var sa = track(S.salesKeys, now, salesAnchor(CA, D));
+    var sa = motion(S.salesKeys, now, salesAnchor(CA, D));
     sa.o = S.salesO; sa.p = 0;
     var stag = drawCursor(SALESC, sa, S.bubbles.sales, now, CA.L.box, t, 2);
     drawHover(CA, D, sa, S, stag);
@@ -747,7 +773,7 @@
     rings.forEach(function (r) { op(r, 0); });
     S.uiClicks.forEach(function (ct) {
       var dd = now - ct; if (dd < 0 || dd > 0.55 || used > 1) return;
-      var at = track(S.uiKeys, ct, uiAnchor(S)), r = rings[used++];
+      var at = track(S.uiKeys, ct, uiAnchor(S, ct)), r = rings[used++];
       set(r, { cx: at.x, cy: at.y, r: 2.5 + (dd / 0.55) * 15, stroke: INK }); op(r, 0.28 * (1 - dd / 0.55) * S.uiO);
     });
   }
@@ -864,6 +890,8 @@
   draw(elapsedBase);
   if (reduced) return;
   function frame(now) {
+    // If anything else has shown the page, the intro must not play captions over the real headline: end it now.
+    if (intro && !endIntro.done && !root.classList.contains('hero-intro')) { skipIntro(); raf = requestAnimationFrame(frame); return; }
     var t = elapsedBase + (now - start) / 1000;
     draw(t);
     if (intro && !endIntro.done) REVEAL.forEach(function (s) { if (t >= s[0]) root.classList.add(s[1]); });
@@ -873,7 +901,12 @@
   function run() { if (raf || !visible || document.hidden) return; start = performance.now(); raf = requestAnimationFrame(frame); }
   function stop() { if (!raf) return; cancelAnimationFrame(raf); raf = 0; elapsedBase = clock; }
   if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; if (visible) run(); else stop(); }).observe(art);
+    // The scene only runs while it is on screen. If it is not (say a reload put you further down the page), skip the
+    // intro rather than keep the page hidden while it waits.
+    new IntersectionObserver(function (entries) {
+      visible = entries[0].isIntersecting;
+      if (visible) run(); else { if (intro && clock < INTRO_END) skipIntro(); stop(); }
+    }).observe(art);
   }
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) { if (intro && clock < INTRO_END) skipIntro(); stop(); } else run();
