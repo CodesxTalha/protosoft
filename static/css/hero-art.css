@@ -8,7 +8,8 @@
 .hero__art { position: relative; z-index: 1; width: 100%; aspect-ratio: 66 / 28; }
 .hero__art svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; overflow: visible; }
 
-@media (max-width: 640px) { .hero__art { aspect-ratio: 43 / 28; } }
+/* phones: the sales card sits under the window (static/js/hero-art.js draws a 430 x 456 picture there) */
+@media (max-width: 640px) { .hero__art { aspect-ratio: 430 / 456; } }
 
 /* hidden while the intro plays */
 html.hero-intro:not(.hi-ready) .hero__title { opacity: 0; }
